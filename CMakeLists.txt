@@ -29,10 +29,8 @@ add_executable(batch_cc
 target_include_directories(batch_cc
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/extern/vamp/src/impl
-    ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/nigh-src/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/pdqsort-src
 )
+
 target_link_libraries(batch_cc
     PRIVATE
     nlohmann_json::nlohmann_json
