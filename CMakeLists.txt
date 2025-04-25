@@ -45,6 +45,11 @@ add_executable(batch_cc
     src/batch_cc.cu
 )
 
+target_compile_options(batch_cc
+    PRIVATE
+    -g
+)
+
 target_include_directories(batch_cc
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -82,9 +82,9 @@ inline std::array<float, 3> quaternion_to_euler(float x, float y, float z, float
 std::vector<Environment<float>> setup_environments(std::string filename) {
 
     std::vector<Environment<float>> environments(MAX_WORLD_SAMPLES_EVAL);
-    std::vector<Sphere<float>> object_spheres(MAX_WORLD_SAMPLES_EVAL); // spheres for each environment
-    std::vector<Cuboid<float>> object_cuboids(MAX_WORLD_SAMPLES_EVAL); // cuboids for each environment
-    std::vector<Capsule<float>> object_capsules(MAX_WORLD_SAMPLES_EVAL); // cylinders for each environment
+    std::vector<Sphere<float>> object_spheres; // spheres for each environment
+    std::vector<Cuboid<float>> object_cuboids; // cuboids for each environment
+    std::vector<Capsule<float>> object_capsules; // cylinders for each environment
 
     /* Define maps for obstacles, as we may have more than one obstacle */
     std::map<std::string, std::vector<CuboidData>> obstacle_cuboids_map;
@@ -116,7 +116,6 @@ std::vector<Environment<float>> setup_environments(std::string filename) {
                 obs_name.pop_back();
             }
         }
-
         if(obj_type == "BOX") {
             float x, y, z, qx, qy, qz, qw, dim_x, dim_y, dim_z;
             iss >> x >> y >> z >> qx >> qy >> qz >> qw >> dim_x >> dim_y >> dim_z;
@@ -166,7 +165,7 @@ std::vector<Environment<float>> setup_environments(std::string filename) {
     std::vector<std::vector<Sphere<float>>> obstacle_target_spheres(MAX_WORLD_SAMPLES_EVAL);
     std::vector<std::vector<Cuboid<float>>> obstacle_target_cuboids(MAX_WORLD_SAMPLES_EVAL);
     std::vector<std::vector<Capsule<float>>> obstacle_target_capsules(MAX_WORLD_SAMPLES_EVAL);
-
+    std::cout << "here1\n";
     for (const auto& cuboid_entry : obstacle_cuboids_map) {
         std::string obs_name = cuboid_entry.first;
         std::vector<CuboidData> cuboids = cuboid_entry.second;
@@ -328,14 +327,14 @@ Graph read_graph_from_file(const std::string& file_path)
 
 template<typename Robot>
 void run_test(std::string graph_file_path, std::string scene_file_path, int resolution, std::string robot_name) {
-    std::cout << "Running test for robot: " << robot_name << "\n";
-    std::cout << "Creating environments from scene file: " << scene_file_path << "\n";
+    // std::cout << "Running test for robot: " << robot_name << "\n";
+    // std::cout << "Creating environments from scene file: " << scene_file_path << "\n";
     std::vector<Environment<float>> h_envs = setup_environments(scene_file_path);
-    std::cout << "Number of environments: " << h_envs.size() << "\n";
-    std::cout << "Creating graph from file: " << graph_file_path << "\n";
+    // std::cout << "Number of environments: " << h_envs.size() << "\n";
+    // std::cout << "Creating graph from file: " << graph_file_path << "\n";
     Graph g = read_graph_from_file(graph_file_path);
-    std::cout << "Number of vertices: " << boost::num_vertices(g) << "\n";
-    std::cout << "Number of edges: " << boost::num_edges(g) << "\n";
+    // std::cout << "Number of vertices: " << boost::num_vertices(g) << "\n";
+    // std::cout << "Number of edges: " << boost::num_edges(g) << "\n";
     std::vector<std::array<typename Robot::Configuration, 2>> edges_vec;
 
     // add all edges from graph to edges vector
