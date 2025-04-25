@@ -386,6 +386,12 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
         std::cout << h_envs[i].num_capsules << " capsules\n\n";
     }
 
+    // for each edge print the distance between the two configurations
+    // for (int i = 0; i < num_edges; i++) {
+    //     std::cout << "Edge " << i << ": ";
+    //     std::cout << l2dist<Robot>(edges_vec[i][0], edges_vec[i][1]) << "\n";
+    // }
+
     // // Clean up the environments
     // for (auto env : h_envs) {
     //     delete env;

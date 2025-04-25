@@ -81,7 +81,7 @@ namespace batch_cc {
         __shared__ float edge_start[dim];
         __shared__ float edge_end[dim];
         __shared__ float delta[dim];
-        __shared__ unsigned int local_cc_result;
+        __shared__ bool local_cc_result;
         __shared__ int n;
         float config[dim];
         if (tid < dim) {
@@ -103,7 +103,7 @@ namespace batch_cc {
             // }
             float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
             n = max(ceil((dist / (float) blockDim.x) * resolution), 1.0f);
-            local_cc_result = 0;
+            local_cc_result = false;
         }
         __syncthreads();
         if (tid < dim) {
@@ -128,7 +128,7 @@ namespace batch_cc {
             }
         }
         if (tid == 0) {
-            cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? true : false;
+            cc_result[edge_idx * num_envs + env_idx] = local_cc_result;
         }
     }
 
