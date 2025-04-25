@@ -272,7 +272,7 @@ namespace batch_cc {
 
 
     template <typename Robot>
-    void batch_cc(std::vector<ppln::collision::Environment<float>*>& h_envs, std::vector<std::array<typename Robot::Configuration, 2>>& edges, int resolution, std::vector<bool>& results) {
+    void batch_cc(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename Robot::Configuration, 2>>& edges, int resolution, std::vector<bool>& results) {
         // verify pointers in h_envs are valid
         // for (const auto env : h_envs) {
         //     std::cout << "checking environment" << std::endl;
@@ -296,7 +296,7 @@ namespace batch_cc {
         // std::cout << "here0" << std::endl;
         for (size_t i = 0; i < h_envs.size(); ++i) {
             // std::cout << "Setting up environment " << i << std::endl;
-            setup_environment_on_device(d_envs[i], *h_envs[i]);
+            setup_environment_on_device(d_envs[i], h_envs[i]);
         }
         int num_envs = h_envs.size();
         int num_edges = edges.size();
@@ -358,7 +358,7 @@ namespace batch_cc {
         cudaCheckError(cudaGetLastError());
         // std::cout << "here4" << std::endl;
         for (int i = 0; i < h_envs.size(); ++i) {
-            cleanup_environment_on_device(d_envs[i], *h_envs[i]);
+            cleanup_environment_on_device(d_envs[i], h_envs[i]);
         }
         cudaFree(d_cc_result);
         for (int i = 0; i < Robot::dimension; ++i) {
@@ -368,7 +368,7 @@ namespace batch_cc {
         cudaFree(d_envs_ptr);
     }
 
-    template void batch_cc<typename ppln::robots::Panda>(std::vector<ppln::collision::Environment<float>*>& h_envs, std::vector<std::array<typename ppln::robots::Panda::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
-    template void batch_cc<typename ppln::robots::Fetch>(std::vector<ppln::collision::Environment<float>*>& h_envs, std::vector<std::array<typename ppln::robots::Fetch::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
-    template void batch_cc<typename ppln::robots::Baxter>(std::vector<ppln::collision::Environment<float>*>& h_envs, std::vector<std::array<typename ppln::robots::Baxter::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
+    template void batch_cc<typename ppln::robots::Panda>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Panda::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
+    template void batch_cc<typename ppln::robots::Fetch>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Fetch::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
+    template void batch_cc<typename ppln::robots::Baxter>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Baxter::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
 } // namespace batch_cc

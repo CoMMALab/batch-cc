@@ -20,19 +20,44 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CUDA_ARCHITECTURES 86)
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+find_package(Boost REQUIRED COMPONENTS graph regex)
 
+### batch cc with motion bench maker problems
+add_executable(batch_cc_mbm
+    scripts/batch_cc_mbm.cpp
+    src/batch_cc.cu
+)
+
+target_include_directories(batch_cc_mbm
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+target_link_libraries(batch_cc_mbm
+    PRIVATE
+    nlohmann_json::nlohmann_json
+    Eigen3::Eigen
+)
+
+### batch cc with edges taken from graph.dot and scene taken from scene.txt
 add_executable(batch_cc
     scripts/batch_cc.cpp
     src/batch_cc.cu
+)
+
+target_compile_options(batch_cc
+    PRIVATE
+    -g
 )
 
 target_include_directories(batch_cc
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
-
 target_link_libraries(batch_cc
     PRIVATE
-    nlohmann_json::nlohmann_json
     Eigen3::Eigen
+    Boost::boost
+    Boost::graph
+    Boost::regex
 )
