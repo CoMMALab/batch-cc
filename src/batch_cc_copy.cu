@@ -40,6 +40,9 @@ namespace batch_cc {
         }
     }
 
+    // histogram of where collisions occur along the edges
+    __device__ unsigned int collision_hist[100];
+
     template <typename Robot>
     __global__ void
     __launch_bounds__(32, 4)
@@ -102,12 +105,12 @@ namespace batch_cc {
             //     printf("\n");
             // }
             float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
-            n = max(ceil((dist / (float) blockDim.x) * resolution), 1.0f);
+            n = max(ceil((dist / (float) (blockDim.x - 1)) * resolution), 1.0f);
             local_cc_result = false;
         }
         __syncthreads();
         if (tid < dim) {
-            delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (blockDim.x * n);
+            delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) ((blockDim.x - 1) * n);
         }
         __syncthreads();
         # pragma unroll
@@ -116,7 +119,30 @@ namespace batch_cc {
         }
         __syncthreads();
         for (int i = 0; i < n; i++) {
+            // check if we are checking the edge_end
+            bool is_edge_end = true;
+            for (int j = 0; j < dim; j++) {
+                if (config[j] != edge_end[j])  {
+                    is_edge_end = false;
+                    break;
+                }
+            }
+            if (is_edge_end) {
+                printf("Checking edge end\n");
+            }
             bool config_in_collision = not ppln::collision::fkcc<Robot>(config, env, tid);
+
+            if (config_in_collision) {
+                float total_dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
+                float coll_dist = sqrt(device_utils::sq_l2_dist(config, edge_start, dim));
+                float ratio = coll_dist / total_dist;
+                // printf("Collision at ratio: %f\n", ratio);
+                int bin = (int) (ratio * 100);
+                if (bin >= 0 && bin < 100) {
+                    atomicAdd(&collision_hist[bin], 1);
+                }
+            }
+
             // atomicOr(&local_cc_result, config_in_collision ? 1u : 0u);
             // __syncthreads();
             // if (local_cc_result) break;
@@ -330,6 +356,9 @@ namespace batch_cc {
 
         // Copy the host array of pointers to the device
         cudaMemcpy(d_edges_ptr, d_edges, sizeof(float*) * 2 * Robot::dimension, cudaMemcpyHostToDevice);
+        
+        unsigned int h_hist[100] = {0};
+        cudaMemcpyToSymbol(collision_hist, h_hist, sizeof(unsigned int) * 100);
 
         // std::cout << "here3" << std::endl;
         cudaCheckError(cudaGetLastError());
@@ -344,6 +373,14 @@ namespace batch_cc {
         std::cout << "Edges checked: " << edges_checked << std::endl;
         double throughput = edges_checked / (nanoseconds / 1e9);
         std::cout << "Throughput: " << throughput << " edges/s" << std::endl;
+
+        // copy histogram to host and print it
+        cudaMemcpyFromSymbol(h_hist, collision_hist, sizeof(unsigned int) * 100);
+        std::cout << "Collision histogram: " << std::endl;
+        for (int i = 0; i < 100; ++i) {
+            std::cout << h_hist[i] << ",";
+        }
+        std::cout << std::endl;
 
         // Create a temporary buffer for the results
         bool* h_cc_result = new bool[num_envs * num_edges];

@@ -345,8 +345,8 @@ void batch_cc(std::vector<ppln::collision::Environment<float>>& h_envs,
 
     Flag* d_flag;
     cudaMalloc(&d_flag, sizeof(Flag) * num_edges * num_envs);
-    
     auto start_time = std::chrono::steady_clock::now();
+    auto prune_start_time = std::chrono::steady_clock::now();
 
     prune_midpoint_kernel<Robot><<<grid1, block1>>>(
         d_envs_ptr, d_edges_ptr,
@@ -355,8 +355,10 @@ void batch_cc(std::vector<ppln::collision::Environment<float>>& h_envs,
         d_flag);
     cudaCheckError(cudaGetLastError());
 
-    /* ---------- device-side compaction with Thrust ---------------- */
+    auto prune_time = get_elapsed_nanoseconds(prune_start_time);
 
+    /* ---------- device-side compaction with Thrust ---------------- */
+    auto compact_start_time = std::chrono::steady_clock::now();
     /* (a) create input WorkPair list:  0..total_pairs-1  -> (edge, env) */
     thrust::device_vector<WorkPair> d_pairs_in(total_pairs);
     thrust::counting_iterator<int> first(0);
@@ -378,10 +380,9 @@ void batch_cc(std::vector<ppln::collision::Environment<float>>& h_envs,
         [] __device__ (Flag f){ return f == 0; });
 
     const int num_remaining = static_cast<int>(new_end - d_pairs_in.begin());
-
-   
-
+    auto compact_time = get_elapsed_nanoseconds(compact_start_time);
     /* ---------- stage-2 fine kernel ------------------------------- */
+    auto fine_start_time = std::chrono::steady_clock::now();
     if (num_remaining > 0) {
         int threads2 = 32;
         int blocks2  = num_remaining;
@@ -397,12 +398,18 @@ void batch_cc(std::vector<ppln::collision::Environment<float>>& h_envs,
     }
 
     cudaDeviceSynchronize();
+    auto fine_time = get_elapsed_nanoseconds(fine_start_time);
+    auto total_time = get_elapsed_nanoseconds(start_time);
 
-    auto nanoseconds = get_elapsed_nanoseconds(start_time);
 
-    std::cout << "Time taken: " << nanoseconds << " ns" << std::endl;
+    std::cout << "Total time: " << total_time << " ns" << std::endl;
+    std::cout << "Prune time: " << prune_time << " ns" << std::endl;
+    std::cout << "Compact time: " << compact_time << " ns" << std::endl;
+    std::cout << "Fine time: " << fine_time << " ns" << std::endl;
     std::cout << "Edges checked: " << total_pairs << std::endl;
-    double throughput = total_pairs / (nanoseconds / 1e9);
+    std::cout << "Edges remaining: " << num_remaining << std::endl;
+    std::cout << "Edges pruned: " << total_pairs - num_remaining << std::endl;
+    double throughput = total_pairs / (total_time / 1e9);
     std::cout << "Throughput: " << throughput << " edges/s" << std::endl;
 
     /* ---------- copy results back to host ------------------------- */

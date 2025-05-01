@@ -43,6 +43,7 @@ target_link_libraries(batch_cc_mbm
 add_executable(batch_cc
     scripts/batch_cc.cpp
     src/batch_cc_bisect.cu
+    # src/batch_cc_copy.cu
 )
 
 target_compile_options(batch_cc
