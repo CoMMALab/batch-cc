@@ -165,7 +165,7 @@ std::vector<Environment<float>> setup_environments(std::string filename) {
     std::vector<std::vector<Sphere<float>>> obstacle_target_spheres(MAX_WORLD_SAMPLES_EVAL);
     std::vector<std::vector<Cuboid<float>>> obstacle_target_cuboids(MAX_WORLD_SAMPLES_EVAL);
     std::vector<std::vector<Capsule<float>>> obstacle_target_capsules(MAX_WORLD_SAMPLES_EVAL);
-    std::cout << "here1\n";
+    // std::cout << "here1\n";
     for (const auto& cuboid_entry : obstacle_cuboids_map) {
         std::string obs_name = cuboid_entry.first;
         std::vector<CuboidData> cuboids = cuboid_entry.second;
@@ -370,27 +370,27 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
     std::vector<bool> results(num_edges * num_envs);
     batch_cc::batch_cc<Robot>(h_envs, edges_vec, resolution, results);
 
-    for (int i = 0; i < num_edges; i++) {
-        std::cout << "Edge " << i << ": ";
-        for (int j = 0; j < num_envs; j++) {
-            std::cout << results[i * num_envs + j] << " ";
-        }
-        std::cout << "\n";
-    }
+    // for (int i = 0; i < num_edges; i++) {
+    //     std::cout << "Edge " << i << ": ";
+    //     for (int j = 0; j < num_envs; j++) {
+    //         std::cout << results[i * num_envs + j] << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
 
     // for each environment print number of spheres, cuboids, capsules
-    for (int i = 0; i < num_envs; i++) {
-        std::cout << "Environment " << i << ": ";
-        std::cout << h_envs[i].num_spheres << " spheres, ";
-        std::cout << h_envs[i].num_cuboids << " cuboids, ";
-        std::cout << h_envs[i].num_capsules << " capsules\n\n";
-    }
+    // for (int i = 0; i < num_envs; i++) {
+    //     std::cout << "Environment " << i << ": ";
+    //     std::cout << h_envs[i].num_spheres << " spheres, ";
+    //     std::cout << h_envs[i].num_cuboids << " cuboids, ";
+    //     std::cout << h_envs[i].num_capsules << " capsules\n\n";
+    // }
 
     // for each edge print the distance between the two configurations
-    for (int i = 0; i < num_edges; i++) {
-        std::cout << "Edge " << i << ": ";
-        std::cout << l2dist<Robot>(edges_vec[i][0], edges_vec[i][1]) << "\n";
-    }
+    // for (int i = 0; i < num_edges; i++) {
+    //     std::cout << "Edge " << i << ": ";
+    //     std::cout << l2dist<Robot>(edges_vec[i][0], edges_vec[i][1]) << "\n";
+    // }
 
     // // Clean up the environments
     // for (auto env : h_envs) {

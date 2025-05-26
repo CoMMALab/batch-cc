@@ -42,7 +42,7 @@ target_link_libraries(batch_cc_mbm
 ### batch cc with edges taken from graph.dot and scene taken from scene.txt
 add_executable(batch_cc
     scripts/batch_cc.cpp
-    src/batch_cc_bisect.cu
+    src/batch_cc_bisect_4.cu
     # src/batch_cc_copy.cu
 )
 
