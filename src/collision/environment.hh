@@ -32,41 +32,9 @@ namespace ppln::collision
         // HeightField<DataT> *heightfields;
         // unsigned int num_heightfields;
 
-        Environment() = default;
+        bool owns_memory; // Flag to indicate if this object owns the memory
 
-        // copy constructor (deep copy)
-        // Environment(const Environment &other)
-        //     : num_spheres(other.num_spheres),
-        //       num_capsules(other.num_capsules),
-        //       num_z_aligned_capsules(other.num_z_aligned_capsules),
-        //       num_cylinders(other.num_cylinders),
-        //       num_cuboids(other.num_cuboids),
-        //       num_z_aligned_cuboids(other.num_z_aligned_cuboids)
-        // {
-        //     spheres = new Sphere<DataT>[num_spheres];
-        //     for (unsigned int i = 0; i < num_spheres; ++i)
-        //     spheres[i] = other.spheres[i];
-
-        //     capsules = new Capsule<DataT>[num_capsules];
-        //     for (unsigned int i = 0; i < num_capsules; ++i)
-        //     capsules[i] = other.capsules[i];
-
-        //     z_aligned_capsules = new Capsule<DataT>[num_z_aligned_capsules];
-        //     for (unsigned int i = 0; i < num_z_aligned_capsules; ++i)
-        //     z_aligned_capsules[i] = other.z_aligned_capsules[i];
-
-        //     cylinders = new Cylinder<DataT>[num_cylinders];
-        //     for (unsigned int i = 0; i < num_cylinders; ++i)
-        //     cylinders[i] = other.cylinders[i];
-
-        //     cuboids = new Cuboid<DataT>[num_cuboids];
-        //     for (unsigned int i = 0; i < num_cuboids; ++i)
-        //     cuboids[i] = other.cuboids[i];
-
-        //     z_aligned_cuboids = new Cuboid<DataT>[num_z_aligned_cuboids];
-        //     for (unsigned int i = 0; i < num_z_aligned_cuboids; ++i)
-        //     z_aligned_cuboids[i] = other.z_aligned_cuboids[i];
-        // }
+        Environment() : owns_memory(true) {}
 
         // move constructor
         Environment(Environment &&other) noexcept
@@ -81,7 +49,8 @@ namespace ppln::collision
               cuboids(other.cuboids),
               num_cuboids(other.num_cuboids),
               z_aligned_cuboids(other.z_aligned_cuboids),
-              num_z_aligned_cuboids(other.num_z_aligned_cuboids)
+              num_z_aligned_cuboids(other.num_z_aligned_cuboids),
+              owns_memory(other.owns_memory)
         {
             other.spheres = nullptr;
             other.capsules = nullptr;
@@ -89,17 +58,19 @@ namespace ppln::collision
             other.cylinders = nullptr;
             other.cuboids = nullptr;
             other.z_aligned_cuboids = nullptr;
+            other.owns_memory = false; // Transfer ownership
         }
 
 
         ~Environment() {
-            std::cout << "Destroying environment" << std::endl;
-            delete[] spheres;
-            delete[] capsules;
-            delete[] cuboids;
-            delete[] z_aligned_capsules;
-            delete[] cylinders;
-            delete[] z_aligned_cuboids;
+            if (owns_memory) {
+                delete[] spheres;
+                delete[] capsules;
+                delete[] cuboids;
+                delete[] z_aligned_capsules;
+                delete[] cylinders;
+                delete[] z_aligned_cuboids;
+            }
         }
     };
 }  // namespace ppln::collision

@@ -1,3 +1,7 @@
 build
 *.out
 .vscode
+graph.dot*
+*.png
+*.zip
+temp*

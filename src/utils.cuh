@@ -334,4940 +334,9978 @@ namespace ppln::collision {
     }
 
     template <>
-    __device__  __forceinline__ bool fkcc<ppln::robots::Panda>(volatile float *q, ppln::collision::Environment<float> *environment, int tid)
-    {
-        // Ignore static frame collisions - needed for some evaluation problems
-        // if (/*panda_link0*/ sphere_environment_in_collision(environment, 0.0, 0.0, 0.05, 0.08))
-        // {
-        //     return false;
-        // }  // (0, 0)
-        float INPUT_0 = q[0];
-        float DIV_8 = INPUT_0 * 0.5;
-        float SIN_9 = sin(DIV_8);
-        float COS_15 = cos(DIV_8);
-        float MUL_1575 = COS_15 * SIN_9;
-        float MUL_1594 = MUL_1575 * 2.0;
-        float MUL_1625 = MUL_1594 * 0.039;
-        float MUL_1574 = SIN_9 * SIN_9;
-        float MUL_1584 = MUL_1574 * 2.0;
-        float SUB_1587 = 1.0 - MUL_1584;
-        float MUL_1614 = SUB_1587 * 0.001;
-        float SUB_1641 = MUL_1625 - MUL_1614; // intermediate
-        float MUL_1628 = SUB_1587 * 0.039;
-        float MUL_1618 = MUL_1594 * 0.001;
-        float ADD_1642 = MUL_1618 + MUL_1628;
-        float NEGATE_1643 = -ADD_1642; // intermediate
-        float MUL_1656 = MUL_1594 * 0.08; // intermediate
-        float MUL_1659 = SUB_1587 * 0.08;
-        float NEGATE_1660 = -MUL_1659; // intermediate
-        float MUL_1680 = MUL_1594 * 0.03;  // intermediate
-        float MUL_1683 = SUB_1587 * 0.03;
-        float NEGATE_1684 = -MUL_1683; // intermediate
-        // var_cache[tid][0] = SUB_1641;
-        // var_cache[tid][1] = NEGATE_1643;
-        // var_cache[tid][2] = MUL_1656;
-        // var_cache[tid][3] = NEGATE_1660;
-        // var_cache[tid][4] = MUL_1680;
-        // var_cache[tid][5] = NEGATE_1684;
-        // if (tid%32 == 0) printf("here fkcc: %d", tid);
-        if (/*panda_link1*/ sphere_environment_in_collision(environment, SUB_1641, NEGATE_1643, 0.248, 0.154))
+__device__  __forceinline__ bool fkcc<ppln::robots::Panda>(volatile float *x, ppln::collision::Environment<float> *environment, int tid)
         {
-            if (sphere_environment_in_collision(environment, MUL_1656, NEGATE_1660, 0.333, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, MUL_1680, NEGATE_1684, 0.333, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, 0.0, 0.0, 0.213, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, 0.0, 0.0, 0.163, 0.06))
-            {
-                return false;
-            }
-        }  // (0, 22)
-        float MUL_74 = COS_15 * 0.7071068;
-        float MUL_72 = SIN_9 * 0.7071068;
-        float INPUT_1 = q[1];
-        float DIV_117 = INPUT_1 * 0.5;
-        float SIN_118 = sin(DIV_117);
-        float COS_124 = cos(DIV_117);
-        float MUL_143 = MUL_72 * COS_124;
-        float MUL_128 = MUL_72 * SIN_118;
-        float MUL_126 = MUL_74 * COS_124;
-        float SUB_149 = MUL_126 - MUL_128;
-        float ADD_130 = MUL_126 + MUL_128;
-        float MUL_140 = MUL_74 * SIN_118;
-        float SUB_138 = MUL_140 - MUL_143;
-        float ADD_144 = MUL_140 + MUL_143;
-        float MUL_1756 = SUB_149 * ADD_144;
-        float MUL_1757 = SUB_149 * SUB_138;
-        float MUL_1763 = ADD_130 * ADD_144;
-        float SUB_1796 = MUL_1757 - MUL_1763;
-        float MUL_1798 = SUB_1796 * 2.0;
-        float MUL_1827 = MUL_1798 * 0.04;
-        float MUL_1761 = ADD_130 * SUB_138;
-        float ADD_1781 = MUL_1761 + MUL_1756;
-        float MUL_1784 = ADD_1781 * 2.0;
-        float MUL_1817 = MUL_1784 * 0.085;
-        float ADD_1832 = MUL_1817 + MUL_1827;
-        float MUL_1759 = SUB_149 * ADD_130;
-        float MUL_1755 = ADD_144 * ADD_144;
-        float MUL_1765 = SUB_138 * ADD_144;
-        float ADD_1799 = MUL_1765 + MUL_1759;
-        float MUL_1801 = ADD_1799 * 2.0;
-        float MUL_1829 = MUL_1801 * 0.04;
-        float MUL_1758 = ADD_130 * ADD_130;
-        float ADD_1786 = MUL_1755 + MUL_1758;
-        float MUL_1789 = ADD_1786 * 2.0;
-        float SUB_1792 = 1.0 - MUL_1789;
-        float MUL_1820 = SUB_1792 * 0.085;
-        float SUB_1833 = MUL_1829 - MUL_1820;
-        float SUB_1793 = MUL_1765 - MUL_1759;
-        float MUL_1795 = SUB_1793 * 2.0;
-        float MUL_1824 = MUL_1795 * 0.085;
-        float MUL_1754 = SUB_138 * SUB_138;
-        float ADD_1802 = MUL_1754 + MUL_1758;
-        float MUL_1805 = ADD_1802 * 2.0;
-        float SUB_1808 = 1.0 - MUL_1805;
-        float MUL_1831 = SUB_1808 * 0.04;
-        float SUB_1834 = MUL_1831 - MUL_1824;
-        float ADD_1835 = 0.333 + SUB_1834;
-        float MUL_1849 = MUL_1798 * 0.03;
-        float MUL_1851 = MUL_1801 * 0.03;
-        float MUL_1853 = SUB_1808 * 0.03;
-        float ADD_1854 = 0.333 + MUL_1853;
-        float MUL_1868 = MUL_1798 * 0.08;
-        float MUL_1870 = MUL_1801 * 0.08;
-        float MUL_1872 = SUB_1808 * 0.08;
-        float ADD_1873 = 0.333 + MUL_1872;
-        float MUL_1882 = MUL_1784 * 0.12;
-        float MUL_1885 = SUB_1792 * 0.12;
-        float NEGATE_1886 = -MUL_1885;
-        float MUL_1889 = MUL_1795 * 0.12;
-        float SUB_1897 = 0.333 - MUL_1889;
-        float MUL_1906 = MUL_1784 * 0.17;
-        float MUL_1909 = SUB_1792 * 0.17;
-        float NEGATE_1910 = -MUL_1909;
-        float MUL_1913 = MUL_1795 * 0.17;
-        float SUB_1921 = 0.333 - MUL_1913;
-        if (/*panda_link2*/ sphere_environment_in_collision(environment, ADD_1832, SUB_1833, ADD_1835, 0.154))
-        {
-            if (sphere_environment_in_collision(environment, MUL_1849, MUL_1851, ADD_1854, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, MUL_1868, MUL_1870, ADD_1873, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, MUL_1882, NEGATE_1886, SUB_1897, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, MUL_1906, NEGATE_1910, SUB_1921, 0.06))
-            {
-                return false;
-            }
-        }  // (22, 87)
-        float MUL_182 = SUB_149 * 0.7071068;
-        float MUL_198 = ADD_144 * 0.7071068;
-        float MUL_196 = SUB_138 * 0.7071068;
-        float SUB_209 = MUL_198 - MUL_196;
-        float ADD_199 = MUL_196 + MUL_198;
-        float MUL_184 = ADD_130 * 0.7071068;
-        float SUB_186 = MUL_182 - MUL_184;
-        float ADD_215 = MUL_182 + MUL_184;
-        float MUL_224 = ADD_144 * 0.316;
-        float MUL_235 = SUB_149 * MUL_224;
-        float MUL_228 = ADD_130 * 0.316;
-        float MUL_236 = SUB_138 * MUL_228;
-        float ADD_237 = MUL_235 + MUL_236;
-        float MUL_240 = ADD_237 * 2.0;
-        float INPUT_2 = q[2];
-        float DIV_262 = INPUT_2 * 0.5;
-        float SIN_263 = sin(DIV_262);
-        float COS_269 = cos(DIV_262);
-        float MUL_286 = ADD_215 * COS_269;
-        float MUL_281 = ADD_215 * SIN_263;
-        float MUL_284 = SUB_209 * COS_269;
-        float ADD_285 = MUL_281 + MUL_284;
-        float MUL_1933 = ADD_285 * ADD_285;
-        float MUL_289 = SUB_209 * SIN_263;
-        float SUB_290 = MUL_286 - MUL_289;
-        float MUL_1934 = SUB_290 * ADD_285;
-        float MUL_271 = SUB_186 * COS_269;
-        float MUL_276 = SUB_186 * SIN_263;
-        float MUL_278 = ADD_199 * COS_269;
-        float SUB_279 = MUL_278 - MUL_276;
-        float MUL_1935 = SUB_290 * SUB_279;
-        float MUL_1932 = SUB_279 * SUB_279;
-        float ADD_1941 = MUL_1932 + MUL_1933;
-        float MUL_1944 = ADD_1941 * 2.0;
-        float SUB_1947 = 1.0 - MUL_1944;
-        float MUL_1981 = SUB_1947 * 0.039;
-        float MUL_272 = ADD_199 * SIN_263;
-        float ADD_273 = MUL_271 + MUL_272;
-        float MUL_1939 = ADD_273 * ADD_285;
-        float ADD_1967 = MUL_1939 + MUL_1935;
-        float MUL_1969 = ADD_1967 * 2.0;
-        float MUL_1994 = MUL_1969 * 0.052;
-        float MUL_1938 = ADD_273 * SUB_279;
-        float SUB_1954 = MUL_1938 - MUL_1934;
-        float MUL_1956 = SUB_1954 * 2.0;
-        float MUL_1987 = MUL_1956 * 0.028;
-        float ADD_2004 = MUL_1981 + MUL_1987;
-        float SUB_2007 = ADD_2004 - MUL_1994;
-        float ADD_2010 = MUL_240 + SUB_2007;
-        float ADD_1948 = MUL_1938 + MUL_1934;
-        float MUL_1950 = ADD_1948 * 2.0;
-        float MUL_1983 = MUL_1950 * 0.039;
-        float MUL_1937 = SUB_290 * ADD_273;
-        float MUL_1940 = SUB_279 * ADD_285;
-        float SUB_1970 = MUL_1940 - MUL_1937;
-        float MUL_1972 = SUB_1970 * 2.0;
-        float MUL_1998 = MUL_1972 * 0.052;
-        float MUL_1936 = ADD_273 * ADD_273;
-        float ADD_1957 = MUL_1933 + MUL_1936;
-        float MUL_1960 = ADD_1957 * 2.0;
-        float SUB_1963 = 1.0 - MUL_1960;
-        float MUL_1989 = SUB_1963 * 0.028;
-        float ADD_2005 = MUL_1983 + MUL_1989;
-        float SUB_2008 = ADD_2005 - MUL_1998;
-        float MUL_246 = ADD_144 * MUL_224;
-        float MUL_244 = ADD_130 * MUL_228;
-        float ADD_247 = MUL_244 + MUL_246;
-        float MUL_249 = ADD_247 * 2.0;
-        float SUB_252 = MUL_249 - 0.316;
-        float ADD_2011 = SUB_252 + SUB_2008;
-        float SUB_1951 = MUL_1939 - MUL_1935;
-        float ADD_1964 = MUL_1940 + MUL_1937;
-        float ADD_1973 = MUL_1932 + MUL_1936;
-        float MUL_1976 = ADD_1973 * 2.0;
-        float SUB_1979 = 1.0 - MUL_1976;
-        float MUL_2002 = SUB_1979 * 0.052;
-        float MUL_1966 = ADD_1964 * 2.0;
-        float MUL_1991 = MUL_1966 * 0.028;
-        float MUL_1953 = SUB_1951 * 2.0;
-        float MUL_1985 = MUL_1953 * 0.039;
-        float ADD_2006 = MUL_1985 + MUL_1991;
-        float SUB_2009 = ADD_2006 - MUL_2002;
-        float MUL_253 = SUB_149 * MUL_228;
-        float MUL_255 = SUB_138 * MUL_224;
-        float SUB_256 = MUL_253 - MUL_255;
-        float MUL_258 = SUB_256 * 2.0;
-        float ADD_260 = 0.333 + MUL_258;
-        float ADD_2012 = ADD_260 + SUB_2009;
-        float MUL_2027 = MUL_1969 * 0.1;
-        float SUB_2037 = MUL_240 - MUL_2027;
-        float MUL_2031 = MUL_1972 * 0.1;
-        float SUB_2038 = SUB_252 - MUL_2031;
-        float MUL_2035 = SUB_1979 * 0.1;
-        float SUB_2039 = ADD_260 - MUL_2035;
-        float MUL_2054 = MUL_1969 * 0.06;
-        float SUB_2064 = MUL_240 - MUL_2054;
-        float MUL_2058 = MUL_1972 * 0.06;
-        float SUB_2065 = SUB_252 - MUL_2058;
-        float MUL_2062 = SUB_1979 * 0.06;
-        float SUB_2066 = ADD_260 - MUL_2062;
-        float MUL_2074 = MUL_1956 * 0.06;
-        float MUL_2068 = SUB_1947 * 0.08;
-        float ADD_2085 = MUL_2068 + MUL_2074;
-        float ADD_2088 = MUL_240 + ADD_2085;
-        float MUL_2076 = SUB_1963 * 0.06;
-        float MUL_2070 = MUL_1950 * 0.08;
-        float ADD_2086 = MUL_2070 + MUL_2076;
-        float ADD_2089 = SUB_252 + ADD_2086;
-        float MUL_2078 = MUL_1966 * 0.06;
-        float MUL_2072 = MUL_1953 * 0.08;
-        float ADD_2087 = MUL_2072 + MUL_2078;
-        float ADD_2090 = ADD_260 + ADD_2087;
-        float MUL_2098 = MUL_1956 * 0.02;
-        float ADD_2109 = MUL_2068 + MUL_2098;
-        float ADD_2112 = MUL_240 + ADD_2109;
-        float MUL_2100 = SUB_1963 * 0.02;
-        float ADD_2110 = MUL_2070 + MUL_2100;
-        float ADD_2113 = SUB_252 + ADD_2110;
-        float MUL_2102 = MUL_1966 * 0.02;
-        float ADD_2111 = MUL_2072 + MUL_2102;
-        float ADD_2114 = ADD_260 + ADD_2111;
-        if (/*panda_link3*/ sphere_environment_in_collision(environment, ADD_2010, ADD_2011, ADD_2012, 0.128))
-        {
-            if (sphere_environment_in_collision(environment, SUB_2037, SUB_2038, SUB_2039, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, SUB_2064, SUB_2065, SUB_2066, 0.05))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2088, ADD_2089, ADD_2090, 0.055))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2112, ADD_2113, ADD_2114, 0.055))
-            {
-                return false;
-            }
-        }  // (87, 208)
-        float MUL_323 = SUB_290 * 0.7071068;
-        float MUL_338 = ADD_285 * 0.7071068;
-        float MUL_336 = SUB_279 * 0.7071068;
-        float SUB_349 = MUL_338 - MUL_336;
-        float ADD_339 = MUL_336 + MUL_338;
-        float MUL_325 = ADD_273 * 0.7071068;
-        float SUB_354 = MUL_323 - MUL_325;
-        float ADD_326 = MUL_323 + MUL_325;
-        float MUL_371 = ADD_285 * 0.0825;
-        float MUL_376 = ADD_285 * MUL_371;
-        float MUL_366 = SUB_279 * 0.0825;
-        float MUL_374 = SUB_279 * MUL_366;
-        float ADD_378 = MUL_374 + MUL_376;
-        float MUL_381 = ADD_378 * 2.0;
-        float SUB_384 = 0.0825 - MUL_381;
-        float ADD_403 = MUL_240 + SUB_384;
-        float INPUT_3 = q[3];
-        float DIV_407 = INPUT_3 * 0.5;
-        float SIN_408 = sin(DIV_407);
-        float COS_414 = cos(DIV_407);
-        float MUL_431 = SUB_354 * COS_414;
-        float MUL_426 = SUB_354 * SIN_408;
-        float MUL_429 = SUB_349 * COS_414;
-        float ADD_430 = MUL_426 + MUL_429;
-        float MUL_2126 = ADD_430 * ADD_430;
-        float MUL_434 = SUB_349 * SIN_408;
-        float SUB_435 = MUL_431 - MUL_434;
-        float MUL_2127 = SUB_435 * ADD_430;
-        float MUL_416 = ADD_326 * COS_414;
-        float MUL_421 = ADD_326 * SIN_408;
-        float MUL_423 = ADD_339 * COS_414;
-        float SUB_424 = MUL_423 - MUL_421;
-        float MUL_2128 = SUB_435 * SUB_424;
-        float MUL_2125 = SUB_424 * SUB_424;
-        float ADD_2134 = MUL_2125 + MUL_2126;
-        float MUL_2137 = ADD_2134 * 2.0;
-        float SUB_2140 = 1.0 - MUL_2137;
-        float MUL_2175 = SUB_2140 * 0.042;
-        float MUL_417 = ADD_339 * SIN_408;
-        float ADD_418 = MUL_416 + MUL_417;
-        float MUL_2132 = ADD_418 * ADD_430;
-        float ADD_2160 = MUL_2132 + MUL_2128;
-        float MUL_2162 = ADD_2160 * 2.0;
-        float MUL_2192 = MUL_2162 * 0.029;
-        float MUL_2131 = ADD_418 * SUB_424;
-        float SUB_2147 = MUL_2131 - MUL_2127;
-        float MUL_2149 = SUB_2147 * 2.0;
-        float MUL_2186 = MUL_2149 * 0.049;
-        float SUB_2197 = MUL_2186 - MUL_2175;
-        float ADD_2200 = SUB_2197 + MUL_2192;
-        float ADD_2203 = ADD_403 + ADD_2200;
-        float ADD_2141 = MUL_2131 + MUL_2127;
-        float MUL_2143 = ADD_2141 * 2.0;
-        float MUL_2179 = MUL_2143 * 0.042;
-        float MUL_2130 = SUB_435 * ADD_418;
-        float MUL_2133 = SUB_424 * ADD_430;
-        float SUB_2163 = MUL_2133 - MUL_2130;
-        float MUL_2165 = SUB_2163 * 2.0;
-        float MUL_2194 = MUL_2165 * 0.029;
-        float MUL_2129 = ADD_418 * ADD_418;
-        float ADD_2150 = MUL_2126 + MUL_2129;
-        float MUL_2153 = ADD_2150 * 2.0;
-        float SUB_2156 = 1.0 - MUL_2153;
-        float MUL_2188 = SUB_2156 * 0.049;
-        float SUB_2198 = MUL_2188 - MUL_2179;
-        float ADD_2201 = SUB_2198 + MUL_2194;
-        float MUL_386 = SUB_290 * MUL_371;
-        float MUL_387 = ADD_273 * MUL_366;
-        float ADD_389 = MUL_386 + MUL_387;
-        float MUL_392 = ADD_389 * 2.0;
-        float ADD_404 = SUB_252 + MUL_392;
-        float ADD_2204 = ADD_404 + ADD_2201;
-        float SUB_2144 = MUL_2132 - MUL_2128;
-        float ADD_2157 = MUL_2133 + MUL_2130;
-        float ADD_2166 = MUL_2125 + MUL_2129;
-        float MUL_2169 = ADD_2166 * 2.0;
-        float SUB_2172 = 1.0 - MUL_2169;
-        float MUL_2196 = SUB_2172 * 0.029;
-        float MUL_2159 = ADD_2157 * 2.0;
-        float MUL_2190 = MUL_2159 * 0.049;
-        float MUL_2146 = SUB_2144 * 2.0;
-        float MUL_2183 = MUL_2146 * 0.042;
-        float SUB_2199 = MUL_2190 - MUL_2183;
-        float ADD_2202 = SUB_2199 + MUL_2196;
-        float MUL_394 = SUB_290 * MUL_366;
-        float MUL_396 = ADD_273 * MUL_371;
-        float SUB_398 = MUL_396 - MUL_394;
-        float MUL_401 = SUB_398 * 2.0;
-        float ADD_405 = ADD_260 + MUL_401;
-        float ADD_2205 = ADD_405 + ADD_2202;
-        float MUL_2208 = SUB_2140 * 0.08;
-        float MUL_2219 = MUL_2149 * 0.095;
-        float SUB_2230 = MUL_2219 - MUL_2208;
-        float ADD_2233 = ADD_403 + SUB_2230;
-        float MUL_2221 = SUB_2156 * 0.095;
-        float MUL_2212 = MUL_2143 * 0.08;
-        float SUB_2231 = MUL_2221 - MUL_2212;
-        float ADD_2234 = ADD_404 + SUB_2231;
-        float MUL_2223 = MUL_2159 * 0.095;
-        float MUL_2216 = MUL_2146 * 0.08;
-        float SUB_2232 = MUL_2223 - MUL_2216;
-        float ADD_2235 = ADD_405 + SUB_2232;
-        float MUL_2249 = MUL_2162 * 0.02;
-        float ADD_2254 = ADD_403 + MUL_2249;
-        float MUL_2251 = MUL_2165 * 0.02;
-        float ADD_2255 = ADD_404 + MUL_2251;
-        float MUL_2253 = SUB_2172 * 0.02;
-        float ADD_2256 = ADD_405 + MUL_2253;
-        float MUL_2270 = MUL_2162 * 0.06;
-        float ADD_2275 = ADD_403 + MUL_2270;
-        float MUL_2272 = MUL_2165 * 0.06;
-        float ADD_2276 = ADD_404 + MUL_2272;
-        float MUL_2274 = SUB_2172 * 0.06;
-        float ADD_2277 = ADD_405 + MUL_2274;
-        float MUL_2291 = MUL_2149 * 0.06;
-        float SUB_2302 = MUL_2291 - MUL_2208;
-        float ADD_2305 = ADD_403 + SUB_2302;
-        float MUL_2293 = SUB_2156 * 0.06;
-        float SUB_2303 = MUL_2293 - MUL_2212;
-        float ADD_2306 = ADD_404 + SUB_2303;
-        float MUL_2295 = MUL_2159 * 0.06;
-        float SUB_2304 = MUL_2295 - MUL_2216;
-        float ADD_2307 = ADD_405 + SUB_2304;
-        if (/*panda_link4*/ sphere_environment_in_collision(environment, ADD_2203, ADD_2204, ADD_2205, 0.126))
-        {
-            if (sphere_environment_in_collision(environment, ADD_2233, ADD_2234, ADD_2235, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2254, ADD_2255, ADD_2256, 0.055))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2275, ADD_2276, ADD_2277, 0.055))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2305, ADD_2306, ADD_2307, 0.055))
-            {
-                return false;
-            }
-        }  // (208, 331)
-        float MUL_469 = SUB_435 * 0.7071068;
-        float MUL_486 = ADD_430 * 0.7071068;
-        float MUL_527 = ADD_430 * 0.0825;
-        float MUL_533 = ADD_430 * MUL_527;
-        float MUL_483 = SUB_424 * 0.7071068;
-        float SUB_488 = MUL_483 - MUL_486;
-        float ADD_499 = MUL_483 + MUL_486;
-        float MUL_520 = SUB_424 * 0.0825;
-        float MUL_472 = ADD_418 * 0.7071068;
-        float SUB_473 = MUL_472 - MUL_469;
-        float ADD_506 = MUL_469 + MUL_472;
-        float MUL_514 = ADD_430 * 0.384;
-        float MUL_529 = SUB_435 * MUL_514;
-        float MUL_517 = ADD_418 * 0.384;
-        float ADD_522 = MUL_517 + MUL_520;
-        float MUL_531 = SUB_424 * ADD_522;
-        float SUB_532 = MUL_531 - MUL_529;
-        float ADD_534 = SUB_532 + MUL_533;
-        float MUL_536 = ADD_534 * 2.0;
-        float SUB_539 = MUL_536 - 0.0825;
-        float ADD_564 = ADD_403 + SUB_539;
-        float INPUT_4 = q[4];
-        float DIV_568 = INPUT_4 * 0.5;
-        float SIN_569 = sin(DIV_568);
-        float COS_575 = cos(DIV_568);
-        float MUL_592 = ADD_506 * COS_575;
-        float MUL_587 = ADD_506 * SIN_569;
-        float MUL_590 = ADD_499 * COS_575;
-        float ADD_591 = MUL_587 + MUL_590;
-        float MUL_2319 = ADD_591 * ADD_591;
-        float MUL_595 = ADD_499 * SIN_569;
-        float SUB_596 = MUL_592 - MUL_595;
-        float MUL_2320 = SUB_596 * ADD_591;
-        float MUL_577 = SUB_473 * COS_575;
-        float MUL_582 = SUB_473 * SIN_569;
-        float MUL_584 = SUB_488 * COS_575;
-        float SUB_585 = MUL_584 - MUL_582;
-        float MUL_2321 = SUB_596 * SUB_585;
-        float MUL_2318 = SUB_585 * SUB_585;
-        float ADD_2327 = MUL_2318 + MUL_2319;
-        float MUL_2330 = ADD_2327 * 2.0;
-        float SUB_2333 = 1.0 - MUL_2330;
-        float MUL_2368 = SUB_2333 * 0.001;
-        float MUL_578 = SUB_488 * SIN_569;
-        float ADD_579 = MUL_577 + MUL_578;
-        float MUL_2325 = ADD_579 * ADD_591;
-        float ADD_2353 = MUL_2325 + MUL_2321;
-        float MUL_2355 = ADD_2353 * 2.0;
-        float MUL_2386 = MUL_2355 * 0.11;
-        float MUL_2324 = ADD_579 * SUB_585;
-        float SUB_2340 = MUL_2324 - MUL_2320;
-        float MUL_2342 = SUB_2340 * 2.0;
-        float MUL_2379 = MUL_2342 * 0.037;
-        float SUB_2396 = MUL_2379 - MUL_2368;
-        float SUB_2399 = SUB_2396 - MUL_2386;
-        float ADD_2402 = ADD_564 + SUB_2399;
-        float ADD_2334 = MUL_2324 + MUL_2320;
-        float MUL_2336 = ADD_2334 * 2.0;
-        float MUL_2372 = MUL_2336 * 0.001;
-        float MUL_2323 = SUB_596 * ADD_579;
-        float MUL_2326 = SUB_585 * ADD_591;
-        float SUB_2356 = MUL_2326 - MUL_2323;
-        float MUL_2358 = SUB_2356 * 2.0;
-        float MUL_2390 = MUL_2358 * 0.11;
-        float MUL_2322 = ADD_579 * ADD_579;
-        float ADD_2343 = MUL_2319 + MUL_2322;
-        float MUL_2346 = ADD_2343 * 2.0;
-        float SUB_2349 = 1.0 - MUL_2346;
-        float MUL_2381 = SUB_2349 * 0.037;
-        float SUB_2397 = MUL_2381 - MUL_2372;
-        float SUB_2400 = SUB_2397 - MUL_2390;
-        float MUL_541 = SUB_435 * MUL_527;
-        float MUL_546 = ADD_430 * MUL_514;
-        float MUL_543 = ADD_418 * ADD_522;
-        float ADD_544 = MUL_541 + MUL_543;
-        float ADD_548 = ADD_544 + MUL_546;
-        float MUL_551 = ADD_548 * 2.0;
-        float SUB_554 = 0.384 - MUL_551;
-        float ADD_565 = ADD_404 + SUB_554;
-        float ADD_2403 = ADD_565 + SUB_2400;
-        float SUB_2337 = MUL_2325 - MUL_2321;
-        float ADD_2350 = MUL_2326 + MUL_2323;
-        float ADD_2359 = MUL_2318 + MUL_2322;
-        float MUL_2362 = ADD_2359 * 2.0;
-        float SUB_2365 = 1.0 - MUL_2362;
-        float MUL_2394 = SUB_2365 * 0.11;
-        float MUL_2352 = ADD_2350 * 2.0;
-        float MUL_2383 = MUL_2352 * 0.037;
-        float MUL_2339 = SUB_2337 * 2.0;
-        float MUL_2376 = MUL_2339 * 0.001;
-        float SUB_2398 = MUL_2383 - MUL_2376;
-        float SUB_2401 = SUB_2398 - MUL_2394;
-        float MUL_555 = SUB_435 * ADD_522;
-        float MUL_558 = SUB_424 * MUL_514;
-        float MUL_556 = ADD_418 * MUL_527;
-        float SUB_557 = MUL_555 - MUL_556;
-        float ADD_560 = SUB_557 + MUL_558;
-        float MUL_562 = ADD_560 * 2.0;
-        float ADD_566 = ADD_405 + MUL_562;
-        float ADD_2404 = ADD_566 + SUB_2401;
-        float MUL_2412 = MUL_2342 * 0.055;
-        float ADD_2423 = ADD_564 + MUL_2412;
-        float MUL_2414 = SUB_2349 * 0.055;
-        float ADD_2424 = ADD_565 + MUL_2414;
-        float MUL_2416 = MUL_2352 * 0.055;
-        float ADD_2425 = ADD_566 + MUL_2416;
-        float MUL_2433 = MUL_2342 * 0.075;
-        float ADD_2444 = ADD_564 + MUL_2433;
-        float MUL_2435 = SUB_2349 * 0.075;
-        float ADD_2445 = ADD_565 + MUL_2435;
-        float MUL_2437 = MUL_2352 * 0.075;
-        float ADD_2446 = ADD_566 + MUL_2437;
-        float MUL_2461 = MUL_2355 * 0.22;
-        float SUB_2471 = ADD_564 - MUL_2461;
-        float MUL_2465 = MUL_2358 * 0.22;
-        float SUB_2472 = ADD_565 - MUL_2465;
-        float MUL_2469 = SUB_2365 * 0.22;
-        float SUB_2473 = ADD_566 - MUL_2469;
-        float MUL_2488 = MUL_2355 * 0.18;
-        float MUL_2481 = MUL_2342 * 0.05;
-        float SUB_2498 = MUL_2481 - MUL_2488;
-        float ADD_2501 = ADD_564 + SUB_2498;
-        float MUL_2492 = MUL_2358 * 0.18;
-        float MUL_2483 = SUB_2349 * 0.05;
-        float SUB_2499 = MUL_2483 - MUL_2492;
-        float ADD_2502 = ADD_565 + SUB_2499;
-        float MUL_2496 = SUB_2365 * 0.18;
-        float MUL_2485 = MUL_2352 * 0.05;
-        float SUB_2500 = MUL_2485 - MUL_2496;
-        float ADD_2503 = ADD_566 + SUB_2500;
-        float MUL_2511 = MUL_2342 * 0.08;
-        float MUL_2518 = MUL_2355 * 0.14;
-        float MUL_2505 = SUB_2333 * 0.01;
-        float ADD_2528 = MUL_2505 + MUL_2511;
-        float SUB_2531 = ADD_2528 - MUL_2518;
-        float ADD_2534 = ADD_564 + SUB_2531;
-        float MUL_2522 = MUL_2358 * 0.14;
-        float MUL_2513 = SUB_2349 * 0.08;
-        float MUL_2507 = MUL_2336 * 0.01;
-        float ADD_2529 = MUL_2507 + MUL_2513;
-        float SUB_2532 = ADD_2529 - MUL_2522;
-        float ADD_2535 = ADD_565 + SUB_2532;
-        float MUL_2526 = SUB_2365 * 0.14;
-        float MUL_2515 = MUL_2352 * 0.08;
-        float MUL_2509 = MUL_2339 * 0.01;
-        float ADD_2530 = MUL_2509 + MUL_2515;
-        float SUB_2533 = ADD_2530 - MUL_2526;
-        float ADD_2536 = ADD_566 + SUB_2533;
-        float MUL_2544 = MUL_2342 * 0.085;
-        float ADD_2561 = MUL_2505 + MUL_2544;
-        float SUB_2564 = ADD_2561 - MUL_2386;
-        float ADD_2567 = ADD_564 + SUB_2564;
-        float MUL_2546 = SUB_2349 * 0.085;
-        float ADD_2562 = MUL_2507 + MUL_2546;
-        float SUB_2565 = ADD_2562 - MUL_2390;
-        float ADD_2568 = ADD_565 + SUB_2565;
-        float MUL_2548 = MUL_2352 * 0.085;
-        float ADD_2563 = MUL_2509 + MUL_2548;
-        float SUB_2566 = ADD_2563 - MUL_2394;
-        float ADD_2569 = ADD_566 + SUB_2566;
-        float MUL_2584 = MUL_2355 * 0.08;
-        float MUL_2577 = MUL_2342 * 0.09;
-        float ADD_2594 = MUL_2505 + MUL_2577;
-        float SUB_2597 = ADD_2594 - MUL_2584;
-        float ADD_2600 = ADD_564 + SUB_2597;
-        float MUL_2588 = MUL_2358 * 0.08;
-        float MUL_2579 = SUB_2349 * 0.09;
-        float ADD_2595 = MUL_2507 + MUL_2579;
-        float SUB_2598 = ADD_2595 - MUL_2588;
-        float ADD_2601 = ADD_565 + SUB_2598;
-        float MUL_2592 = SUB_2365 * 0.08;
-        float MUL_2581 = MUL_2352 * 0.09;
-        float ADD_2596 = MUL_2509 + MUL_2581;
-        float SUB_2599 = ADD_2596 - MUL_2592;
-        float ADD_2602 = ADD_566 + SUB_2599;
-        float MUL_2617 = MUL_2355 * 0.05;
-        float MUL_2610 = MUL_2342 * 0.095;
-        float ADD_2627 = MUL_2505 + MUL_2610;
-        float SUB_2630 = ADD_2627 - MUL_2617;
-        float ADD_2633 = ADD_564 + SUB_2630;
-        float MUL_2621 = MUL_2358 * 0.05;
-        float MUL_2612 = SUB_2349 * 0.095;
-        float ADD_2628 = MUL_2507 + MUL_2612;
-        float SUB_2631 = ADD_2628 - MUL_2621;
-        float ADD_2634 = ADD_565 + SUB_2631;
-        float MUL_2625 = SUB_2365 * 0.05;
-        float MUL_2614 = MUL_2352 * 0.095;
-        float ADD_2629 = MUL_2509 + MUL_2614;
-        float SUB_2632 = ADD_2629 - MUL_2625;
-        float ADD_2635 = ADD_566 + SUB_2632;
-        float SUB_2666 = MUL_2511 - MUL_2505;
-        float SUB_2669 = SUB_2666 - MUL_2518;
-        float ADD_2672 = ADD_564 + SUB_2669;
-        float SUB_2667 = MUL_2513 - MUL_2507;
-        float SUB_2670 = SUB_2667 - MUL_2522;
-        float ADD_2673 = ADD_565 + SUB_2670;
-        float SUB_2668 = MUL_2515 - MUL_2509;
-        float SUB_2671 = SUB_2668 - MUL_2526;
-        float ADD_2674 = ADD_566 + SUB_2671;
-        float SUB_2705 = MUL_2544 - MUL_2505;
-        float SUB_2708 = SUB_2705 - MUL_2386;
-        float ADD_2711 = ADD_564 + SUB_2708;
-        float SUB_2706 = MUL_2546 - MUL_2507;
-        float SUB_2709 = SUB_2706 - MUL_2390;
-        float ADD_2712 = ADD_565 + SUB_2709;
-        float SUB_2707 = MUL_2548 - MUL_2509;
-        float SUB_2710 = SUB_2707 - MUL_2394;
-        float ADD_2713 = ADD_566 + SUB_2710;
-        float SUB_2744 = MUL_2577 - MUL_2505;
-        float SUB_2747 = SUB_2744 - MUL_2584;
-        float ADD_2750 = ADD_564 + SUB_2747;
-        float SUB_2745 = MUL_2579 - MUL_2507;
-        float SUB_2748 = SUB_2745 - MUL_2588;
-        float ADD_2751 = ADD_565 + SUB_2748;
-        float SUB_2746 = MUL_2581 - MUL_2509;
-        float SUB_2749 = SUB_2746 - MUL_2592;
-        float ADD_2752 = ADD_566 + SUB_2749;
-        float SUB_2783 = MUL_2610 - MUL_2505;
-        float SUB_2786 = SUB_2783 - MUL_2617;
-        float ADD_2789 = ADD_564 + SUB_2786;
-        float SUB_2784 = MUL_2612 - MUL_2507;
-        float SUB_2787 = SUB_2784 - MUL_2621;
-        float ADD_2790 = ADD_565 + SUB_2787;
-        float SUB_2785 = MUL_2614 - MUL_2509;
-        float SUB_2788 = SUB_2785 - MUL_2625;
-        float ADD_2791 = ADD_566 + SUB_2788;
-        if (/*panda_link0 vs. panda_link5*/ sphere_sphere_self_collision(
-            0.0, 0.0, 0.05, 0.08, ADD_2402, ADD_2403, ADD_2404, 0.176))
-        {
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2423, ADD_2424, ADD_2425, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2444, ADD_2445, ADD_2446, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, SUB_2471, SUB_2472, SUB_2473, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2501, ADD_2502, ADD_2503, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2534, ADD_2535, ADD_2536, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2567, ADD_2568, ADD_2569, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2600, ADD_2601, ADD_2602, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2633, ADD_2634, ADD_2635, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2672, ADD_2673, ADD_2674, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2711, ADD_2712, ADD_2713, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2750, ADD_2751, ADD_2752, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2789, ADD_2790, ADD_2791, 0.025))
-            {
-                return false;
-            }
-        }  // (331, 557)
-        if (/*panda_link1 vs. panda_link5*/ sphere_sphere_self_collision(
-            SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_2402, ADD_2403, ADD_2404, 0.176))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
-            {
-                return false;
-            }
-        }  // (557, 557)
-        if (/*panda_link2 vs. panda_link5*/ sphere_sphere_self_collision(
-            ADD_1832, SUB_1833, ADD_1835, 0.154, ADD_2402, ADD_2403, ADD_2404, 0.176))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
-            {
-                return false;
-            }
-        }  // (557, 557)
-        if (/*panda_link5*/ sphere_environment_in_collision(environment, ADD_2402, ADD_2403, ADD_2404, 0.176))
-        {
-            if (sphere_environment_in_collision(environment, ADD_2423, ADD_2424, ADD_2425, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2444, ADD_2445, ADD_2446, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, SUB_2471, SUB_2472, SUB_2473, 0.06))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2501, ADD_2502, ADD_2503, 0.05))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2534, ADD_2535, ADD_2536, 0.025))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2567, ADD_2568, ADD_2569, 0.025))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2600, ADD_2601, ADD_2602, 0.025))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2633, ADD_2634, ADD_2635, 0.025))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2672, ADD_2673, ADD_2674, 0.025))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2711, ADD_2712, ADD_2713, 0.025))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2750, ADD_2751, ADD_2752, 0.025))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2789, ADD_2790, ADD_2791, 0.025))
-            {
-                return false;
-            }
-        }  // (557, 557)
-        float MUL_657 = SUB_596 * 0.7071068;
-        float MUL_654 = ADD_591 * 0.7071068;
-        float MUL_651 = SUB_585 * 0.7071068;
-        float SUB_655 = MUL_654 - MUL_651;
-        float ADD_645 = MUL_651 + MUL_654;
-        float MUL_659 = ADD_579 * 0.7071068;
-        float SUB_660 = MUL_657 - MUL_659;
-        float ADD_632 = MUL_657 + MUL_659;
-        float INPUT_5 = q[5];
-        float DIV_697 = INPUT_5 * 0.5;
-        float SIN_698 = sin(DIV_697);
-        float COS_704 = cos(DIV_697);
-        float MUL_716 = SUB_660 * SIN_698;
-        float MUL_721 = SUB_660 * COS_704;
-        float MUL_724 = SUB_655 * SIN_698;
-        float SUB_725 = MUL_721 - MUL_724;
-        float MUL_719 = SUB_655 * COS_704;
-        float ADD_720 = MUL_716 + MUL_719;
-        float MUL_2820 = SUB_725 * ADD_720;
-        float MUL_2819 = ADD_720 * ADD_720;
-        float MUL_711 = ADD_632 * SIN_698;
-        float MUL_706 = ADD_632 * COS_704;
-        float MUL_707 = ADD_645 * SIN_698;
-        float ADD_708 = MUL_706 + MUL_707;
-        float MUL_713 = ADD_645 * COS_704;
-        float SUB_714 = MUL_713 - MUL_711;
-        float MUL_2818 = SUB_714 * SUB_714;
-        float ADD_2827 = MUL_2818 + MUL_2819;
-        float MUL_2830 = ADD_2827 * 2.0;
-        float SUB_2833 = 1.0 - MUL_2830;
-        float MUL_2867 = SUB_2833 * 0.042;
-        float MUL_2824 = ADD_708 * SUB_714;
-        float SUB_2840 = MUL_2824 - MUL_2820;
-        float MUL_2842 = SUB_2840 * 2.0;
-        float MUL_2873 = MUL_2842 * 0.014;
-        float ADD_2884 = MUL_2867 + MUL_2873;
-        float ADD_2887 = ADD_564 + ADD_2884;
-        float ADD_2834 = MUL_2824 + MUL_2820;
-        float MUL_2836 = ADD_2834 * 2.0;
-        float MUL_2869 = MUL_2836 * 0.042;
-        float MUL_2822 = ADD_708 * ADD_708;
-        float ADD_2843 = MUL_2819 + MUL_2822;
-        float MUL_2846 = ADD_2843 * 2.0;
-        float SUB_2849 = 1.0 - MUL_2846;
-        float MUL_2875 = SUB_2849 * 0.014;
-        float ADD_2885 = MUL_2869 + MUL_2875;
-        float ADD_2888 = ADD_565 + ADD_2885;
-        float MUL_2821 = SUB_725 * SUB_714;
-        float MUL_2823 = SUB_725 * ADD_708;
-        float MUL_2826 = SUB_714 * ADD_720;
-        float ADD_2850 = MUL_2826 + MUL_2823;
-        float MUL_2852 = ADD_2850 * 2.0;
-        float MUL_2877 = MUL_2852 * 0.014;
-        float MUL_2825 = ADD_708 * ADD_720;
-        float SUB_2837 = MUL_2825 - MUL_2821;
-        float MUL_2839 = SUB_2837 * 2.0;
-        float MUL_2871 = MUL_2839 * 0.042;
-        float ADD_2886 = MUL_2871 + MUL_2877;
-        float ADD_2889 = ADD_566 + ADD_2886;
-        float MUL_2916 = MUL_2842 * 0.01;
-        float MUL_2909 = SUB_2833 * 0.08;
-        float SUB_2932 = MUL_2909 - MUL_2916;
-        float ADD_2935 = ADD_564 + SUB_2932;
-        float MUL_2920 = SUB_2849 * 0.01;
-        float MUL_2911 = MUL_2836 * 0.08;
-        float SUB_2933 = MUL_2911 - MUL_2920;
-        float ADD_2936 = ADD_565 + SUB_2933;
-        float MUL_2924 = MUL_2852 * 0.01;
-        float MUL_2913 = MUL_2839 * 0.08;
-        float SUB_2934 = MUL_2913 - MUL_2924;
-        float ADD_2937 = ADD_566 + SUB_2934;
-        float MUL_2945 = MUL_2842 * 0.035;
-        float ADD_2956 = MUL_2909 + MUL_2945;
-        float ADD_2959 = ADD_564 + ADD_2956;
-        float MUL_2947 = SUB_2849 * 0.035;
-        float ADD_2957 = MUL_2911 + MUL_2947;
-        float ADD_2960 = ADD_565 + ADD_2957;
-        float MUL_2949 = MUL_2852 * 0.035;
-        float ADD_2958 = MUL_2913 + MUL_2949;
-        float ADD_2961 = ADD_566 + ADD_2958;
-        if (/*panda_link0 vs. panda_link6*/ sphere_sphere_self_collision(
-            0.0, 0.0, 0.05, 0.08, ADD_2887, ADD_2888, ADD_2889, 0.095))
-        {
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_564, ADD_565, ADD_566, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2935, ADD_2936, ADD_2937, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_2959, ADD_2960, ADD_2961, 0.052))
-            {
-                return false;
-            }
-        }  // (557, 637)
-        if (/*panda_link1 vs. panda_link6*/ sphere_sphere_self_collision(
-            SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_2887, ADD_2888, ADD_2889, 0.095))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_564, ADD_565, ADD_566, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2935, ADD_2936, ADD_2937, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2959, ADD_2960, ADD_2961, 0.052))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_564, ADD_565, ADD_566, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2935, ADD_2936, ADD_2937, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2959, ADD_2960, ADD_2961, 0.052))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_564, ADD_565, ADD_566, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2935, ADD_2936, ADD_2937, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_2959, ADD_2960, ADD_2961, 0.052))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_564, ADD_565, ADD_566, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2935, ADD_2936, ADD_2937, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_2959, ADD_2960, ADD_2961, 0.052))
-            {
-                return false;
-            }
-        }  // (637, 637)
-        if (/*panda_link6*/ sphere_environment_in_collision(environment, ADD_2887, ADD_2888, ADD_2889, 0.095))
-        {
-            if (sphere_environment_in_collision(environment, ADD_564, ADD_565, ADD_566, 0.05))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2935, ADD_2936, ADD_2937, 0.05))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_2959, ADD_2960, ADD_2961, 0.052))
-            {
-                return false;
-            }
-        }  // (637, 637)
-        float MUL_758 = SUB_725 * 0.7071068;
-        float MUL_773 = ADD_720 * 0.7071068;
-        float MUL_771 = SUB_714 * 0.7071068;
-        float SUB_784 = MUL_773 - MUL_771;
-        float ADD_774 = MUL_771 + MUL_773;
-        float MUL_760 = ADD_708 * 0.7071068;
-        float SUB_789 = MUL_758 - MUL_760;
-        float ADD_761 = MUL_758 + MUL_760;
-        float MUL_806 = ADD_720 * 0.088;
-        float MUL_811 = ADD_720 * MUL_806;
-        float MUL_801 = SUB_714 * 0.088;
-        float MUL_809 = SUB_714 * MUL_801;
-        float ADD_813 = MUL_809 + MUL_811;
-        float MUL_816 = ADD_813 * 2.0;
-        float SUB_819 = 0.088 - MUL_816;
-        float ADD_838 = ADD_564 + SUB_819;
-        float INPUT_6 = q[6];
-        float DIV_842 = INPUT_6 * 0.5;
-        float SIN_843 = sin(DIV_842);
-        float COS_849 = cos(DIV_842);
-        float MUL_866 = SUB_789 * COS_849;
-        float MUL_861 = SUB_789 * SIN_843;
-        float MUL_864 = SUB_784 * COS_849;
-        float ADD_865 = MUL_861 + MUL_864;
-        float MUL_2971 = ADD_865 * ADD_865;
-        float MUL_869 = SUB_784 * SIN_843;
-        float SUB_870 = MUL_866 - MUL_869;
-        float MUL_2972 = SUB_870 * ADD_865;
-        float MUL_851 = ADD_761 * COS_849;
-        float MUL_856 = ADD_761 * SIN_843;
-        float MUL_858 = ADD_774 * COS_849;
-        float SUB_859 = MUL_858 - MUL_856;
-        float MUL_2973 = SUB_870 * SUB_859;
-        float MUL_2970 = SUB_859 * SUB_859;
-        float ADD_2979 = MUL_2970 + MUL_2971;
-        float MUL_2982 = ADD_2979 * 2.0;
-        float SUB_2985 = 1.0 - MUL_2982;
-        float MUL_3019 = SUB_2985 * 0.015;
-        float MUL_852 = ADD_774 * SIN_843;
-        float ADD_853 = MUL_851 + MUL_852;
-        float MUL_2977 = ADD_853 * ADD_865;
-        float ADD_3005 = MUL_2977 + MUL_2973;
-        float MUL_3007 = ADD_3005 * 2.0;
-        float MUL_3031 = MUL_3007 * 0.075;
-        float MUL_2976 = ADD_853 * SUB_859;
-        float SUB_2992 = MUL_2976 - MUL_2972;
-        float MUL_2994 = SUB_2992 * 2.0;
-        float MUL_3025 = MUL_2994 * 0.015;
-        float ADD_3036 = MUL_3019 + MUL_3025;
-        float ADD_3039 = ADD_3036 + MUL_3031;
-        float ADD_3042 = ADD_838 + ADD_3039;
-        float ADD_2986 = MUL_2976 + MUL_2972;
-        float MUL_2988 = ADD_2986 * 2.0;
-        float MUL_3021 = MUL_2988 * 0.015;
-        float MUL_2975 = SUB_870 * ADD_853;
-        float MUL_2978 = SUB_859 * ADD_865;
-        float SUB_3008 = MUL_2978 - MUL_2975;
-        float MUL_3010 = SUB_3008 * 2.0;
-        float MUL_3033 = MUL_3010 * 0.075;
-        float MUL_2974 = ADD_853 * ADD_853;
-        float ADD_2995 = MUL_2971 + MUL_2974;
-        float MUL_2998 = ADD_2995 * 2.0;
-        float SUB_3001 = 1.0 - MUL_2998;
-        float MUL_3027 = SUB_3001 * 0.015;
-        float ADD_3037 = MUL_3021 + MUL_3027;
-        float ADD_3040 = ADD_3037 + MUL_3033;
-        float MUL_821 = SUB_725 * MUL_806;
-        float MUL_822 = ADD_708 * MUL_801;
-        float ADD_824 = MUL_821 + MUL_822;
-        float MUL_827 = ADD_824 * 2.0;
-        float ADD_839 = ADD_565 + MUL_827;
-        float ADD_3043 = ADD_839 + ADD_3040;
-        float SUB_2989 = MUL_2977 - MUL_2973;
-        float ADD_3002 = MUL_2978 + MUL_2975;
-        float ADD_3011 = MUL_2970 + MUL_2974;
-        float MUL_3014 = ADD_3011 * 2.0;
-        float SUB_3017 = 1.0 - MUL_3014;
-        float MUL_3035 = SUB_3017 * 0.075;
-        float MUL_3004 = ADD_3002 * 2.0;
-        float MUL_3029 = MUL_3004 * 0.015;
-        float MUL_2991 = SUB_2989 * 2.0;
-        float MUL_3023 = MUL_2991 * 0.015;
-        float ADD_3038 = MUL_3023 + MUL_3029;
-        float ADD_3041 = ADD_3038 + MUL_3035;
-        float MUL_829 = SUB_725 * MUL_801;
-        float MUL_831 = ADD_708 * MUL_806;
-        float SUB_833 = MUL_831 - MUL_829;
-        float MUL_836 = SUB_833 * 2.0;
-        float ADD_840 = ADD_566 + MUL_836;
-        float ADD_3044 = ADD_840 + ADD_3041;
-        float MUL_3058 = MUL_3007 * 0.07;
-        float ADD_3063 = ADD_838 + MUL_3058;
-        float MUL_3060 = MUL_3010 * 0.07;
-        float ADD_3064 = ADD_839 + MUL_3060;
-        float MUL_3062 = SUB_3017 * 0.07;
-        float ADD_3065 = ADD_840 + MUL_3062;
-        float MUL_3079 = MUL_3007 * 0.08;
-        float MUL_3073 = MUL_2994 * 0.04;
-        float MUL_3067 = SUB_2985 * 0.02;
-        float ADD_3084 = MUL_3067 + MUL_3073;
-        float ADD_3087 = ADD_3084 + MUL_3079;
-        float ADD_3090 = ADD_838 + ADD_3087;
-        float MUL_3081 = MUL_3010 * 0.08;
-        float MUL_3075 = SUB_3001 * 0.04;
-        float MUL_3069 = MUL_2988 * 0.02;
-        float ADD_3085 = MUL_3069 + MUL_3075;
-        float ADD_3088 = ADD_3085 + MUL_3081;
-        float ADD_3091 = ADD_839 + ADD_3088;
-        float MUL_3083 = SUB_3017 * 0.08;
-        float MUL_3077 = MUL_3004 * 0.04;
-        float MUL_3071 = MUL_2991 * 0.02;
-        float ADD_3086 = MUL_3071 + MUL_3077;
-        float ADD_3089 = ADD_3086 + MUL_3083;
-        float ADD_3092 = ADD_840 + ADD_3089;
-        float MUL_3100 = MUL_2994 * 0.02;
-        float MUL_3094 = SUB_2985 * 0.04;
-        float ADD_3111 = MUL_3094 + MUL_3100;
-        float ADD_3114 = ADD_3111 + MUL_3079;
-        float ADD_3117 = ADD_838 + ADD_3114;
-        float MUL_3102 = SUB_3001 * 0.02;
-        float MUL_3096 = MUL_2988 * 0.04;
-        float ADD_3112 = MUL_3096 + MUL_3102;
-        float ADD_3115 = ADD_3112 + MUL_3081;
-        float ADD_3118 = ADD_839 + ADD_3115;
-        float MUL_3104 = MUL_3004 * 0.02;
-        float MUL_3098 = MUL_2991 * 0.04;
-        float ADD_3113 = MUL_3098 + MUL_3104;
-        float ADD_3116 = ADD_3113 + MUL_3083;
-        float ADD_3119 = ADD_840 + ADD_3116;
-        float MUL_3133 = MUL_3007 * 0.085;
-        float MUL_3127 = MUL_2994 * 0.06;
-        float ADD_3138 = MUL_3094 + MUL_3127;
-        float ADD_3141 = ADD_3138 + MUL_3133;
-        float ADD_3144 = ADD_838 + ADD_3141;
-        float MUL_3135 = MUL_3010 * 0.085;
-        float MUL_3129 = SUB_3001 * 0.06;
-        float ADD_3139 = MUL_3096 + MUL_3129;
-        float ADD_3142 = ADD_3139 + MUL_3135;
-        float ADD_3145 = ADD_839 + ADD_3142;
-        float MUL_3137 = SUB_3017 * 0.085;
-        float MUL_3131 = MUL_3004 * 0.06;
-        float ADD_3140 = MUL_3098 + MUL_3131;
-        float ADD_3143 = ADD_3140 + MUL_3137;
-        float ADD_3146 = ADD_840 + ADD_3143;
-        float MUL_3148 = SUB_2985 * 0.06;
-        float ADD_3165 = MUL_3148 + MUL_3073;
-        float ADD_3168 = ADD_3165 + MUL_3133;
-        float ADD_3171 = ADD_838 + ADD_3168;
-        float MUL_3150 = MUL_2988 * 0.06;
-        float ADD_3166 = MUL_3150 + MUL_3075;
-        float ADD_3169 = ADD_3166 + MUL_3135;
-        float ADD_3172 = ADD_839 + ADD_3169;
-        float MUL_3152 = MUL_2991 * 0.06;
-        float ADD_3167 = MUL_3152 + MUL_3077;
-        float ADD_3170 = ADD_3167 + MUL_3137;
-        float ADD_3173 = ADD_840 + ADD_3170;
-        if (/*panda_link0 vs. panda_link7*/ sphere_sphere_self_collision(
-            0.0, 0.0, 0.05, 0.08, ADD_3042, ADD_3043, ADD_3044, 0.072))
-        {
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-        }  // (637, 793)
-        if (/*panda_link1 vs. panda_link7*/ sphere_sphere_self_collision(
-            SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_3042, ADD_3043, ADD_3044, 0.072))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-        }  // (793, 793)
-        if (/*panda_link2 vs. panda_link7*/ sphere_sphere_self_collision(
-            ADD_1832, SUB_1833, ADD_1835, 0.154, ADD_3042, ADD_3043, ADD_3044, 0.072))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-        }  // (793, 793)
-        if (/*panda_link5 vs. panda_link7*/ sphere_sphere_self_collision(
-            ADD_2402, ADD_2403, ADD_2404, 0.176, ADD_3042, ADD_3043, ADD_3044, 0.072))
-        {
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-        }  // (793, 793)
+            // std::array<FloatVector<rake, 1>, 57> v;
+            // std::array<FloatVector<rake, 1>, 280> y;
 
-        // if (local_cc_result[0]>0) return false;
+            float v0 = __sinf(x[0]);
+            float v1 = -v0;
+            float y4 = -0.08 * v1;
+            float v2 = __cosf(x[0]);
+            float y5 = -0.08 * v2;
+            float y8 = -0.03 * v1;
+            float y9 = -0.03 * v2;
+            float y20 = 0.03 * v1;
+            float y21 = 0.03 * v2;
+            float y24 = 0.08 * v1;
+            float y25 = 0.08 * v2;
+            float v3 = __sinf(x[1]);
+            float v4 = -v3;
+            float v5 = __cosf(x[1]);
+            float v6 = 4.89663865010925e-12 * v5;
+            float v7 = v2 * v4 + v1 * v6;
+            float y28 = -0.12 * v7;
+            v6 = v0 * v4 + v2 * v6;
+            float y29 = -0.12 * v6;
+            v4 = -1. * v5;
+            float y30 = 0.333 + -0.12 * v4;
+            float y32 = -0.17 * v7;
+            float y33 = -0.17 * v6;
+            float y34 = 0.333 + -0.17 * v4;
+            float v8 = -1. * v7 + 4.89663865010925e-12 * v1;
+            float v9 = -0.316 * v7;
+            float y36 = -0.1 * v8 + v9;
+            float v10 = -1. * v6 + 4.89663865010925e-12 * v2;
+            float v11 = -0.316 * v6;
+            float y37 = -0.1 * v10 + v11;
+            float v12 = 2.39770700697438e-23 + -1. * v4;
+            float v13 = 0.333 + -0.316 * v4;
+            float y38 = -0.1 * v12 + v13;
+            float y40 = -0.06 * v8 + v9;
+            float y41 = -0.06 * v10 + v11;
+            float y42 = -0.06 * v12 + v13;
+            float v14 = 4.89663865010925e-12 * v3;
+            float v15 = v2 * v5 + v1 * v14;
+            float v16 = __cosf(x[2]);
+            float v17 = __sinf(x[2]);
+            float v18 = 4.89663865010925e-12 * v17;
+            float v19 = v15 * v16 + v7 * v18 + v1 * v17;
+            float v20 = -v17;
+            float v21 = 4.89663865010925e-12 * v16;
+            v15 = v15 * v20 + v7 * v21 + v1 * v16;
+            float y44 = 0.08 * v19 + 0.06 * v15 + v9;
+            v14 = v0 * v5 + v2 * v14;
+            v5 = v14 * v16 + v6 * v18 + v2 * v17;
+            v14 = v14 * v20 + v6 * v21 + v2 * v16;
+            float y45 = 0.08 * v5 + 0.06 * v14 + v11;
+            v3 = -1. * v3;
+            v18 = v3 * v16 + v4 * v18 + 4.89663865010925e-12 * v17;
+            v3 = v3 * v20 + v4 * v21 + 4.89663865010925e-12 * v16;
+            float y46 = 0.08 * v18 + 0.06 * v3 + v13;
+            float y48 = 0.08 * v19 + 0.02 * v15 + v9;
+            float y49 = 0.08 * v5 + 0.02 * v14 + v11;
+            float y50 = 0.08 * v18 + 0.02 * v3 + v13;
+            v21 = __cosf(x[3]);
+            v20 = __sinf(x[3]);
+            v16 = 4.89663865010925e-12 * v20;
+            v17 = v19 * v21 + v15 * v16 + v8 * v20;
+            v0 = -v20;
+            float v22 = 4.89663865010925e-12 * v21;
+            float v23 = v19 * v0 + v15 * v22 + v8 * v21;
+            float v24 = v9 + 0.0825 * v19;
+            float y52 = -0.08 * v17 + 0.095 * v23 + v24;
+            float v25 = v5 * v21 + v14 * v16 + v10 * v20;
+            float v26 = v5 * v0 + v14 * v22 + v10 * v21;
+            float v27 = v11 + 0.0825 * v5;
+            float y53 = -0.08 * v25 + 0.095 * v26 + v27;
+            v16 = v18 * v21 + v3 * v16 + v12 * v20;
+            v22 = v18 * v0 + v3 * v22 + v12 * v21;
+            v0 = v13 + 0.0825 * v18;
+            float y54 = -0.08 * v16 + 0.095 * v22 + v0;
+            v21 = -1. * v15 + 4.89663865010925e-12 * v8;
+            float y56 = 0.02 * v21 + v24;
+            v20 = -1. * v14 + 4.89663865010925e-12 * v10;
+            float y57 = 0.02 * v20 + v27;
+            float v28 = -1. * v3 + 4.89663865010925e-12 * v12;
+            float y58 = 0.02 * v28 + v0;
+            float y60 = 0.06 * v21 + v24;
+            float y61 = 0.06 * v20 + v27;
+            float y62 = 0.06 * v28 + v0;
+            float y64 = -0.08 * v17 + 0.06 * v23 + v24;
+            float y65 = -0.08 * v25 + 0.06 * v26 + v27;
+            float y66 = -0.08 * v16 + 0.06 * v22 + v0;
+            float v29 = __sinf(x[4]);
+            float v30 = -v29;
+            float v31 = __cosf(x[4]);
+            float v32 = 4.89663865010925e-12 * v31;
+            float v33 = -1. * v31;
+            float v34 = v17 * v30 + v23 * v32 + v21 * v33;
+            float y116 = v24 + -0.0825 * v17 + 0.384 * v23;
+            float y68 = 0.055 * v34 + y116;
+            float v35 = v25 * v30 + v26 * v32 + v20 * v33;
+            float y117 = v27 + -0.0825 * v25 + 0.384 * v26;
+            float y69 = 0.055 * v35 + y117;
+            v33 = v16 * v30 + v22 * v32 + v28 * v33;
+            float y118 = v0 + -0.0825 * v16 + 0.384 * v22;
+            float y70 = 0.055 * v33 + y118;
+            float y72 = 0.075 * v34 + y116;
+            float y73 = 0.075 * v35 + y117;
+            float y74 = 0.075 * v33 + y118;
+            v32 = v23 + 4.89663865010925e-12 * v21;
+            float y76 = -0.22 * v32 + y116;
+            v30 = v26 + 4.89663865010925e-12 * v20;
+            float y77 = -0.22 * v30 + y117;
+            float v36 = v22 + 4.89663865010925e-12 * v28;
+            float y78 = -0.22 * v36 + y118;
+            float y80 = 0.05 * v34 + -0.18 * v32 + y116;
+            float y81 = 0.05 * v35 + -0.18 * v30 + y117;
+            float y82 = 0.05 * v33 + -0.18 * v36 + y118;
+            float v37 = 4.89663865010925e-12 * v29;
+            v29 = -1. * v29;
+            float v38 = v17 * v31 + v23 * v37 + v21 * v29;
+            float y84 = 0.01 * v38 + 0.08 * v34 + -0.14 * v32 + y116;
+            float v39 = v25 * v31 + v26 * v37 + v20 * v29;
+            float y85 = 0.01 * v39 + 0.08 * v35 + -0.14 * v30 + y117;
+            v29 = v16 * v31 + v22 * v37 + v28 * v29;
+            float y86 = 0.01 * v29 + 0.08 * v33 + -0.14 * v36 + y118;
+            float y88 = 0.01 * v38 + 0.085 * v34 + -0.11 * v32 + y116;
+            float y89 = 0.01 * v39 + 0.085 * v35 + -0.11 * v30 + y117;
+            float y90 = 0.01 * v29 + 0.085 * v33 + -0.11 * v36 + y118;
+            float y92 = 0.01 * v38 + 0.09 * v34 + -0.08 * v32 + y116;
+            float y93 = 0.01 * v39 + 0.09 * v35 + -0.08 * v30 + y117;
+            float y94 = 0.01 * v29 + 0.09 * v33 + -0.08 * v36 + y118;
+            float y96 = 0.01 * v38 + 0.095 * v34 + -0.05 * v32 + y116;
+            float y97 = 0.01 * v39 + 0.095 * v35 + -0.05 * v30 + y117;
+            float y98 = 0.01 * v29 + 0.095 * v33 + -0.05 * v36 + y118;
+            float y100 = -0.01 * v38 + 0.08 * v34 + -0.14 * v32 + y116;
+            float y101 = -0.01 * v39 + 0.08 * v35 + -0.14 * v30 + y117;
+            float y102 = -0.01 * v29 + 0.08 * v33 + -0.14 * v36 + y118;
+            float y104 = -0.01 * v38 + 0.085 * v34 + -0.11 * v32 + y116;
+            float y105 = -0.01 * v39 + 0.085 * v35 + -0.11 * v30 + y117;
+            float y106 = -0.01 * v29 + 0.085 * v33 + -0.11 * v36 + y118;
+            float y108 = -0.01 * v38 + 0.09 * v34 + -0.08 * v32 + y116;
+            float y109 = -0.01 * v39 + 0.09 * v35 + -0.08 * v30 + y117;
+            float y110 = -0.01 * v29 + 0.09 * v33 + -0.08 * v36 + y118;
+            float y112 = -0.01 * v38 + 0.095 * v34 + -0.05 * v32 + y116;
+            float y113 = -0.01 * v39 + 0.095 * v35 + -0.05 * v30 + y117;
+            float y114 = -0.01 * v29 + 0.095 * v33 + -0.05 * v36 + y118;
+            v37 = __cosf(x[5]);
+            v31 = __sinf(x[5]);
+            float v40 = 4.89663865010925e-12 * v31;
+            float v41 = v38 * v37 + v34 * v40 + v32 * v31;
+            float v42 = -v31;
+            float v43 = 4.89663865010925e-12 * v37;
+            v38 = v38 * v42 + v34 * v43 + v32 * v37;
+            float y120 = 0.08 * v41 + -0.01 * v38 + y116;
+            float v44 = v39 * v37 + v35 * v40 + v30 * v31;
+            v39 = v39 * v42 + v35 * v43 + v30 * v37;
+            float y121 = 0.08 * v44 + -0.01 * v39 + y117;
+            v40 = v29 * v37 + v33 * v40 + v36 * v31;
+            v43 = v29 * v42 + v33 * v43 + v36 * v37;
+            float y122 = 0.08 * v40 + -0.01 * v43 + y118;
+            float y124 = 0.08 * v41 + 0.035 * v38 + y116;
+            float y125 = 0.08 * v44 + 0.035 * v39 + y117;
+            float y126 = 0.08 * v40 + 0.035 * v43 + y118;
+            v42 = -1. * v34 + 4.89663865010925e-12 * v32;
+            v37 = -1. * v38 + 4.89663865010925e-12 * v42;
+            v29 = y116 + 0.088 * v41;
+            float y128 = 0.07 * v37 + v29;
+            v31 = -1. * v35 + 4.89663865010925e-12 * v30;
+            float v45 = -1. * v39 + 4.89663865010925e-12 * v31;
+            float v46 = y117 + 0.088 * v44;
+            float y129 = 0.07 * v45 + v46;
+            float v47 = -1. * v33 + 4.89663865010925e-12 * v36;
+            float v48 = -1. * v43 + 4.89663865010925e-12 * v47;
+            float v49 = y118 + 0.088 * v40;
+            float y130 = 0.07 * v48 + v49;
+            float v50 = __cosf(x[6]);
+            float v51 = __sinf(x[6]);
+            float v52 = 4.89663865010925e-12 * v51;
+            float v53 = v41 * v50 + v38 * v52 + v42 * v51;
+            float v54 = -v51;
+            float v55 = 4.89663865010925e-12 * v50;
+            v42 = v41 * v54 + v38 * v55 + v42 * v50;
+            float y132 = 0.02 * v53 + 0.04 * v42 + 0.08 * v37 + v29;
+            float v56 = v44 * v50 + v39 * v52 + v31 * v51;
+            v31 = v44 * v54 + v39 * v55 + v31 * v50;
+            float y133 = 0.02 * v56 + 0.04 * v31 + 0.08 * v45 + v46;
+            v52 = v40 * v50 + v43 * v52 + v47 * v51;
+            v55 = v40 * v54 + v43 * v55 + v47 * v50;
+            float y134 = 0.02 * v52 + 0.04 * v55 + 0.08 * v48 + v49;
+            float y136 = 0.04 * v53 + 0.02 * v42 + 0.08 * v37 + v29;
+            float y137 = 0.04 * v56 + 0.02 * v31 + 0.08 * v45 + v46;
+            float y138 = 0.04 * v52 + 0.02 * v55 + 0.08 * v48 + v49;
+            float y140 = 0.04 * v53 + 0.06 * v42 + 0.085 * v37 + v29;
+            float y141 = 0.04 * v56 + 0.06 * v31 + 0.085 * v45 + v46;
+            float y142 = 0.04 * v52 + 0.06 * v55 + 0.085 * v48 + v49;
+            float y144 = 0.06 * v53 + 0.04 * v42 + 0.085 * v37 + v29;
+            float y145 = 0.06 * v56 + 0.04 * v31 + 0.085 * v45 + v46;
+            float y146 = 0.06 * v52 + 0.04 * v55 + 0.085 * v48 + v49;
+            float y148 = -0.0530330085889673 * v53 + -0.0530330085890148 * v42 + 0.117 * v37 + v29;
+            float y149 = -0.0530330085889673 * v56 + -0.0530330085890148 * v31 + 0.117 * v45 + v46;
+            float y150 = -0.0530330085889673 * v52 + -0.0530330085890148 * v55 + 0.117 * v48 + v49;
+            float y152 = -0.0318198051533804 * v53 + -0.0318198051534089 * v42 + 0.117 * v37 + v29;
+            float y153 = -0.0318198051533804 * v56 + -0.0318198051534089 * v31 + 0.117 * v45 + v46;
+            float y154 = -0.0318198051533804 * v52 + -0.0318198051534089 * v55 + 0.117 * v48 + v49;
+            float y156 = -0.0106066017177935 * v53 + -0.010606601717803 * v42 + 0.117 * v37 + v29;
+            float y157 = -0.0106066017177935 * v56 + -0.010606601717803 * v31 + 0.117 * v45 + v46;
+            float y158 = -0.0106066017177935 * v52 + -0.010606601717803 * v55 + 0.117 * v48 + v49;
+            float y160 = 0.0106066017177935 * v53 + 0.010606601717803 * v42 + 0.117 * v37 + v29;
+            float y161 = 0.0106066017177935 * v56 + 0.010606601717803 * v31 + 0.117 * v45 + v46;
+            float y162 = 0.0106066017177935 * v52 + 0.010606601717803 * v55 + 0.117 * v48 + v49;
+            float y164 = 0.0318198051533804 * v53 + 0.0318198051534089 * v42 + 0.117 * v37 + v29;
+            float y165 = 0.0318198051533804 * v56 + 0.0318198051534089 * v31 + 0.117 * v45 + v46;
+            float y166 = 0.0318198051533804 * v52 + 0.0318198051534089 * v55 + 0.117 * v48 + v49;
+            float y168 = 0.0530330085889673 * v53 + 0.0530330085890148 * v42 + 0.117 * v37 + v29;
+            float y169 = 0.0530330085889673 * v56 + 0.0530330085890148 * v31 + 0.117 * v45 + v46;
+            float y170 = 0.0530330085889673 * v52 + 0.0530330085890148 * v55 + 0.117 * v48 + v49;
+            float y172 = -0.0530330085889673 * v53 + -0.0530330085890148 * v42 + 0.137 * v37 + v29;
+            float y173 = -0.0530330085889673 * v56 + -0.0530330085890148 * v31 + 0.137 * v45 + v46;
+            float y174 = -0.0530330085889673 * v52 + -0.0530330085890148 * v55 + 0.137 * v48 + v49;
+            float y176 = -0.0318198051533804 * v53 + -0.0318198051534089 * v42 + 0.137 * v37 + v29;
+            float y177 = -0.0318198051533804 * v56 + -0.0318198051534089 * v31 + 0.137 * v45 + v46;
+            float y178 = -0.0318198051533804 * v52 + -0.0318198051534089 * v55 + 0.137 * v48 + v49;
+            float y180 = -0.0106066017177935 * v53 + -0.010606601717803 * v42 + 0.137 * v37 + v29;
+            float y181 = -0.0106066017177935 * v56 + -0.010606601717803 * v31 + 0.137 * v45 + v46;
+            float y182 = -0.0106066017177935 * v52 + -0.010606601717803 * v55 + 0.137 * v48 + v49;
+            float y184 = 0.0106066017177935 * v53 + 0.010606601717803 * v42 + 0.137 * v37 + v29;
+            float y185 = 0.0106066017177935 * v56 + 0.010606601717803 * v31 + 0.137 * v45 + v46;
+            float y186 = 0.0106066017177935 * v52 + 0.010606601717803 * v55 + 0.137 * v48 + v49;
+            float y188 = 0.0318198051533804 * v53 + 0.0318198051534089 * v42 + 0.137 * v37 + v29;
+            float y189 = 0.0318198051533804 * v56 + 0.0318198051534089 * v31 + 0.137 * v45 + v46;
+            float y190 = 0.0318198051533804 * v52 + 0.0318198051534089 * v55 + 0.137 * v48 + v49;
+            float y192 = 0.0530330085889673 * v53 + 0.0530330085890148 * v42 + 0.137 * v37 + v29;
+            float y193 = 0.0530330085889673 * v56 + 0.0530330085890148 * v31 + 0.137 * v45 + v46;
+            float y194 = 0.0530330085889673 * v52 + 0.0530330085890148 * v55 + 0.137 * v48 + v49;
+            float y196 = -0.0530330085889673 * v53 + -0.0530330085890148 * v42 + 0.157 * v37 + v29;
+            float y197 = -0.0530330085889673 * v56 + -0.0530330085890148 * v31 + 0.157 * v45 + v46;
+            float y198 = -0.0530330085889673 * v52 + -0.0530330085890148 * v55 + 0.157 * v48 + v49;
+            float y200 = -0.0318198051533804 * v53 + -0.0318198051534089 * v42 + 0.157 * v37 + v29;
+            float y201 = -0.0318198051533804 * v56 + -0.0318198051534089 * v31 + 0.157 * v45 + v46;
+            float y202 = -0.0318198051533804 * v52 + -0.0318198051534089 * v55 + 0.157 * v48 + v49;
+            float y204 = -0.0106066017177935 * v53 + -0.010606601717803 * v42 + 0.157 * v37 + v29;
+            float y205 = -0.0106066017177935 * v56 + -0.010606601717803 * v31 + 0.157 * v45 + v46;
+            float y206 = -0.0106066017177935 * v52 + -0.010606601717803 * v55 + 0.157 * v48 + v49;
+            float y208 = 0.0106066017177935 * v53 + 0.010606601717803 * v42 + 0.157 * v37 + v29;
+            float y209 = 0.0106066017177935 * v56 + 0.010606601717803 * v31 + 0.157 * v45 + v46;
+            float y210 = 0.0106066017177935 * v52 + 0.010606601717803 * v55 + 0.157 * v48 + v49;
+            float y212 = 0.0318198051533804 * v53 + 0.0318198051534089 * v42 + 0.157 * v37 + v29;
+            float y213 = 0.0318198051533804 * v56 + 0.0318198051534089 * v31 + 0.157 * v45 + v46;
+            float y214 = 0.0318198051533804 * v52 + 0.0318198051534089 * v55 + 0.157 * v48 + v49;
+            float y216 = 0.0530330085889673 * v53 + 0.0530330085890148 * v42 + 0.157 * v37 + v29;
+            float y217 = 0.0530330085889673 * v56 + 0.0530330085890148 * v31 + 0.157 * v45 + v46;
+            float y218 = 0.0530330085889673 * v52 + 0.0530330085890148 * v55 + 0.157 * v48 + v49;
+            float y220 = 0.0565685424948984 * v53 + 0.0565685424949492 * v42 + 0.1874 * v37 + v29;
+            float y221 = 0.0565685424948984 * v56 + 0.0565685424949492 * v31 + 0.1874 * v45 + v46;
+            float y222 = 0.0565685424948984 * v52 + 0.0565685424949492 * v55 + 0.1874 * v48 + v49;
+            float y224 = 0.0516187950265948 * v53 + 0.0516187950266411 * v42 + 0.2094 * v37 + v29;
+            float y225 = 0.0516187950265948 * v56 + 0.0516187950266411 * v31 + 0.2094 * v45 + v46;
+            float y226 = 0.0516187950265948 * v52 + 0.0516187950266411 * v55 + 0.2094 * v48 + v49;
+            float y228 = -0.0565685424948984 * v53 + -0.0565685424949492 * v42 + 0.1874 * v37 + v29;
+            float y229 = -0.0565685424948984 * v56 + -0.0565685424949492 * v31 + 0.1874 * v45 + v46;
+            float y230 = -0.0565685424948984 * v52 + -0.0565685424949492 * v55 + 0.1874 * v48 + v49;
+            float y232 = -0.0516187950265948 * v53 + -0.0516187950266411 * v42 + 0.2094 * v37 + v29;
+            float y233 = -0.0516187950265948 * v56 + -0.0516187950266411 * v31 + 0.2094 * v45 + v46;
+            float y234 = -0.0516187950265948 * v52 + -0.0516187950266411 * v55 + 0.2094 * v48 + v49;
+            float y240 = -0.0399999991059303 * v1;
+            float y241 = -0.0399999991059303 * v2;
+            float y244 = -0.0850000008940697 * v7 + 0.0399999991059303 * v1;
+            float y245 = -0.0850000008940697 * v6 + 0.0399999991059303 * v2;
+            float y246 = 0.333 + 1.95865541626434e-13 + -0.0850000008940697 * v4;
+            float y248 =
+                0.0385857857763767 * v19 + 0.0289393402636051 * v15 + -0.0517677664756775 * v8 + v9;
+            float y249 =
+                0.0385857857763767 * v5 + 0.0289393402636051 * v14 + -0.0517677664756775 * v10 + v11;
+            float y250 =
+                0.0385857857763767 * v18 + 0.0289393402636051 * v3 + -0.0517677664756775 * v12 + v13;
+            float y252 =
+                -0.041449997574091 * v17 + 0.0492218732833862 * v23 + 0.0289125014096498 * v21 + v24;
+            float y253 =
+                -0.041449997574091 * v25 + 0.0492218732833862 * v26 + 0.0289125014096498 * v20 + v27;
+            float y254 =
+                -0.041449997574091 * v16 + 0.0492218732833862 * v22 + 0.0289125014096498 * v28 + v0;
+            float y256 = 0.0375000014901161 * v34 + -0.109999999403954 * v32 + y116;
+            float y257 = 0.0375000014901161 * v35 + -0.109999999403954 * v30 + y117;
+            float y258 = 0.0375000014901161 * v33 + -0.109999999403954 * v36 + y118;
+            float y260 = 0.0424309633672237 * v41 + 0.0144476993009448 * v38 + y116;
+            float y261 = 0.0424309633672237 * v44 + 0.0144476993009448 * v39 + y117;
+            float y262 = 0.0424309633672237 * v40 + 0.0144476993009448 * v43 + y118;
+            float y264 =
+                0.0153005504980683 * v53 + 0.0153005504980683 * v42 + 0.0745901614427567 * v37 + v29;
+            float y265 =
+                0.0153005504980683 * v56 + 0.0153005504980683 * v31 + 0.0745901614427567 * v45 + v46;
+            float y266 =
+                0.0153005504980683 * v52 + 0.0153005504980683 * v55 + 0.0745901614427567 * v48 + v49;
+            float y268 = -5.20417042793042e-18 * v53 + -2.16840434497101e-18 * v42 +
+                     0.129201397299767 * v37 + v29;
+            float y269 = -5.20417042793042e-18 * v56 + -2.16840434497101e-18 * v31 +
+                     0.129201397299767 * v45 + v46;
+            float y270 = -5.20417042793042e-18 * v52 + -2.16840434497101e-18 * v55 +
+                     0.129201397299767 * v48 + v49;
+            float y272 =
+                0.0540936700999737 * v53 + 0.0540936700999737 * v42 + 0.198400005698204 * v37 + v29;
+            float y273 =
+                0.0540936700999737 * v56 + 0.0540936700999737 * v31 + 0.198400005698204 * v45 + v46;
+            float y274 =
+                0.0540936700999737 * v52 + 0.0540936700999737 * v55 + 0.198400005698204 * v48 + v49;
+            float y276 =
+                -0.0540936700999737 * v53 + -0.0540936700999737 * v42 + 0.198400005698204 * v37 + v29;
+            float y277 =
+                -0.0540936700999737 * v56 + -0.0540936700999737 * v31 + 0.198400005698204 * v45 + v46;
+            float y278 =
+                -0.0540936700999737 * v52 + -0.0540936700999737 * v55 + 0.198400005698204 * v48 + v49;
+            // dependent variables without operations
+            float y0 = 0.;
+            float y1 = 0.;
+            float y2 = 0.05;
+            float y3 = 0.0799999982118607;
+            float y6 = 0.333;
+            float y7 = 0.0599999986588955;
+            float y10 = 0.333;
+            float y11 = 0.0599999986588955;
+            float y12 = 0.;
+            float y13 = 0.;
+            float y14 = 0.213;
+            float y15 = 0.0599999986588955;
+            float y16 = 0.;
+            float y17 = 0.;
+            float y18 = 0.163;
+            float y19 = 0.0599999986588955;
+            float y22 = 0.333000000000147;
+            float y23 = 0.0599999986588955;
+            float y26 = 0.333000000000392;
+            float y27 = 0.0599999986588955;
+            float y31 = 0.0599999986588955;
+            float y35 = 0.0599999986588955;
+            float y39 = 0.0599999986588955;
+            float y43 = 0.0500000007450581;
+            float y47 = 0.0549999997019768;
+            float y51 = 0.0549999997019768;
+            float y55 = 0.0599999986588955;
+            float y59 = 0.0549999997019768;
+            float y63 = 0.0549999997019768;
+            float y67 = 0.0549999997019768;
+            float y71 = 0.0599999986588955;
+            float y75 = 0.0599999986588955;
+            float y79 = 0.0599999986588955;
+            float y83 = 0.0500000007450581;
+            float y87 = 0.025000000372529;
+            float y91 = 0.025000000372529;
+            float y95 = 0.025000000372529;
+            float y99 = 0.025000000372529;
+            float y103 = 0.025000000372529;
+            float y107 = 0.025000000372529;
+            float y111 = 0.025000000372529;
+            float y115 = 0.025000000372529;
+            float y119 = 0.0500000007450581;
+            float y123 = 0.0500000007450581;
+            float y127 = 0.0520000010728836;
+            float y131 = 0.0500000007450581;
+            float y135 = 0.025000000372529;
+            float y139 = 0.025000000372529;
+            float y143 = 0.0199999995529652;
+            float y147 = 0.0199999995529652;
+            float y151 = 0.0280000008642673;
+            float y155 = 0.0280000008642673;
+            float y159 = 0.0280000008642673;
+            float y163 = 0.0280000008642673;
+            float y167 = 0.0280000008642673;
+            float y171 = 0.0280000008642673;
+            float y175 = 0.0260000005364418;
+            float y179 = 0.0260000005364418;
+            float y183 = 0.0260000005364418;
+            float y187 = 0.0260000005364418;
+            float y191 = 0.0260000005364418;
+            float y195 = 0.0260000005364418;
+            float y199 = 0.0240000002086163;
+            float y203 = 0.0240000002086163;
+            float y207 = 0.0240000002086163;
+            float y211 = 0.0240000002086163;
+            float y215 = 0.0240000002086163;
+            float y219 = 0.0240000002086163;
+            float y223 = 0.0120000001043081;
+            float y227 = 0.0120000001043081;
+            float y231 = 0.0120000001043081;
+            float y235 = 0.0120000001043081;
+            float y236 = 0.;
+            float y237 = 0.;
+            float y238 = 0.0500000007450581;
+            float y239 = 0.0799999982118607;
+            float y242 = 0.24799999910593;
+            float y243 = 0.153941467404366;
+            float y247 = 0.153941467404366;
+            float y251 = 0.128210678696632;
+            float y255 = 0.126465573906898;
+            float y259 = 0.176216393709183;
+            float y263 = 0.0948232412338257;
+            float y267 = 0.0721197500824928;
+            float y271 = 0.103986009955406;
+            float y275 = 0.0235433969646692;
+            float y279 = 0.0235433969646692;
 
-        if (/*panda_link7*/ sphere_environment_in_collision(environment, ADD_3042, ADD_3043, ADD_3044, 0.072))
-        {
-            if (sphere_environment_in_collision(environment, ADD_3063, ADD_3064, ADD_3065, 0.05))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3090, ADD_3091, ADD_3092, 0.025))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3117, ADD_3118, ADD_3119, 0.025))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3144, ADD_3145, ADD_3146, 0.02))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3171, ADD_3172, ADD_3173, 0.02))
-            {
-                return false;
-            }
-        }  // (793, 793)
-        float MUL_1065 = SUB_870 * 0.9238795;
-        float MUL_1062 = ADD_865 * 0.9238795;
-        float MUL_1049 = SUB_859 * 0.9238795;
-        float MUL_1034 = ADD_853 * 0.9238795;
-        float MUL_1055 = SUB_870 * 0.3826834;
-        float SUB_1063 = MUL_1062 - MUL_1055;
-        float MUL_1072 = ADD_865 * 0.3826834;
-        float ADD_1074 = MUL_1065 + MUL_1072;
-        float MUL_1037 = SUB_859 * 0.3826834;
-        float SUB_1039 = MUL_1034 - MUL_1037;
-        float MUL_3241 = SUB_1039 * SUB_1063;
-        float MUL_1046 = ADD_853 * 0.3826834;
-        float ADD_1050 = MUL_1046 + MUL_1049;
-        float MUL_3237 = ADD_1074 * ADD_1050;
-        float ADD_3269 = MUL_3241 + MUL_3237;
-        float MUL_3271 = ADD_3269 * 2.0;
-        float MUL_931 = SUB_859 * 0.107;
-        float MUL_942 = SUB_870 * MUL_931;
-        float MUL_939 = ADD_853 * 0.107;
-        float MUL_944 = ADD_865 * MUL_939;
-        float ADD_945 = MUL_942 + MUL_944;
-        float MUL_947 = ADD_945 * 2.0;
-        float ADD_969 = ADD_838 + MUL_947;
-        float MUL_3295 = MUL_3271 * 0.022;
-        float ADD_3300 = ADD_969 + MUL_3295;
-        float MUL_3239 = ADD_1074 * SUB_1039;
-        float MUL_3242 = ADD_1050 * SUB_1063;
-        float SUB_3272 = MUL_3242 - MUL_3239;
-        float MUL_3274 = SUB_3272 * 2.0;
-        float MUL_3297 = MUL_3274 * 0.022;
-        float MUL_950 = SUB_870 * MUL_939;
-        float MUL_953 = ADD_865 * MUL_931;
-        float SUB_954 = MUL_953 - MUL_950;
-        float MUL_956 = SUB_954 * 2.0;
-        float ADD_970 = ADD_839 + MUL_956;
-        float ADD_3301 = ADD_970 + MUL_3297;
-        float MUL_3238 = SUB_1039 * SUB_1039;
-        float MUL_3234 = ADD_1050 * ADD_1050;
-        float ADD_3275 = MUL_3234 + MUL_3238;
-        float MUL_3278 = ADD_3275 * 2.0;
-        float SUB_3281 = 1.0 - MUL_3278;
-        float MUL_3299 = SUB_3281 * 0.022;
-        float MUL_961 = SUB_859 * MUL_931;
-        float MUL_959 = ADD_853 * MUL_939;
-        float ADD_962 = MUL_959 + MUL_961;
-        float MUL_965 = ADD_962 * 2.0;
-        float SUB_968 = 0.107 - MUL_965;
-        float ADD_971 = ADD_840 + SUB_968;
-        float ADD_3302 = ADD_971 + MUL_3299;
-        float MUL_3322 = MUL_3271 * 0.01;
-        float MUL_3236 = ADD_1074 * SUB_1063;
-        float MUL_3240 = SUB_1039 * ADD_1050;
-        float SUB_3256 = MUL_3240 - MUL_3236;
-        float MUL_3258 = SUB_3256 * 2.0;
-        float MUL_3311 = MUL_3258 * 0.075;
-        float SUB_3327 = MUL_3322 - MUL_3311;
-        float ADD_3330 = ADD_969 + SUB_3327;
-        float MUL_3324 = MUL_3274 * 0.01;
-        float MUL_3235 = SUB_1063 * SUB_1063;
-        float ADD_3259 = MUL_3235 + MUL_3238;
-        float MUL_3262 = ADD_3259 * 2.0;
-        float SUB_3265 = 1.0 - MUL_3262;
-        float MUL_3315 = SUB_3265 * 0.075;
-        float SUB_3328 = MUL_3324 - MUL_3315;
-        float ADD_3331 = ADD_970 + SUB_3328;
-        float ADD_3266 = MUL_3242 + MUL_3239;
-        float MUL_3326 = SUB_3281 * 0.01;
-        float MUL_3268 = ADD_3266 * 2.0;
-        float MUL_3319 = MUL_3268 * 0.075;
-        float SUB_3329 = MUL_3326 - MUL_3319;
-        float ADD_3332 = ADD_971 + SUB_3329;
-        float MUL_3341 = MUL_3258 * 0.045;
-        float SUB_3357 = MUL_3322 - MUL_3341;
-        float ADD_3360 = ADD_969 + SUB_3357;
-        float MUL_3345 = SUB_3265 * 0.045;
-        float SUB_3358 = MUL_3324 - MUL_3345;
-        float ADD_3361 = ADD_970 + SUB_3358;
-        float MUL_3349 = MUL_3268 * 0.045;
-        float SUB_3359 = MUL_3326 - MUL_3349;
-        float ADD_3362 = ADD_971 + SUB_3359;
-        float MUL_3371 = MUL_3258 * 0.015;
-        float SUB_3387 = MUL_3322 - MUL_3371;
-        float ADD_3390 = ADD_969 + SUB_3387;
-        float MUL_3375 = SUB_3265 * 0.015;
-        float SUB_3388 = MUL_3324 - MUL_3375;
-        float ADD_3391 = ADD_970 + SUB_3388;
-        float MUL_3379 = MUL_3268 * 0.015;
-        float SUB_3389 = MUL_3326 - MUL_3379;
-        float ADD_3392 = ADD_971 + SUB_3389;
-        float ADD_3411 = MUL_3371 + MUL_3322;
-        float ADD_3414 = ADD_969 + ADD_3411;
-        float ADD_3412 = MUL_3375 + MUL_3324;
-        float ADD_3415 = ADD_970 + ADD_3412;
-        float ADD_3413 = MUL_3379 + MUL_3326;
-        float ADD_3416 = ADD_971 + ADD_3413;
-        float ADD_3435 = MUL_3341 + MUL_3322;
-        float ADD_3438 = ADD_969 + ADD_3435;
-        float ADD_3436 = MUL_3345 + MUL_3324;
-        float ADD_3439 = ADD_970 + ADD_3436;
-        float ADD_3437 = MUL_3349 + MUL_3326;
-        float ADD_3440 = ADD_971 + ADD_3437;
-        float ADD_3459 = MUL_3311 + MUL_3322;
-        float ADD_3462 = ADD_969 + ADD_3459;
-        float ADD_3460 = MUL_3315 + MUL_3324;
-        float ADD_3463 = ADD_970 + ADD_3460;
-        float ADD_3461 = MUL_3319 + MUL_3326;
-        float ADD_3464 = ADD_971 + ADD_3461;
-        float MUL_3484 = MUL_3271 * 0.03;
-        float SUB_3489 = MUL_3484 - MUL_3311;
-        float ADD_3492 = ADD_969 + SUB_3489;
-        float MUL_3486 = MUL_3274 * 0.03;
-        float SUB_3490 = MUL_3486 - MUL_3315;
-        float ADD_3493 = ADD_970 + SUB_3490;
-        float MUL_3488 = SUB_3281 * 0.03;
-        float SUB_3491 = MUL_3488 - MUL_3319;
-        float ADD_3494 = ADD_971 + SUB_3491;
-        float SUB_3519 = MUL_3484 - MUL_3341;
-        float ADD_3522 = ADD_969 + SUB_3519;
-        float SUB_3520 = MUL_3486 - MUL_3345;
-        float ADD_3523 = ADD_970 + SUB_3520;
-        float SUB_3521 = MUL_3488 - MUL_3349;
-        float ADD_3524 = ADD_971 + SUB_3521;
-        float SUB_3549 = MUL_3484 - MUL_3371;
-        float ADD_3552 = ADD_969 + SUB_3549;
-        float SUB_3550 = MUL_3486 - MUL_3375;
-        float ADD_3553 = ADD_970 + SUB_3550;
-        float SUB_3551 = MUL_3488 - MUL_3379;
-        float ADD_3554 = ADD_971 + SUB_3551;
-        float ADD_3573 = MUL_3371 + MUL_3484;
-        float ADD_3576 = ADD_969 + ADD_3573;
-        float ADD_3574 = MUL_3375 + MUL_3486;
-        float ADD_3577 = ADD_970 + ADD_3574;
-        float ADD_3575 = MUL_3379 + MUL_3488;
-        float ADD_3578 = ADD_971 + ADD_3575;
-        float ADD_3597 = MUL_3341 + MUL_3484;
-        float ADD_3600 = ADD_969 + ADD_3597;
-        float ADD_3598 = MUL_3345 + MUL_3486;
-        float ADD_3601 = ADD_970 + ADD_3598;
-        float ADD_3599 = MUL_3349 + MUL_3488;
-        float ADD_3602 = ADD_971 + ADD_3599;
-        float ADD_3621 = MUL_3311 + MUL_3484;
-        float ADD_3624 = ADD_969 + ADD_3621;
-        float ADD_3622 = MUL_3315 + MUL_3486;
-        float ADD_3625 = ADD_970 + ADD_3622;
-        float ADD_3623 = MUL_3319 + MUL_3488;
-        float ADD_3626 = ADD_971 + ADD_3623;
-        float MUL_3646 = MUL_3271 * 0.05;
-        float SUB_3651 = MUL_3646 - MUL_3311;
-        float ADD_3654 = ADD_969 + SUB_3651;
-        float MUL_3648 = MUL_3274 * 0.05;
-        float SUB_3652 = MUL_3648 - MUL_3315;
-        float ADD_3655 = ADD_970 + SUB_3652;
-        float MUL_3650 = SUB_3281 * 0.05;
-        float SUB_3653 = MUL_3650 - MUL_3319;
-        float ADD_3656 = ADD_971 + SUB_3653;
-        float SUB_3681 = MUL_3646 - MUL_3341;
-        float ADD_3684 = ADD_969 + SUB_3681;
-        float SUB_3682 = MUL_3648 - MUL_3345;
-        float ADD_3685 = ADD_970 + SUB_3682;
-        float SUB_3683 = MUL_3650 - MUL_3349;
-        float ADD_3686 = ADD_971 + SUB_3683;
-        float SUB_3711 = MUL_3646 - MUL_3371;
-        float ADD_3714 = ADD_969 + SUB_3711;
-        float SUB_3712 = MUL_3648 - MUL_3375;
-        float ADD_3715 = ADD_970 + SUB_3712;
-        float SUB_3713 = MUL_3650 - MUL_3379;
-        float ADD_3716 = ADD_971 + SUB_3713;
-        float ADD_3735 = MUL_3371 + MUL_3646;
-        float ADD_3738 = ADD_969 + ADD_3735;
-        float ADD_3736 = MUL_3375 + MUL_3648;
-        float ADD_3739 = ADD_970 + ADD_3736;
-        float ADD_3737 = MUL_3379 + MUL_3650;
-        float ADD_3740 = ADD_971 + ADD_3737;
-        float ADD_3759 = MUL_3341 + MUL_3646;
-        float ADD_3762 = ADD_969 + ADD_3759;
-        float ADD_3760 = MUL_3345 + MUL_3648;
-        float ADD_3763 = ADD_970 + ADD_3760;
-        float ADD_3761 = MUL_3349 + MUL_3650;
-        float ADD_3764 = ADD_971 + ADD_3761;
-        float ADD_3783 = MUL_3311 + MUL_3646;
-        float ADD_3786 = ADD_969 + ADD_3783;
-        float ADD_3784 = MUL_3315 + MUL_3648;
-        float ADD_3787 = ADD_970 + ADD_3784;
-        float ADD_3785 = MUL_3319 + MUL_3650;
-        float ADD_3788 = ADD_971 + ADD_3785;
-        if (/*panda_hand*/ sphere_environment_in_collision(environment, ADD_3300, ADD_3301, ADD_3302, 0.104))
-        {
-            if (sphere_environment_in_collision(environment, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            // printf("about to check panda hand collision:\n");
-            if (sphere_environment_in_collision(environment, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                // printf("panda hand collision!");
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-        }  // (793, 978)
-        if (/*panda_link0 vs. panda_hand*/ sphere_sphere_self_collision(
-            0.0, 0.0, 0.05, 0.08, ADD_3300, ADD_3301, ADD_3302, 0.104))
-        {
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-        }  // (978, 978)
-        if (/*panda_link1 vs. panda_hand*/ sphere_sphere_self_collision(
-            SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_3300, ADD_3301, ADD_3302, 0.104))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-        }  // (978, 978)
-        if (/*panda_link2 vs. panda_hand*/ sphere_sphere_self_collision(
-            ADD_1832, SUB_1833, ADD_1835, 0.154, ADD_3300, ADD_3301, ADD_3302, 0.104))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-        }  // (978, 978)
-        // if (local_cc_result[0]>0) return false;
-        if (/*panda_link5 vs. panda_hand*/ sphere_sphere_self_collision(
-            ADD_2402, ADD_2403, ADD_2404, 0.176, ADD_3300, ADD_3301, ADD_3302, 0.104))
-        {
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
-            {
-                return false;
-            }
-        }  // (978, 978)
-        // if (local_cc_result[0]>0) return false;
-        float MUL_3864 = ADD_3269 * 2.0;
-        float MUL_3851 = SUB_3256 * 2.0;
-        float MUL_1196 = SUB_1063 * 0.065;
-        float MUL_1199 = SUB_1039 * 0.065;
-        float MUL_1207 = ADD_1050 * MUL_1199;
-        float MUL_1203 = SUB_1039 * 0.0584;
-        float MUL_1209 = SUB_1063 * MUL_1203;
-        float MUL_1194 = ADD_1050 * 0.0584;
-        float SUB_1197 = MUL_1194 - MUL_1196;
-        float MUL_1206 = ADD_1074 * SUB_1197;
-        float ADD_1208 = MUL_1206 + MUL_1207;
-        float ADD_1210 = ADD_1208 + MUL_1209;
-        float MUL_1212 = ADD_1210 * 2.0;
-        float ADD_1235 = ADD_969 + MUL_1212;
-        float MUL_3888 = MUL_3864 * 0.033;
-        float MUL_3882 = MUL_3851 * 0.012;
-        float ADD_3893 = MUL_3882 + MUL_3888;
-        float ADD_3896 = ADD_1235 + ADD_3893;
-        float MUL_3867 = SUB_3272 * 2.0;
-        float MUL_3890 = MUL_3867 * 0.033;
-        float MUL_3855 = ADD_3259 * 2.0;
-        float SUB_3858 = 1.0 - MUL_3855;
-        float MUL_3884 = SUB_3858 * 0.012;
-        float ADD_3894 = MUL_3884 + MUL_3890;
-        float MUL_1215 = ADD_1074 * MUL_1203;
-        float MUL_1220 = SUB_1063 * SUB_1197;
-        float MUL_1217 = SUB_1039 * MUL_1199;
-        float ADD_1218 = MUL_1215 + MUL_1217;
-        float SUB_1221 = MUL_1220 - ADD_1218;
-        float MUL_1223 = SUB_1221 * 2.0;
-        float ADD_1225 = MUL_1223 + 0.065;
-        float ADD_1236 = ADD_970 + ADD_1225;
-        float ADD_3897 = ADD_1236 + ADD_3894;
-        float MUL_3871 = ADD_3275 * 2.0;
-        float SUB_3874 = 1.0 - MUL_3871;
-        float MUL_3892 = SUB_3874 * 0.033;
-        float MUL_3861 = ADD_3266 * 2.0;
-        float MUL_3886 = MUL_3861 * 0.012;
-        float ADD_3895 = MUL_3886 + MUL_3892;
-        float MUL_1226 = ADD_1074 * MUL_1199;
-        float MUL_1227 = SUB_1039 * MUL_1203;
-        float SUB_1228 = MUL_1226 - MUL_1227;
-        float MUL_1229 = ADD_1050 * SUB_1197;
-        float SUB_1230 = SUB_1228 - MUL_1229;
-        float MUL_1232 = SUB_1230 * 2.0;
-        float ADD_1234 = MUL_1232 + 0.0584;
-        float ADD_1237 = ADD_971 + ADD_1234;
-        float ADD_3898 = ADD_1237 + ADD_3895;
-        float MUL_3912 = MUL_3864 * 0.022;
-        float MUL_3906 = MUL_3851 * 0.015;
-        float ADD_3917 = MUL_3906 + MUL_3912;
-        float ADD_3920 = ADD_1235 + ADD_3917;
-        float MUL_3914 = MUL_3867 * 0.022;
-        float MUL_3908 = SUB_3858 * 0.015;
-        float ADD_3918 = MUL_3908 + MUL_3914;
-        float ADD_3921 = ADD_1236 + ADD_3918;
-        float MUL_3916 = SUB_3874 * 0.022;
-        float MUL_3910 = MUL_3861 * 0.015;
-        float ADD_3919 = MUL_3910 + MUL_3916;
-        float ADD_3922 = ADD_1237 + ADD_3919;
-        float MUL_3936 = MUL_3864 * 0.044;
-        float MUL_3930 = MUL_3851 * 0.008;
-        float ADD_3941 = MUL_3930 + MUL_3936;
-        float ADD_3944 = ADD_1235 + ADD_3941;
-        float MUL_3938 = MUL_3867 * 0.044;
-        float MUL_3932 = SUB_3858 * 0.008;
-        float ADD_3942 = MUL_3932 + MUL_3938;
-        float ADD_3945 = ADD_1236 + ADD_3942;
-        float MUL_3940 = SUB_3874 * 0.044;
-        float MUL_3934 = MUL_3861 * 0.008;
-        float ADD_3943 = MUL_3934 + MUL_3940;
-        float ADD_3946 = ADD_1237 + ADD_3943;
-        if (/*panda_leftfinger*/ sphere_environment_in_collision(
-            environment, ADD_3896, ADD_3897, ADD_3898, 0.024))
-        {
-            if (sphere_environment_in_collision(environment, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-        }  // (978, 1050)
-        if (/*panda_link0 vs. panda_leftfinger*/ sphere_sphere_self_collision(
-            0.0, 0.0, 0.05, 0.08, ADD_3896, ADD_3897, ADD_3898, 0.024))
-        {
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-        }  // (1050, 1050)
-        if (/*panda_link1 vs. panda_leftfinger*/ sphere_sphere_self_collision(
-            SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_3896, ADD_3897, ADD_3898, 0.024))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-        }  // (1050, 1050)
-        if (/*panda_link2 vs. panda_leftfinger*/ sphere_sphere_self_collision(
-            ADD_1832, SUB_1833, ADD_1835, 0.154, ADD_3896, ADD_3897, ADD_3898, 0.024))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-        }  // (1050, 1050)
-        if (/*panda_link5 vs. panda_leftfinger*/ sphere_sphere_self_collision(
-            ADD_2402, ADD_2403, ADD_2404, 0.176, ADD_3896, ADD_3897, ADD_3898, 0.024))
-        {
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
-            {
-                return false;
-            }
-        }  // (1050, 1050)
-        float ADD_1331 = MUL_1194 + MUL_1196;
-        float MUL_3990 = ADD_3269 * 2.0;
-        float MUL_4020 = MUL_3990 * 0.033;
-        float MUL_3977 = SUB_3256 * 2.0;
-        float MUL_4009 = MUL_3977 * 0.012;
-        float SUB_4025 = MUL_4020 - MUL_4009;
-        float MUL_1342 = ADD_1074 * ADD_1331;
-        float SUB_1345 = MUL_1342 - MUL_1207;
-        float ADD_1347 = SUB_1345 + MUL_1209;
-        float MUL_1349 = ADD_1347 * 2.0;
-        float ADD_1377 = ADD_969 + MUL_1349;
-        float ADD_4028 = ADD_1377 + SUB_4025;
-        float SUB_1356 = MUL_1217 - MUL_1215;
-        float MUL_3993 = SUB_3272 * 2.0;
-        float MUL_4022 = MUL_3993 * 0.033;
-        float MUL_3981 = ADD_3259 * 2.0;
-        float SUB_3984 = 1.0 - MUL_3981;
-        float MUL_4013 = SUB_3984 * 0.012;
-        float SUB_4026 = MUL_4022 - MUL_4013;
-        float MUL_1357 = SUB_1063 * ADD_1331;
-        float ADD_1358 = SUB_1356 + MUL_1357;
-        float MUL_1360 = ADD_1358 * 2.0;
-        float SUB_1363 = MUL_1360 - 0.065;
-        float ADD_1378 = ADD_970 + SUB_1363;
-        float ADD_4029 = ADD_1378 + SUB_4026;
-        float ADD_1367 = MUL_1226 + MUL_1227;
-        float MUL_3997 = ADD_3275 * 2.0;
-        float SUB_4000 = 1.0 - MUL_3997;
-        float MUL_4024 = SUB_4000 * 0.033;
-        float MUL_3987 = ADD_3266 * 2.0;
-        float MUL_4017 = MUL_3987 * 0.012;
-        float SUB_4027 = MUL_4024 - MUL_4017;
-        float MUL_1369 = ADD_1050 * ADD_1331;
-        float ADD_1370 = ADD_1367 + MUL_1369;
-        float MUL_1373 = ADD_1370 * 2.0;
-        float SUB_1376 = 0.0584 - MUL_1373;
-        float ADD_1379 = ADD_971 + SUB_1376;
-        float ADD_4030 = ADD_1379 + SUB_4027;
-        float MUL_4050 = MUL_3990 * 0.022;
-        float MUL_4039 = MUL_3977 * 0.015;
-        float SUB_4055 = MUL_4050 - MUL_4039;
-        float ADD_4058 = ADD_1377 + SUB_4055;
-        float MUL_4052 = MUL_3993 * 0.022;
-        float MUL_4043 = SUB_3984 * 0.015;
-        float SUB_4056 = MUL_4052 - MUL_4043;
-        float ADD_4059 = ADD_1378 + SUB_4056;
-        float MUL_4054 = SUB_4000 * 0.022;
-        float MUL_4047 = MUL_3987 * 0.015;
-        float SUB_4057 = MUL_4054 - MUL_4047;
-        float ADD_4060 = ADD_1379 + SUB_4057;
-        float MUL_4080 = MUL_3990 * 0.044;
-        float MUL_4069 = MUL_3977 * 0.008;
-        float SUB_4085 = MUL_4080 - MUL_4069;
-        float ADD_4088 = ADD_1377 + SUB_4085;
-        float MUL_4082 = MUL_3993 * 0.044;
-        float MUL_4073 = SUB_3984 * 0.008;
-        float SUB_4086 = MUL_4082 - MUL_4073;
-        float ADD_4089 = ADD_1378 + SUB_4086;
-        float MUL_4084 = SUB_4000 * 0.044;
-        float MUL_4077 = MUL_3987 * 0.008;
-        float SUB_4087 = MUL_4084 - MUL_4077;
-        float ADD_4090 = ADD_1379 + SUB_4087;
-        if (/*panda_link0 vs. panda_rightfinger*/ sphere_sphere_self_collision(
-            0.0, 0.0, 0.05, 0.08, ADD_4028, ADD_4029, ADD_4030, 0.024))
-        {
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.05, 0.08, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-        }  // (1050, 1112)
-        if (/*panda_link1 vs. panda_rightfinger*/ sphere_sphere_self_collision(
-            SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_4028, ADD_4029, ADD_4030, 0.024))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.213, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    0.0, 0.0, 0.163, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-        }  // (1112, 1112)
-        if (/*panda_link2 vs. panda_rightfinger*/ sphere_sphere_self_collision(
-            ADD_1832, SUB_1833, ADD_1835, 0.154, ADD_4028, ADD_4029, ADD_4030, 0.024))
-        {
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-        }  // (1112, 1112)
-        if (/*panda_link5 vs. panda_rightfinger*/ sphere_sphere_self_collision(
-            ADD_2402, ADD_2403, ADD_2404, 0.176, ADD_4028, ADD_4029, ADD_4030, 0.024))
-        {
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_sphere_self_collision(
-                    ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-        }  // (1112, 1112)
-        if (/*panda_rightfinger*/ sphere_environment_in_collision(
-            environment, ADD_4028, ADD_4029, ADD_4030, 0.024))
-        {
-            if (sphere_environment_in_collision(environment, ADD_4058, ADD_4059, ADD_4060, 0.012))
-            {
-                return false;
-            }
-            if (sphere_environment_in_collision(environment, ADD_4088, ADD_4089, ADD_4090, 0.012))
-            {
-                return false;
-            }
-        }  // (1112, 1112)
+            //
+            // environment vs. robot collisions
+            //
 
-        return true;
-    }
+            // panda_rightfinger
+            if (sphere_environment_in_collision(environment, y276, y277, y278, y279))
+            {
+                if (sphere_environment_in_collision(environment, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+            }
+
+            //
+            // environment vs. robot collisions
+            //
+
+            // panda_leftfinger
+            if (sphere_environment_in_collision(environment, y272, y273, y274, y275))
+            {
+                if (sphere_environment_in_collision(environment, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+            }
+
+            //
+            // environment vs. robot collisions
+            //
+
+            // panda_hand
+            if (sphere_environment_in_collision(environment, y268, y269, y270, y271))
+            {
+                if (sphere_environment_in_collision(environment, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+            }
+
+            //
+            // environment vs. robot collisions
+            //
+
+            // panda_link7
+            if (sphere_environment_in_collision(environment, y264, y265, y266, y267))
+            {
+                if (sphere_environment_in_collision(environment, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+            }
+
+            //
+            // environment vs. robot collisions
+            //
+
+            // panda_link6
+            if (sphere_environment_in_collision(environment, y260, y261, y262, y263))
+            {
+                if (sphere_environment_in_collision(environment, y116, y117, y118, y119))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y120, y121, y122, y123))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y124, y125, y126, y127))
+                {
+                    return false;
+                }
+            }
+
+            //
+            // environment vs. robot collisions
+            //
+
+            // panda_link5
+            if (sphere_environment_in_collision(environment, y256, y257, y258, y259))
+            {
+                if (sphere_environment_in_collision(environment, y68, y69, y70, y71))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y72, y73, y74, y75))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y76, y77, y78, y79))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y80, y81, y82, y83))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y84, y85, y86, y87))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y88, y89, y90, y91))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y92, y93, y94, y95))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y96, y97, y98, y99))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y100, y101, y102, y103))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y104, y105, y106, y107))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y108, y109, y110, y111))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y112, y113, y114, y115))
+                {
+                    return false;
+                }
+            }
+
+            //
+            // environment vs. robot collisions
+            //
+
+            // panda_link4
+            if (sphere_environment_in_collision(environment, y252, y253, y254, y255))
+            {
+                if (sphere_environment_in_collision(environment, y52, y53, y54, y55))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y56, y57, y58, y59))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y60, y61, y62, y63))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y64, y65, y66, y67))
+                {
+                    return false;
+                }
+            }
+
+            //
+            // environment vs. robot collisions
+            //
+
+            // panda_link3
+            if (sphere_environment_in_collision(environment, y248, y249, y250, y251))
+            {
+                if (sphere_environment_in_collision(environment, y36, y37, y38, y39))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y40, y41, y42, y43))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y44, y45, y46, y47))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y48, y49, y50, y51))
+                {
+                    return false;
+                }
+            }
+
+            //
+            // environment vs. robot collisions
+            //
+
+            // panda_link2
+            if (sphere_environment_in_collision(environment, y244, y245, y246, y247))
+            {
+                if (sphere_environment_in_collision(environment, y20, y21, y22, y23))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y24, y25, y26, y27))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y28, y29, y30, y31))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y32, y33, y34, y35))
+                {
+                    return false;
+                }
+            }
+
+            //
+            // environment vs. robot collisions
+            //
+
+            // panda_link1
+            if (sphere_environment_in_collision(environment, y240, y241, y242, y243))
+            {
+                if (sphere_environment_in_collision(environment, y4, y5, y6, y7))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y8, y9, y10, y11))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y12, y13, y14, y15))
+                {
+                    return false;
+                }
+
+                if (sphere_environment_in_collision(environment, y16, y17, y18, y19))
+                {
+                    return false;
+                }
+            }
+
+            //
+            // environment vs. robot collisions
+            //
+
+            // panda_link0
+            // if (sphere_environment_in_collision(environment, y236, y237, y238, y239))
+            // {
+            //     if (sphere_environment_in_collision(environment, y0, y1, y2, y3))
+            //     {
+            //         return false;
+            //     }
+            // }
+
+            //
+            // robot self-collisions
+            //
+
+            // panda_link0 vs. panda_link5
+            if (sphere_sphere_self_collision(
+                    y236, y237, y238, y239, y256, y257, y258, y259))
+            {
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y68, y69, y70, y71))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y72, y73, y74, y75))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y76, y77, y78, y79))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y80, y81, y82, y83))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y84, y85, y86, y87))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y88, y89, y90, y91))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y92, y93, y94, y95))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y96, y97, y98, y99))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y100, y101, y102, y103))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y104, y105, y106, y107))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y108, y109, y110, y111))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y112, y113, y114, y115))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link0 vs. panda_link6
+            if (sphere_sphere_self_collision(
+                    y236, y237, y238, y239, y260, y261, y262, y263))
+            {
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y116, y117, y118, y119))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y120, y121, y122, y123))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y124, y125, y126, y127))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link0 vs. panda_link7
+            if (sphere_sphere_self_collision(
+                    y236, y237, y238, y239, y264, y265, y266, y267))
+            {
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link0 vs. panda_hand
+            if (sphere_sphere_self_collision(
+                    y236, y237, y238, y239, y268, y269, y270, y271))
+            {
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link0 vs. panda_leftfinger
+            if (sphere_sphere_self_collision(
+                    y236, y237, y238, y239, y272, y273, y274, y275))
+            {
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link0 vs. panda_rightfinger
+            if (sphere_sphere_self_collision(
+                    y236, y237, y238, y239, y276, y277, y278, y279))
+            {
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y0, y1, y2, y3, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link1 vs. panda_link5
+            if (sphere_sphere_self_collision(
+                    y240, y241, y242, y243, y256, y257, y258, y259))
+            {
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y68, y69, y70, y71))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y72, y73, y74, y75))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y76, y77, y78, y79))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y80, y81, y82, y83))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y84, y85, y86, y87))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y88, y89, y90, y91))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y92, y93, y94, y95))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y96, y97, y98, y99))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y100, y101, y102, y103))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y104, y105, y106, y107))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y108, y109, y110, y111))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y112, y113, y114, y115))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y68, y69, y70, y71))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y72, y73, y74, y75))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y76, y77, y78, y79))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y80, y81, y82, y83))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y84, y85, y86, y87))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y88, y89, y90, y91))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y92, y93, y94, y95))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y96, y97, y98, y99))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y100, y101, y102, y103))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y104, y105, y106, y107))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y108, y109, y110, y111))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y112, y113, y114, y115))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y68, y69, y70, y71))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y72, y73, y74, y75))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y76, y77, y78, y79))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y80, y81, y82, y83))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y84, y85, y86, y87))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y88, y89, y90, y91))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y92, y93, y94, y95))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y96, y97, y98, y99))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y100, y101, y102, y103))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y104, y105, y106, y107))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y108, y109, y110, y111))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y112, y113, y114, y115))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y68, y69, y70, y71))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y72, y73, y74, y75))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y76, y77, y78, y79))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y80, y81, y82, y83))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y84, y85, y86, y87))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y88, y89, y90, y91))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y92, y93, y94, y95))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y96, y97, y98, y99))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y100, y101, y102, y103))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y104, y105, y106, y107))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y108, y109, y110, y111))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y112, y113, y114, y115))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link1 vs. panda_link6
+            if (sphere_sphere_self_collision(
+                    y240, y241, y242, y243, y260, y261, y262, y263))
+            {
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y116, y117, y118, y119))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y120, y121, y122, y123))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y124, y125, y126, y127))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y116, y117, y118, y119))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y120, y121, y122, y123))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y124, y125, y126, y127))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y116, y117, y118, y119))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y120, y121, y122, y123))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y124, y125, y126, y127))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y116, y117, y118, y119))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y120, y121, y122, y123))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y124, y125, y126, y127))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link1 vs. panda_link7
+            if (sphere_sphere_self_collision(
+                    y240, y241, y242, y243, y264, y265, y266, y267))
+            {
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link1 vs. panda_hand
+            if (sphere_sphere_self_collision(
+                    y240, y241, y242, y243, y268, y269, y270, y271))
+            {
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link1 vs. panda_leftfinger
+            if (sphere_sphere_self_collision(
+                    y240, y241, y242, y243, y272, y273, y274, y275))
+            {
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link1 vs. panda_rightfinger
+            if (sphere_sphere_self_collision(
+                    y240, y241, y242, y243, y276, y277, y278, y279))
+            {
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y4, y5, y6, y7, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y8, y9, y10, y11, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y12, y13, y14, y15, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y16, y17, y18, y19, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link2 vs. panda_link5
+            if (sphere_sphere_self_collision(
+                    y244, y245, y246, y247, y256, y257, y258, y259))
+            {
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y68, y69, y70, y71))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y72, y73, y74, y75))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y76, y77, y78, y79))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y80, y81, y82, y83))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y84, y85, y86, y87))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y88, y89, y90, y91))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y92, y93, y94, y95))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y96, y97, y98, y99))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y100, y101, y102, y103))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y104, y105, y106, y107))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y108, y109, y110, y111))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y112, y113, y114, y115))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y68, y69, y70, y71))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y72, y73, y74, y75))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y76, y77, y78, y79))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y80, y81, y82, y83))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y84, y85, y86, y87))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y88, y89, y90, y91))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y92, y93, y94, y95))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y96, y97, y98, y99))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y100, y101, y102, y103))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y104, y105, y106, y107))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y108, y109, y110, y111))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y112, y113, y114, y115))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y68, y69, y70, y71))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y72, y73, y74, y75))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y76, y77, y78, y79))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y80, y81, y82, y83))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y84, y85, y86, y87))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y88, y89, y90, y91))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y92, y93, y94, y95))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y96, y97, y98, y99))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y100, y101, y102, y103))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y104, y105, y106, y107))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y108, y109, y110, y111))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y112, y113, y114, y115))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y68, y69, y70, y71))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y72, y73, y74, y75))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y76, y77, y78, y79))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y80, y81, y82, y83))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y84, y85, y86, y87))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y88, y89, y90, y91))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y92, y93, y94, y95))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y96, y97, y98, y99))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y100, y101, y102, y103))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y104, y105, y106, y107))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y108, y109, y110, y111))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y112, y113, y114, y115))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link2 vs. panda_link7
+            if (sphere_sphere_self_collision(
+                    y244, y245, y246, y247, y264, y265, y266, y267))
+            {
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link2 vs. panda_hand
+            if (sphere_sphere_self_collision(
+                    y244, y245, y246, y247, y268, y269, y270, y271))
+            {
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link2 vs. panda_leftfinger
+            if (sphere_sphere_self_collision(
+                    y244, y245, y246, y247, y272, y273, y274, y275))
+            {
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link2 vs. panda_rightfinger
+            if (sphere_sphere_self_collision(
+                    y244, y245, y246, y247, y276, y277, y278, y279))
+            {
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y20, y21, y22, y23, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y24, y25, y26, y27, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y28, y29, y30, y31, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y32, y33, y34, y35, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link5 vs. panda_link7
+            if (sphere_sphere_self_collision(
+                    y256, y257, y258, y259, y264, y265, y266, y267))
+            {
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y128, y129, y130, y131))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y132, y133, y134, y135))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y136, y137, y138, y139))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y140, y141, y142, y143))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y144, y145, y146, y147))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link5 vs. panda_hand
+            if (sphere_sphere_self_collision(
+                    y256, y257, y258, y259, y268, y269, y270, y271))
+            {
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y148, y149, y150, y151))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y152, y153, y154, y155))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y156, y157, y158, y159))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y160, y161, y162, y163))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y164, y165, y166, y167))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y168, y169, y170, y171))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y172, y173, y174, y175))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y176, y177, y178, y179))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y180, y181, y182, y183))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y184, y185, y186, y187))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y188, y189, y190, y191))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y192, y193, y194, y195))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y196, y197, y198, y199))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y200, y201, y202, y203))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y204, y205, y206, y207))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y208, y209, y210, y211))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y212, y213, y214, y215))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y216, y217, y218, y219))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link5 vs. panda_leftfinger
+            if (sphere_sphere_self_collision(
+                    y256, y257, y258, y259, y272, y273, y274, y275))
+            {
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y220, y221, y222, y223))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y224, y225, y226, y227))
+                {
+                    return false;
+                }
+            }
+
+            // panda_link5 vs. panda_rightfinger
+            if (sphere_sphere_self_collision(
+                    y256, y257, y258, y259, y276, y277, y278, y279))
+            {
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y68, y69, y70, y71, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y72, y73, y74, y75, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y76, y77, y78, y79, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y80, y81, y82, y83, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y84, y85, y86, y87, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y88, y89, y90, y91, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y92, y93, y94, y95, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y96, y97, y98, y99, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y100, y101, y102, y103, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y104, y105, y106, y107, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y108, y109, y110, y111, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y228, y229, y230, y231))
+                {
+                    return false;
+                }
+
+                if (sphere_sphere_self_collision(
+                        y112, y113, y114, y115, y232, y233, y234, y235))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+    // template <>
+    // __device__  __forceinline__ bool fkcc<ppln::robots::Panda>(volatile float *q, ppln::collision::Environment<float> *environment, int tid)
+    // {
+    //     // Ignore static frame collisions - needed for some evaluation problems
+    //     // if (/*panda_link0*/ sphere_environment_in_collision(environment, 0.0, 0.0, 0.05, 0.08))
+    //     // {
+    //     //     return false;
+    //     // }  // (0, 0)
+    //     float INPUT_0 = q[0];
+    //     float DIV_8 = INPUT_0 * 0.5;
+    //     float SIN_9 = sin(DIV_8);
+    //     float COS_15 = cos(DIV_8);
+    //     float MUL_1575 = COS_15 * SIN_9;
+    //     float MUL_1594 = MUL_1575 * 2.0;
+    //     float MUL_1625 = MUL_1594 * 0.039;
+    //     float MUL_1574 = SIN_9 * SIN_9;
+    //     float MUL_1584 = MUL_1574 * 2.0;
+    //     float SUB_1587 = 1.0 - MUL_1584;
+    //     float MUL_1614 = SUB_1587 * 0.001;
+    //     float SUB_1641 = MUL_1625 - MUL_1614; // intermediate
+    //     float MUL_1628 = SUB_1587 * 0.039;
+    //     float MUL_1618 = MUL_1594 * 0.001;
+    //     float ADD_1642 = MUL_1618 + MUL_1628;
+    //     float NEGATE_1643 = -ADD_1642; // intermediate
+    //     float MUL_1656 = MUL_1594 * 0.08; // intermediate
+    //     float MUL_1659 = SUB_1587 * 0.08;
+    //     float NEGATE_1660 = -MUL_1659; // intermediate
+    //     float MUL_1680 = MUL_1594 * 0.03;  // intermediate
+    //     float MUL_1683 = SUB_1587 * 0.03;
+    //     float NEGATE_1684 = -MUL_1683; // intermediate
+    //     // var_cache[tid][0] = SUB_1641;
+    //     // var_cache[tid][1] = NEGATE_1643;
+    //     // var_cache[tid][2] = MUL_1656;
+    //     // var_cache[tid][3] = NEGATE_1660;
+    //     // var_cache[tid][4] = MUL_1680;
+    //     // var_cache[tid][5] = NEGATE_1684;
+    //     // if (tid%32 == 0) printf("here fkcc: %d", tid);
+    //     if (/*panda_link1*/ sphere_environment_in_collision(environment, SUB_1641, NEGATE_1643, 0.248, 0.154))
+    //     {
+    //         if (sphere_environment_in_collision(environment, MUL_1656, NEGATE_1660, 0.333, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, MUL_1680, NEGATE_1684, 0.333, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, 0.0, 0.0, 0.213, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, 0.0, 0.0, 0.163, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (0, 22)
+    //     float MUL_74 = COS_15 * 0.7071068;
+    //     float MUL_72 = SIN_9 * 0.7071068;
+    //     float INPUT_1 = q[1];
+    //     float DIV_117 = INPUT_1 * 0.5;
+    //     float SIN_118 = sin(DIV_117);
+    //     float COS_124 = cos(DIV_117);
+    //     float MUL_143 = MUL_72 * COS_124;
+    //     float MUL_128 = MUL_72 * SIN_118;
+    //     float MUL_126 = MUL_74 * COS_124;
+    //     float SUB_149 = MUL_126 - MUL_128;
+    //     float ADD_130 = MUL_126 + MUL_128;
+    //     float MUL_140 = MUL_74 * SIN_118;
+    //     float SUB_138 = MUL_140 - MUL_143;
+    //     float ADD_144 = MUL_140 + MUL_143;
+    //     float MUL_1756 = SUB_149 * ADD_144;
+    //     float MUL_1757 = SUB_149 * SUB_138;
+    //     float MUL_1763 = ADD_130 * ADD_144;
+    //     float SUB_1796 = MUL_1757 - MUL_1763;
+    //     float MUL_1798 = SUB_1796 * 2.0;
+    //     float MUL_1827 = MUL_1798 * 0.04;
+    //     float MUL_1761 = ADD_130 * SUB_138;
+    //     float ADD_1781 = MUL_1761 + MUL_1756;
+    //     float MUL_1784 = ADD_1781 * 2.0;
+    //     float MUL_1817 = MUL_1784 * 0.085;
+    //     float ADD_1832 = MUL_1817 + MUL_1827;
+    //     float MUL_1759 = SUB_149 * ADD_130;
+    //     float MUL_1755 = ADD_144 * ADD_144;
+    //     float MUL_1765 = SUB_138 * ADD_144;
+    //     float ADD_1799 = MUL_1765 + MUL_1759;
+    //     float MUL_1801 = ADD_1799 * 2.0;
+    //     float MUL_1829 = MUL_1801 * 0.04;
+    //     float MUL_1758 = ADD_130 * ADD_130;
+    //     float ADD_1786 = MUL_1755 + MUL_1758;
+    //     float MUL_1789 = ADD_1786 * 2.0;
+    //     float SUB_1792 = 1.0 - MUL_1789;
+    //     float MUL_1820 = SUB_1792 * 0.085;
+    //     float SUB_1833 = MUL_1829 - MUL_1820;
+    //     float SUB_1793 = MUL_1765 - MUL_1759;
+    //     float MUL_1795 = SUB_1793 * 2.0;
+    //     float MUL_1824 = MUL_1795 * 0.085;
+    //     float MUL_1754 = SUB_138 * SUB_138;
+    //     float ADD_1802 = MUL_1754 + MUL_1758;
+    //     float MUL_1805 = ADD_1802 * 2.0;
+    //     float SUB_1808 = 1.0 - MUL_1805;
+    //     float MUL_1831 = SUB_1808 * 0.04;
+    //     float SUB_1834 = MUL_1831 - MUL_1824;
+    //     float ADD_1835 = 0.333 + SUB_1834;
+    //     float MUL_1849 = MUL_1798 * 0.03;
+    //     float MUL_1851 = MUL_1801 * 0.03;
+    //     float MUL_1853 = SUB_1808 * 0.03;
+    //     float ADD_1854 = 0.333 + MUL_1853;
+    //     float MUL_1868 = MUL_1798 * 0.08;
+    //     float MUL_1870 = MUL_1801 * 0.08;
+    //     float MUL_1872 = SUB_1808 * 0.08;
+    //     float ADD_1873 = 0.333 + MUL_1872;
+    //     float MUL_1882 = MUL_1784 * 0.12;
+    //     float MUL_1885 = SUB_1792 * 0.12;
+    //     float NEGATE_1886 = -MUL_1885;
+    //     float MUL_1889 = MUL_1795 * 0.12;
+    //     float SUB_1897 = 0.333 - MUL_1889;
+    //     float MUL_1906 = MUL_1784 * 0.17;
+    //     float MUL_1909 = SUB_1792 * 0.17;
+    //     float NEGATE_1910 = -MUL_1909;
+    //     float MUL_1913 = MUL_1795 * 0.17;
+    //     float SUB_1921 = 0.333 - MUL_1913;
+    //     if (/*panda_link2*/ sphere_environment_in_collision(environment, ADD_1832, SUB_1833, ADD_1835, 0.154))
+    //     {
+    //         if (sphere_environment_in_collision(environment, MUL_1849, MUL_1851, ADD_1854, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, MUL_1868, MUL_1870, ADD_1873, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, MUL_1882, NEGATE_1886, SUB_1897, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, MUL_1906, NEGATE_1910, SUB_1921, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (22, 87)
+    //     float MUL_182 = SUB_149 * 0.7071068;
+    //     float MUL_198 = ADD_144 * 0.7071068;
+    //     float MUL_196 = SUB_138 * 0.7071068;
+    //     float SUB_209 = MUL_198 - MUL_196;
+    //     float ADD_199 = MUL_196 + MUL_198;
+    //     float MUL_184 = ADD_130 * 0.7071068;
+    //     float SUB_186 = MUL_182 - MUL_184;
+    //     float ADD_215 = MUL_182 + MUL_184;
+    //     float MUL_224 = ADD_144 * 0.316;
+    //     float MUL_235 = SUB_149 * MUL_224;
+    //     float MUL_228 = ADD_130 * 0.316;
+    //     float MUL_236 = SUB_138 * MUL_228;
+    //     float ADD_237 = MUL_235 + MUL_236;
+    //     float MUL_240 = ADD_237 * 2.0;
+    //     float INPUT_2 = q[2];
+    //     float DIV_262 = INPUT_2 * 0.5;
+    //     float SIN_263 = sin(DIV_262);
+    //     float COS_269 = cos(DIV_262);
+    //     float MUL_286 = ADD_215 * COS_269;
+    //     float MUL_281 = ADD_215 * SIN_263;
+    //     float MUL_284 = SUB_209 * COS_269;
+    //     float ADD_285 = MUL_281 + MUL_284;
+    //     float MUL_1933 = ADD_285 * ADD_285;
+    //     float MUL_289 = SUB_209 * SIN_263;
+    //     float SUB_290 = MUL_286 - MUL_289;
+    //     float MUL_1934 = SUB_290 * ADD_285;
+    //     float MUL_271 = SUB_186 * COS_269;
+    //     float MUL_276 = SUB_186 * SIN_263;
+    //     float MUL_278 = ADD_199 * COS_269;
+    //     float SUB_279 = MUL_278 - MUL_276;
+    //     float MUL_1935 = SUB_290 * SUB_279;
+    //     float MUL_1932 = SUB_279 * SUB_279;
+    //     float ADD_1941 = MUL_1932 + MUL_1933;
+    //     float MUL_1944 = ADD_1941 * 2.0;
+    //     float SUB_1947 = 1.0 - MUL_1944;
+    //     float MUL_1981 = SUB_1947 * 0.039;
+    //     float MUL_272 = ADD_199 * SIN_263;
+    //     float ADD_273 = MUL_271 + MUL_272;
+    //     float MUL_1939 = ADD_273 * ADD_285;
+    //     float ADD_1967 = MUL_1939 + MUL_1935;
+    //     float MUL_1969 = ADD_1967 * 2.0;
+    //     float MUL_1994 = MUL_1969 * 0.052;
+    //     float MUL_1938 = ADD_273 * SUB_279;
+    //     float SUB_1954 = MUL_1938 - MUL_1934;
+    //     float MUL_1956 = SUB_1954 * 2.0;
+    //     float MUL_1987 = MUL_1956 * 0.028;
+    //     float ADD_2004 = MUL_1981 + MUL_1987;
+    //     float SUB_2007 = ADD_2004 - MUL_1994;
+    //     float ADD_2010 = MUL_240 + SUB_2007;
+    //     float ADD_1948 = MUL_1938 + MUL_1934;
+    //     float MUL_1950 = ADD_1948 * 2.0;
+    //     float MUL_1983 = MUL_1950 * 0.039;
+    //     float MUL_1937 = SUB_290 * ADD_273;
+    //     float MUL_1940 = SUB_279 * ADD_285;
+    //     float SUB_1970 = MUL_1940 - MUL_1937;
+    //     float MUL_1972 = SUB_1970 * 2.0;
+    //     float MUL_1998 = MUL_1972 * 0.052;
+    //     float MUL_1936 = ADD_273 * ADD_273;
+    //     float ADD_1957 = MUL_1933 + MUL_1936;
+    //     float MUL_1960 = ADD_1957 * 2.0;
+    //     float SUB_1963 = 1.0 - MUL_1960;
+    //     float MUL_1989 = SUB_1963 * 0.028;
+    //     float ADD_2005 = MUL_1983 + MUL_1989;
+    //     float SUB_2008 = ADD_2005 - MUL_1998;
+    //     float MUL_246 = ADD_144 * MUL_224;
+    //     float MUL_244 = ADD_130 * MUL_228;
+    //     float ADD_247 = MUL_244 + MUL_246;
+    //     float MUL_249 = ADD_247 * 2.0;
+    //     float SUB_252 = MUL_249 - 0.316;
+    //     float ADD_2011 = SUB_252 + SUB_2008;
+    //     float SUB_1951 = MUL_1939 - MUL_1935;
+    //     float ADD_1964 = MUL_1940 + MUL_1937;
+    //     float ADD_1973 = MUL_1932 + MUL_1936;
+    //     float MUL_1976 = ADD_1973 * 2.0;
+    //     float SUB_1979 = 1.0 - MUL_1976;
+    //     float MUL_2002 = SUB_1979 * 0.052;
+    //     float MUL_1966 = ADD_1964 * 2.0;
+    //     float MUL_1991 = MUL_1966 * 0.028;
+    //     float MUL_1953 = SUB_1951 * 2.0;
+    //     float MUL_1985 = MUL_1953 * 0.039;
+    //     float ADD_2006 = MUL_1985 + MUL_1991;
+    //     float SUB_2009 = ADD_2006 - MUL_2002;
+    //     float MUL_253 = SUB_149 * MUL_228;
+    //     float MUL_255 = SUB_138 * MUL_224;
+    //     float SUB_256 = MUL_253 - MUL_255;
+    //     float MUL_258 = SUB_256 * 2.0;
+    //     float ADD_260 = 0.333 + MUL_258;
+    //     float ADD_2012 = ADD_260 + SUB_2009;
+    //     float MUL_2027 = MUL_1969 * 0.1;
+    //     float SUB_2037 = MUL_240 - MUL_2027;
+    //     float MUL_2031 = MUL_1972 * 0.1;
+    //     float SUB_2038 = SUB_252 - MUL_2031;
+    //     float MUL_2035 = SUB_1979 * 0.1;
+    //     float SUB_2039 = ADD_260 - MUL_2035;
+    //     float MUL_2054 = MUL_1969 * 0.06;
+    //     float SUB_2064 = MUL_240 - MUL_2054;
+    //     float MUL_2058 = MUL_1972 * 0.06;
+    //     float SUB_2065 = SUB_252 - MUL_2058;
+    //     float MUL_2062 = SUB_1979 * 0.06;
+    //     float SUB_2066 = ADD_260 - MUL_2062;
+    //     float MUL_2074 = MUL_1956 * 0.06;
+    //     float MUL_2068 = SUB_1947 * 0.08;
+    //     float ADD_2085 = MUL_2068 + MUL_2074;
+    //     float ADD_2088 = MUL_240 + ADD_2085;
+    //     float MUL_2076 = SUB_1963 * 0.06;
+    //     float MUL_2070 = MUL_1950 * 0.08;
+    //     float ADD_2086 = MUL_2070 + MUL_2076;
+    //     float ADD_2089 = SUB_252 + ADD_2086;
+    //     float MUL_2078 = MUL_1966 * 0.06;
+    //     float MUL_2072 = MUL_1953 * 0.08;
+    //     float ADD_2087 = MUL_2072 + MUL_2078;
+    //     float ADD_2090 = ADD_260 + ADD_2087;
+    //     float MUL_2098 = MUL_1956 * 0.02;
+    //     float ADD_2109 = MUL_2068 + MUL_2098;
+    //     float ADD_2112 = MUL_240 + ADD_2109;
+    //     float MUL_2100 = SUB_1963 * 0.02;
+    //     float ADD_2110 = MUL_2070 + MUL_2100;
+    //     float ADD_2113 = SUB_252 + ADD_2110;
+    //     float MUL_2102 = MUL_1966 * 0.02;
+    //     float ADD_2111 = MUL_2072 + MUL_2102;
+    //     float ADD_2114 = ADD_260 + ADD_2111;
+    //     if (/*panda_link3*/ sphere_environment_in_collision(environment, ADD_2010, ADD_2011, ADD_2012, 0.128))
+    //     {
+    //         if (sphere_environment_in_collision(environment, SUB_2037, SUB_2038, SUB_2039, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, SUB_2064, SUB_2065, SUB_2066, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2088, ADD_2089, ADD_2090, 0.055))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2112, ADD_2113, ADD_2114, 0.055))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (87, 208)
+    //     float MUL_323 = SUB_290 * 0.7071068;
+    //     float MUL_338 = ADD_285 * 0.7071068;
+    //     float MUL_336 = SUB_279 * 0.7071068;
+    //     float SUB_349 = MUL_338 - MUL_336;
+    //     float ADD_339 = MUL_336 + MUL_338;
+    //     float MUL_325 = ADD_273 * 0.7071068;
+    //     float SUB_354 = MUL_323 - MUL_325;
+    //     float ADD_326 = MUL_323 + MUL_325;
+    //     float MUL_371 = ADD_285 * 0.0825;
+    //     float MUL_376 = ADD_285 * MUL_371;
+    //     float MUL_366 = SUB_279 * 0.0825;
+    //     float MUL_374 = SUB_279 * MUL_366;
+    //     float ADD_378 = MUL_374 + MUL_376;
+    //     float MUL_381 = ADD_378 * 2.0;
+    //     float SUB_384 = 0.0825 - MUL_381;
+    //     float ADD_403 = MUL_240 + SUB_384;
+    //     float INPUT_3 = q[3];
+    //     float DIV_407 = INPUT_3 * 0.5;
+    //     float SIN_408 = sin(DIV_407);
+    //     float COS_414 = cos(DIV_407);
+    //     float MUL_431 = SUB_354 * COS_414;
+    //     float MUL_426 = SUB_354 * SIN_408;
+    //     float MUL_429 = SUB_349 * COS_414;
+    //     float ADD_430 = MUL_426 + MUL_429;
+    //     float MUL_2126 = ADD_430 * ADD_430;
+    //     float MUL_434 = SUB_349 * SIN_408;
+    //     float SUB_435 = MUL_431 - MUL_434;
+    //     float MUL_2127 = SUB_435 * ADD_430;
+    //     float MUL_416 = ADD_326 * COS_414;
+    //     float MUL_421 = ADD_326 * SIN_408;
+    //     float MUL_423 = ADD_339 * COS_414;
+    //     float SUB_424 = MUL_423 - MUL_421;
+    //     float MUL_2128 = SUB_435 * SUB_424;
+    //     float MUL_2125 = SUB_424 * SUB_424;
+    //     float ADD_2134 = MUL_2125 + MUL_2126;
+    //     float MUL_2137 = ADD_2134 * 2.0;
+    //     float SUB_2140 = 1.0 - MUL_2137;
+    //     float MUL_2175 = SUB_2140 * 0.042;
+    //     float MUL_417 = ADD_339 * SIN_408;
+    //     float ADD_418 = MUL_416 + MUL_417;
+    //     float MUL_2132 = ADD_418 * ADD_430;
+    //     float ADD_2160 = MUL_2132 + MUL_2128;
+    //     float MUL_2162 = ADD_2160 * 2.0;
+    //     float MUL_2192 = MUL_2162 * 0.029;
+    //     float MUL_2131 = ADD_418 * SUB_424;
+    //     float SUB_2147 = MUL_2131 - MUL_2127;
+    //     float MUL_2149 = SUB_2147 * 2.0;
+    //     float MUL_2186 = MUL_2149 * 0.049;
+    //     float SUB_2197 = MUL_2186 - MUL_2175;
+    //     float ADD_2200 = SUB_2197 + MUL_2192;
+    //     float ADD_2203 = ADD_403 + ADD_2200;
+    //     float ADD_2141 = MUL_2131 + MUL_2127;
+    //     float MUL_2143 = ADD_2141 * 2.0;
+    //     float MUL_2179 = MUL_2143 * 0.042;
+    //     float MUL_2130 = SUB_435 * ADD_418;
+    //     float MUL_2133 = SUB_424 * ADD_430;
+    //     float SUB_2163 = MUL_2133 - MUL_2130;
+    //     float MUL_2165 = SUB_2163 * 2.0;
+    //     float MUL_2194 = MUL_2165 * 0.029;
+    //     float MUL_2129 = ADD_418 * ADD_418;
+    //     float ADD_2150 = MUL_2126 + MUL_2129;
+    //     float MUL_2153 = ADD_2150 * 2.0;
+    //     float SUB_2156 = 1.0 - MUL_2153;
+    //     float MUL_2188 = SUB_2156 * 0.049;
+    //     float SUB_2198 = MUL_2188 - MUL_2179;
+    //     float ADD_2201 = SUB_2198 + MUL_2194;
+    //     float MUL_386 = SUB_290 * MUL_371;
+    //     float MUL_387 = ADD_273 * MUL_366;
+    //     float ADD_389 = MUL_386 + MUL_387;
+    //     float MUL_392 = ADD_389 * 2.0;
+    //     float ADD_404 = SUB_252 + MUL_392;
+    //     float ADD_2204 = ADD_404 + ADD_2201;
+    //     float SUB_2144 = MUL_2132 - MUL_2128;
+    //     float ADD_2157 = MUL_2133 + MUL_2130;
+    //     float ADD_2166 = MUL_2125 + MUL_2129;
+    //     float MUL_2169 = ADD_2166 * 2.0;
+    //     float SUB_2172 = 1.0 - MUL_2169;
+    //     float MUL_2196 = SUB_2172 * 0.029;
+    //     float MUL_2159 = ADD_2157 * 2.0;
+    //     float MUL_2190 = MUL_2159 * 0.049;
+    //     float MUL_2146 = SUB_2144 * 2.0;
+    //     float MUL_2183 = MUL_2146 * 0.042;
+    //     float SUB_2199 = MUL_2190 - MUL_2183;
+    //     float ADD_2202 = SUB_2199 + MUL_2196;
+    //     float MUL_394 = SUB_290 * MUL_366;
+    //     float MUL_396 = ADD_273 * MUL_371;
+    //     float SUB_398 = MUL_396 - MUL_394;
+    //     float MUL_401 = SUB_398 * 2.0;
+    //     float ADD_405 = ADD_260 + MUL_401;
+    //     float ADD_2205 = ADD_405 + ADD_2202;
+    //     float MUL_2208 = SUB_2140 * 0.08;
+    //     float MUL_2219 = MUL_2149 * 0.095;
+    //     float SUB_2230 = MUL_2219 - MUL_2208;
+    //     float ADD_2233 = ADD_403 + SUB_2230;
+    //     float MUL_2221 = SUB_2156 * 0.095;
+    //     float MUL_2212 = MUL_2143 * 0.08;
+    //     float SUB_2231 = MUL_2221 - MUL_2212;
+    //     float ADD_2234 = ADD_404 + SUB_2231;
+    //     float MUL_2223 = MUL_2159 * 0.095;
+    //     float MUL_2216 = MUL_2146 * 0.08;
+    //     float SUB_2232 = MUL_2223 - MUL_2216;
+    //     float ADD_2235 = ADD_405 + SUB_2232;
+    //     float MUL_2249 = MUL_2162 * 0.02;
+    //     float ADD_2254 = ADD_403 + MUL_2249;
+    //     float MUL_2251 = MUL_2165 * 0.02;
+    //     float ADD_2255 = ADD_404 + MUL_2251;
+    //     float MUL_2253 = SUB_2172 * 0.02;
+    //     float ADD_2256 = ADD_405 + MUL_2253;
+    //     float MUL_2270 = MUL_2162 * 0.06;
+    //     float ADD_2275 = ADD_403 + MUL_2270;
+    //     float MUL_2272 = MUL_2165 * 0.06;
+    //     float ADD_2276 = ADD_404 + MUL_2272;
+    //     float MUL_2274 = SUB_2172 * 0.06;
+    //     float ADD_2277 = ADD_405 + MUL_2274;
+    //     float MUL_2291 = MUL_2149 * 0.06;
+    //     float SUB_2302 = MUL_2291 - MUL_2208;
+    //     float ADD_2305 = ADD_403 + SUB_2302;
+    //     float MUL_2293 = SUB_2156 * 0.06;
+    //     float SUB_2303 = MUL_2293 - MUL_2212;
+    //     float ADD_2306 = ADD_404 + SUB_2303;
+    //     float MUL_2295 = MUL_2159 * 0.06;
+    //     float SUB_2304 = MUL_2295 - MUL_2216;
+    //     float ADD_2307 = ADD_405 + SUB_2304;
+    //     if (/*panda_link4*/ sphere_environment_in_collision(environment, ADD_2203, ADD_2204, ADD_2205, 0.126))
+    //     {
+    //         if (sphere_environment_in_collision(environment, ADD_2233, ADD_2234, ADD_2235, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2254, ADD_2255, ADD_2256, 0.055))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2275, ADD_2276, ADD_2277, 0.055))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2305, ADD_2306, ADD_2307, 0.055))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (208, 331)
+    //     float MUL_469 = SUB_435 * 0.7071068;
+    //     float MUL_486 = ADD_430 * 0.7071068;
+    //     float MUL_527 = ADD_430 * 0.0825;
+    //     float MUL_533 = ADD_430 * MUL_527;
+    //     float MUL_483 = SUB_424 * 0.7071068;
+    //     float SUB_488 = MUL_483 - MUL_486;
+    //     float ADD_499 = MUL_483 + MUL_486;
+    //     float MUL_520 = SUB_424 * 0.0825;
+    //     float MUL_472 = ADD_418 * 0.7071068;
+    //     float SUB_473 = MUL_472 - MUL_469;
+    //     float ADD_506 = MUL_469 + MUL_472;
+    //     float MUL_514 = ADD_430 * 0.384;
+    //     float MUL_529 = SUB_435 * MUL_514;
+    //     float MUL_517 = ADD_418 * 0.384;
+    //     float ADD_522 = MUL_517 + MUL_520;
+    //     float MUL_531 = SUB_424 * ADD_522;
+    //     float SUB_532 = MUL_531 - MUL_529;
+    //     float ADD_534 = SUB_532 + MUL_533;
+    //     float MUL_536 = ADD_534 * 2.0;
+    //     float SUB_539 = MUL_536 - 0.0825;
+    //     float ADD_564 = ADD_403 + SUB_539;
+    //     float INPUT_4 = q[4];
+    //     float DIV_568 = INPUT_4 * 0.5;
+    //     float SIN_569 = sin(DIV_568);
+    //     float COS_575 = cos(DIV_568);
+    //     float MUL_592 = ADD_506 * COS_575;
+    //     float MUL_587 = ADD_506 * SIN_569;
+    //     float MUL_590 = ADD_499 * COS_575;
+    //     float ADD_591 = MUL_587 + MUL_590;
+    //     float MUL_2319 = ADD_591 * ADD_591;
+    //     float MUL_595 = ADD_499 * SIN_569;
+    //     float SUB_596 = MUL_592 - MUL_595;
+    //     float MUL_2320 = SUB_596 * ADD_591;
+    //     float MUL_577 = SUB_473 * COS_575;
+    //     float MUL_582 = SUB_473 * SIN_569;
+    //     float MUL_584 = SUB_488 * COS_575;
+    //     float SUB_585 = MUL_584 - MUL_582;
+    //     float MUL_2321 = SUB_596 * SUB_585;
+    //     float MUL_2318 = SUB_585 * SUB_585;
+    //     float ADD_2327 = MUL_2318 + MUL_2319;
+    //     float MUL_2330 = ADD_2327 * 2.0;
+    //     float SUB_2333 = 1.0 - MUL_2330;
+    //     float MUL_2368 = SUB_2333 * 0.001;
+    //     float MUL_578 = SUB_488 * SIN_569;
+    //     float ADD_579 = MUL_577 + MUL_578;
+    //     float MUL_2325 = ADD_579 * ADD_591;
+    //     float ADD_2353 = MUL_2325 + MUL_2321;
+    //     float MUL_2355 = ADD_2353 * 2.0;
+    //     float MUL_2386 = MUL_2355 * 0.11;
+    //     float MUL_2324 = ADD_579 * SUB_585;
+    //     float SUB_2340 = MUL_2324 - MUL_2320;
+    //     float MUL_2342 = SUB_2340 * 2.0;
+    //     float MUL_2379 = MUL_2342 * 0.037;
+    //     float SUB_2396 = MUL_2379 - MUL_2368;
+    //     float SUB_2399 = SUB_2396 - MUL_2386;
+    //     float ADD_2402 = ADD_564 + SUB_2399;
+    //     float ADD_2334 = MUL_2324 + MUL_2320;
+    //     float MUL_2336 = ADD_2334 * 2.0;
+    //     float MUL_2372 = MUL_2336 * 0.001;
+    //     float MUL_2323 = SUB_596 * ADD_579;
+    //     float MUL_2326 = SUB_585 * ADD_591;
+    //     float SUB_2356 = MUL_2326 - MUL_2323;
+    //     float MUL_2358 = SUB_2356 * 2.0;
+    //     float MUL_2390 = MUL_2358 * 0.11;
+    //     float MUL_2322 = ADD_579 * ADD_579;
+    //     float ADD_2343 = MUL_2319 + MUL_2322;
+    //     float MUL_2346 = ADD_2343 * 2.0;
+    //     float SUB_2349 = 1.0 - MUL_2346;
+    //     float MUL_2381 = SUB_2349 * 0.037;
+    //     float SUB_2397 = MUL_2381 - MUL_2372;
+    //     float SUB_2400 = SUB_2397 - MUL_2390;
+    //     float MUL_541 = SUB_435 * MUL_527;
+    //     float MUL_546 = ADD_430 * MUL_514;
+    //     float MUL_543 = ADD_418 * ADD_522;
+    //     float ADD_544 = MUL_541 + MUL_543;
+    //     float ADD_548 = ADD_544 + MUL_546;
+    //     float MUL_551 = ADD_548 * 2.0;
+    //     float SUB_554 = 0.384 - MUL_551;
+    //     float ADD_565 = ADD_404 + SUB_554;
+    //     float ADD_2403 = ADD_565 + SUB_2400;
+    //     float SUB_2337 = MUL_2325 - MUL_2321;
+    //     float ADD_2350 = MUL_2326 + MUL_2323;
+    //     float ADD_2359 = MUL_2318 + MUL_2322;
+    //     float MUL_2362 = ADD_2359 * 2.0;
+    //     float SUB_2365 = 1.0 - MUL_2362;
+    //     float MUL_2394 = SUB_2365 * 0.11;
+    //     float MUL_2352 = ADD_2350 * 2.0;
+    //     float MUL_2383 = MUL_2352 * 0.037;
+    //     float MUL_2339 = SUB_2337 * 2.0;
+    //     float MUL_2376 = MUL_2339 * 0.001;
+    //     float SUB_2398 = MUL_2383 - MUL_2376;
+    //     float SUB_2401 = SUB_2398 - MUL_2394;
+    //     float MUL_555 = SUB_435 * ADD_522;
+    //     float MUL_558 = SUB_424 * MUL_514;
+    //     float MUL_556 = ADD_418 * MUL_527;
+    //     float SUB_557 = MUL_555 - MUL_556;
+    //     float ADD_560 = SUB_557 + MUL_558;
+    //     float MUL_562 = ADD_560 * 2.0;
+    //     float ADD_566 = ADD_405 + MUL_562;
+    //     float ADD_2404 = ADD_566 + SUB_2401;
+    //     float MUL_2412 = MUL_2342 * 0.055;
+    //     float ADD_2423 = ADD_564 + MUL_2412;
+    //     float MUL_2414 = SUB_2349 * 0.055;
+    //     float ADD_2424 = ADD_565 + MUL_2414;
+    //     float MUL_2416 = MUL_2352 * 0.055;
+    //     float ADD_2425 = ADD_566 + MUL_2416;
+    //     float MUL_2433 = MUL_2342 * 0.075;
+    //     float ADD_2444 = ADD_564 + MUL_2433;
+    //     float MUL_2435 = SUB_2349 * 0.075;
+    //     float ADD_2445 = ADD_565 + MUL_2435;
+    //     float MUL_2437 = MUL_2352 * 0.075;
+    //     float ADD_2446 = ADD_566 + MUL_2437;
+    //     float MUL_2461 = MUL_2355 * 0.22;
+    //     float SUB_2471 = ADD_564 - MUL_2461;
+    //     float MUL_2465 = MUL_2358 * 0.22;
+    //     float SUB_2472 = ADD_565 - MUL_2465;
+    //     float MUL_2469 = SUB_2365 * 0.22;
+    //     float SUB_2473 = ADD_566 - MUL_2469;
+    //     float MUL_2488 = MUL_2355 * 0.18;
+    //     float MUL_2481 = MUL_2342 * 0.05;
+    //     float SUB_2498 = MUL_2481 - MUL_2488;
+    //     float ADD_2501 = ADD_564 + SUB_2498;
+    //     float MUL_2492 = MUL_2358 * 0.18;
+    //     float MUL_2483 = SUB_2349 * 0.05;
+    //     float SUB_2499 = MUL_2483 - MUL_2492;
+    //     float ADD_2502 = ADD_565 + SUB_2499;
+    //     float MUL_2496 = SUB_2365 * 0.18;
+    //     float MUL_2485 = MUL_2352 * 0.05;
+    //     float SUB_2500 = MUL_2485 - MUL_2496;
+    //     float ADD_2503 = ADD_566 + SUB_2500;
+    //     float MUL_2511 = MUL_2342 * 0.08;
+    //     float MUL_2518 = MUL_2355 * 0.14;
+    //     float MUL_2505 = SUB_2333 * 0.01;
+    //     float ADD_2528 = MUL_2505 + MUL_2511;
+    //     float SUB_2531 = ADD_2528 - MUL_2518;
+    //     float ADD_2534 = ADD_564 + SUB_2531;
+    //     float MUL_2522 = MUL_2358 * 0.14;
+    //     float MUL_2513 = SUB_2349 * 0.08;
+    //     float MUL_2507 = MUL_2336 * 0.01;
+    //     float ADD_2529 = MUL_2507 + MUL_2513;
+    //     float SUB_2532 = ADD_2529 - MUL_2522;
+    //     float ADD_2535 = ADD_565 + SUB_2532;
+    //     float MUL_2526 = SUB_2365 * 0.14;
+    //     float MUL_2515 = MUL_2352 * 0.08;
+    //     float MUL_2509 = MUL_2339 * 0.01;
+    //     float ADD_2530 = MUL_2509 + MUL_2515;
+    //     float SUB_2533 = ADD_2530 - MUL_2526;
+    //     float ADD_2536 = ADD_566 + SUB_2533;
+    //     float MUL_2544 = MUL_2342 * 0.085;
+    //     float ADD_2561 = MUL_2505 + MUL_2544;
+    //     float SUB_2564 = ADD_2561 - MUL_2386;
+    //     float ADD_2567 = ADD_564 + SUB_2564;
+    //     float MUL_2546 = SUB_2349 * 0.085;
+    //     float ADD_2562 = MUL_2507 + MUL_2546;
+    //     float SUB_2565 = ADD_2562 - MUL_2390;
+    //     float ADD_2568 = ADD_565 + SUB_2565;
+    //     float MUL_2548 = MUL_2352 * 0.085;
+    //     float ADD_2563 = MUL_2509 + MUL_2548;
+    //     float SUB_2566 = ADD_2563 - MUL_2394;
+    //     float ADD_2569 = ADD_566 + SUB_2566;
+    //     float MUL_2584 = MUL_2355 * 0.08;
+    //     float MUL_2577 = MUL_2342 * 0.09;
+    //     float ADD_2594 = MUL_2505 + MUL_2577;
+    //     float SUB_2597 = ADD_2594 - MUL_2584;
+    //     float ADD_2600 = ADD_564 + SUB_2597;
+    //     float MUL_2588 = MUL_2358 * 0.08;
+    //     float MUL_2579 = SUB_2349 * 0.09;
+    //     float ADD_2595 = MUL_2507 + MUL_2579;
+    //     float SUB_2598 = ADD_2595 - MUL_2588;
+    //     float ADD_2601 = ADD_565 + SUB_2598;
+    //     float MUL_2592 = SUB_2365 * 0.08;
+    //     float MUL_2581 = MUL_2352 * 0.09;
+    //     float ADD_2596 = MUL_2509 + MUL_2581;
+    //     float SUB_2599 = ADD_2596 - MUL_2592;
+    //     float ADD_2602 = ADD_566 + SUB_2599;
+    //     float MUL_2617 = MUL_2355 * 0.05;
+    //     float MUL_2610 = MUL_2342 * 0.095;
+    //     float ADD_2627 = MUL_2505 + MUL_2610;
+    //     float SUB_2630 = ADD_2627 - MUL_2617;
+    //     float ADD_2633 = ADD_564 + SUB_2630;
+    //     float MUL_2621 = MUL_2358 * 0.05;
+    //     float MUL_2612 = SUB_2349 * 0.095;
+    //     float ADD_2628 = MUL_2507 + MUL_2612;
+    //     float SUB_2631 = ADD_2628 - MUL_2621;
+    //     float ADD_2634 = ADD_565 + SUB_2631;
+    //     float MUL_2625 = SUB_2365 * 0.05;
+    //     float MUL_2614 = MUL_2352 * 0.095;
+    //     float ADD_2629 = MUL_2509 + MUL_2614;
+    //     float SUB_2632 = ADD_2629 - MUL_2625;
+    //     float ADD_2635 = ADD_566 + SUB_2632;
+    //     float SUB_2666 = MUL_2511 - MUL_2505;
+    //     float SUB_2669 = SUB_2666 - MUL_2518;
+    //     float ADD_2672 = ADD_564 + SUB_2669;
+    //     float SUB_2667 = MUL_2513 - MUL_2507;
+    //     float SUB_2670 = SUB_2667 - MUL_2522;
+    //     float ADD_2673 = ADD_565 + SUB_2670;
+    //     float SUB_2668 = MUL_2515 - MUL_2509;
+    //     float SUB_2671 = SUB_2668 - MUL_2526;
+    //     float ADD_2674 = ADD_566 + SUB_2671;
+    //     float SUB_2705 = MUL_2544 - MUL_2505;
+    //     float SUB_2708 = SUB_2705 - MUL_2386;
+    //     float ADD_2711 = ADD_564 + SUB_2708;
+    //     float SUB_2706 = MUL_2546 - MUL_2507;
+    //     float SUB_2709 = SUB_2706 - MUL_2390;
+    //     float ADD_2712 = ADD_565 + SUB_2709;
+    //     float SUB_2707 = MUL_2548 - MUL_2509;
+    //     float SUB_2710 = SUB_2707 - MUL_2394;
+    //     float ADD_2713 = ADD_566 + SUB_2710;
+    //     float SUB_2744 = MUL_2577 - MUL_2505;
+    //     float SUB_2747 = SUB_2744 - MUL_2584;
+    //     float ADD_2750 = ADD_564 + SUB_2747;
+    //     float SUB_2745 = MUL_2579 - MUL_2507;
+    //     float SUB_2748 = SUB_2745 - MUL_2588;
+    //     float ADD_2751 = ADD_565 + SUB_2748;
+    //     float SUB_2746 = MUL_2581 - MUL_2509;
+    //     float SUB_2749 = SUB_2746 - MUL_2592;
+    //     float ADD_2752 = ADD_566 + SUB_2749;
+    //     float SUB_2783 = MUL_2610 - MUL_2505;
+    //     float SUB_2786 = SUB_2783 - MUL_2617;
+    //     float ADD_2789 = ADD_564 + SUB_2786;
+    //     float SUB_2784 = MUL_2612 - MUL_2507;
+    //     float SUB_2787 = SUB_2784 - MUL_2621;
+    //     float ADD_2790 = ADD_565 + SUB_2787;
+    //     float SUB_2785 = MUL_2614 - MUL_2509;
+    //     float SUB_2788 = SUB_2785 - MUL_2625;
+    //     float ADD_2791 = ADD_566 + SUB_2788;
+    //     if (/*panda_link0 vs. panda_link5*/ sphere_sphere_self_collision(
+    //         0.0, 0.0, 0.05, 0.08, ADD_2402, ADD_2403, ADD_2404, 0.176))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2423, ADD_2424, ADD_2425, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2444, ADD_2445, ADD_2446, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, SUB_2471, SUB_2472, SUB_2473, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2501, ADD_2502, ADD_2503, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2534, ADD_2535, ADD_2536, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2567, ADD_2568, ADD_2569, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2600, ADD_2601, ADD_2602, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2633, ADD_2634, ADD_2635, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2672, ADD_2673, ADD_2674, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2711, ADD_2712, ADD_2713, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2750, ADD_2751, ADD_2752, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2789, ADD_2790, ADD_2791, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (331, 557)
+    //     if (/*panda_link1 vs. panda_link5*/ sphere_sphere_self_collision(
+    //         SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_2402, ADD_2403, ADD_2404, 0.176))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (557, 557)
+    //     if (/*panda_link2 vs. panda_link5*/ sphere_sphere_self_collision(
+    //         ADD_1832, SUB_1833, ADD_1835, 0.154, ADD_2402, ADD_2403, ADD_2404, 0.176))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2423, ADD_2424, ADD_2425, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2444, ADD_2445, ADD_2446, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, SUB_2471, SUB_2472, SUB_2473, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2501, ADD_2502, ADD_2503, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2534, ADD_2535, ADD_2536, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2567, ADD_2568, ADD_2569, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2600, ADD_2601, ADD_2602, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2633, ADD_2634, ADD_2635, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2672, ADD_2673, ADD_2674, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2711, ADD_2712, ADD_2713, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2750, ADD_2751, ADD_2752, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_2789, ADD_2790, ADD_2791, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (557, 557)
+    //     if (/*panda_link5*/ sphere_environment_in_collision(environment, ADD_2402, ADD_2403, ADD_2404, 0.176))
+    //     {
+    //         if (sphere_environment_in_collision(environment, ADD_2423, ADD_2424, ADD_2425, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2444, ADD_2445, ADD_2446, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, SUB_2471, SUB_2472, SUB_2473, 0.06))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2501, ADD_2502, ADD_2503, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2534, ADD_2535, ADD_2536, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2567, ADD_2568, ADD_2569, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2600, ADD_2601, ADD_2602, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2633, ADD_2634, ADD_2635, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2672, ADD_2673, ADD_2674, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2711, ADD_2712, ADD_2713, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2750, ADD_2751, ADD_2752, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2789, ADD_2790, ADD_2791, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (557, 557)
+    //     float MUL_657 = SUB_596 * 0.7071068;
+    //     float MUL_654 = ADD_591 * 0.7071068;
+    //     float MUL_651 = SUB_585 * 0.7071068;
+    //     float SUB_655 = MUL_654 - MUL_651;
+    //     float ADD_645 = MUL_651 + MUL_654;
+    //     float MUL_659 = ADD_579 * 0.7071068;
+    //     float SUB_660 = MUL_657 - MUL_659;
+    //     float ADD_632 = MUL_657 + MUL_659;
+    //     float INPUT_5 = q[5];
+    //     float DIV_697 = INPUT_5 * 0.5;
+    //     float SIN_698 = sin(DIV_697);
+    //     float COS_704 = cos(DIV_697);
+    //     float MUL_716 = SUB_660 * SIN_698;
+    //     float MUL_721 = SUB_660 * COS_704;
+    //     float MUL_724 = SUB_655 * SIN_698;
+    //     float SUB_725 = MUL_721 - MUL_724;
+    //     float MUL_719 = SUB_655 * COS_704;
+    //     float ADD_720 = MUL_716 + MUL_719;
+    //     float MUL_2820 = SUB_725 * ADD_720;
+    //     float MUL_2819 = ADD_720 * ADD_720;
+    //     float MUL_711 = ADD_632 * SIN_698;
+    //     float MUL_706 = ADD_632 * COS_704;
+    //     float MUL_707 = ADD_645 * SIN_698;
+    //     float ADD_708 = MUL_706 + MUL_707;
+    //     float MUL_713 = ADD_645 * COS_704;
+    //     float SUB_714 = MUL_713 - MUL_711;
+    //     float MUL_2818 = SUB_714 * SUB_714;
+    //     float ADD_2827 = MUL_2818 + MUL_2819;
+    //     float MUL_2830 = ADD_2827 * 2.0;
+    //     float SUB_2833 = 1.0 - MUL_2830;
+    //     float MUL_2867 = SUB_2833 * 0.042;
+    //     float MUL_2824 = ADD_708 * SUB_714;
+    //     float SUB_2840 = MUL_2824 - MUL_2820;
+    //     float MUL_2842 = SUB_2840 * 2.0;
+    //     float MUL_2873 = MUL_2842 * 0.014;
+    //     float ADD_2884 = MUL_2867 + MUL_2873;
+    //     float ADD_2887 = ADD_564 + ADD_2884;
+    //     float ADD_2834 = MUL_2824 + MUL_2820;
+    //     float MUL_2836 = ADD_2834 * 2.0;
+    //     float MUL_2869 = MUL_2836 * 0.042;
+    //     float MUL_2822 = ADD_708 * ADD_708;
+    //     float ADD_2843 = MUL_2819 + MUL_2822;
+    //     float MUL_2846 = ADD_2843 * 2.0;
+    //     float SUB_2849 = 1.0 - MUL_2846;
+    //     float MUL_2875 = SUB_2849 * 0.014;
+    //     float ADD_2885 = MUL_2869 + MUL_2875;
+    //     float ADD_2888 = ADD_565 + ADD_2885;
+    //     float MUL_2821 = SUB_725 * SUB_714;
+    //     float MUL_2823 = SUB_725 * ADD_708;
+    //     float MUL_2826 = SUB_714 * ADD_720;
+    //     float ADD_2850 = MUL_2826 + MUL_2823;
+    //     float MUL_2852 = ADD_2850 * 2.0;
+    //     float MUL_2877 = MUL_2852 * 0.014;
+    //     float MUL_2825 = ADD_708 * ADD_720;
+    //     float SUB_2837 = MUL_2825 - MUL_2821;
+    //     float MUL_2839 = SUB_2837 * 2.0;
+    //     float MUL_2871 = MUL_2839 * 0.042;
+    //     float ADD_2886 = MUL_2871 + MUL_2877;
+    //     float ADD_2889 = ADD_566 + ADD_2886;
+    //     float MUL_2916 = MUL_2842 * 0.01;
+    //     float MUL_2909 = SUB_2833 * 0.08;
+    //     float SUB_2932 = MUL_2909 - MUL_2916;
+    //     float ADD_2935 = ADD_564 + SUB_2932;
+    //     float MUL_2920 = SUB_2849 * 0.01;
+    //     float MUL_2911 = MUL_2836 * 0.08;
+    //     float SUB_2933 = MUL_2911 - MUL_2920;
+    //     float ADD_2936 = ADD_565 + SUB_2933;
+    //     float MUL_2924 = MUL_2852 * 0.01;
+    //     float MUL_2913 = MUL_2839 * 0.08;
+    //     float SUB_2934 = MUL_2913 - MUL_2924;
+    //     float ADD_2937 = ADD_566 + SUB_2934;
+    //     float MUL_2945 = MUL_2842 * 0.035;
+    //     float ADD_2956 = MUL_2909 + MUL_2945;
+    //     float ADD_2959 = ADD_564 + ADD_2956;
+    //     float MUL_2947 = SUB_2849 * 0.035;
+    //     float ADD_2957 = MUL_2911 + MUL_2947;
+    //     float ADD_2960 = ADD_565 + ADD_2957;
+    //     float MUL_2949 = MUL_2852 * 0.035;
+    //     float ADD_2958 = MUL_2913 + MUL_2949;
+    //     float ADD_2961 = ADD_566 + ADD_2958;
+    //     if (/*panda_link0 vs. panda_link6*/ sphere_sphere_self_collision(
+    //         0.0, 0.0, 0.05, 0.08, ADD_2887, ADD_2888, ADD_2889, 0.095))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_564, ADD_565, ADD_566, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2935, ADD_2936, ADD_2937, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_2959, ADD_2960, ADD_2961, 0.052))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (557, 637)
+    //     if (/*panda_link1 vs. panda_link6*/ sphere_sphere_self_collision(
+    //         SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_2887, ADD_2888, ADD_2889, 0.095))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_564, ADD_565, ADD_566, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2935, ADD_2936, ADD_2937, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_2959, ADD_2960, ADD_2961, 0.052))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_564, ADD_565, ADD_566, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2935, ADD_2936, ADD_2937, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_2959, ADD_2960, ADD_2961, 0.052))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_564, ADD_565, ADD_566, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2935, ADD_2936, ADD_2937, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_2959, ADD_2960, ADD_2961, 0.052))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_564, ADD_565, ADD_566, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2935, ADD_2936, ADD_2937, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_2959, ADD_2960, ADD_2961, 0.052))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (637, 637)
+    //     if (/*panda_link6*/ sphere_environment_in_collision(environment, ADD_2887, ADD_2888, ADD_2889, 0.095))
+    //     {
+    //         if (sphere_environment_in_collision(environment, ADD_564, ADD_565, ADD_566, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2935, ADD_2936, ADD_2937, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_2959, ADD_2960, ADD_2961, 0.052))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (637, 637)
+    //     float MUL_758 = SUB_725 * 0.7071068;
+    //     float MUL_773 = ADD_720 * 0.7071068;
+    //     float MUL_771 = SUB_714 * 0.7071068;
+    //     float SUB_784 = MUL_773 - MUL_771;
+    //     float ADD_774 = MUL_771 + MUL_773;
+    //     float MUL_760 = ADD_708 * 0.7071068;
+    //     float SUB_789 = MUL_758 - MUL_760;
+    //     float ADD_761 = MUL_758 + MUL_760;
+    //     float MUL_806 = ADD_720 * 0.088;
+    //     float MUL_811 = ADD_720 * MUL_806;
+    //     float MUL_801 = SUB_714 * 0.088;
+    //     float MUL_809 = SUB_714 * MUL_801;
+    //     float ADD_813 = MUL_809 + MUL_811;
+    //     float MUL_816 = ADD_813 * 2.0;
+    //     float SUB_819 = 0.088 - MUL_816;
+    //     float ADD_838 = ADD_564 + SUB_819;
+    //     float INPUT_6 = q[6];
+    //     float DIV_842 = INPUT_6 * 0.5;
+    //     float SIN_843 = sin(DIV_842);
+    //     float COS_849 = cos(DIV_842);
+    //     float MUL_866 = SUB_789 * COS_849;
+    //     float MUL_861 = SUB_789 * SIN_843;
+    //     float MUL_864 = SUB_784 * COS_849;
+    //     float ADD_865 = MUL_861 + MUL_864;
+    //     float MUL_2971 = ADD_865 * ADD_865;
+    //     float MUL_869 = SUB_784 * SIN_843;
+    //     float SUB_870 = MUL_866 - MUL_869;
+    //     float MUL_2972 = SUB_870 * ADD_865;
+    //     float MUL_851 = ADD_761 * COS_849;
+    //     float MUL_856 = ADD_761 * SIN_843;
+    //     float MUL_858 = ADD_774 * COS_849;
+    //     float SUB_859 = MUL_858 - MUL_856;
+    //     float MUL_2973 = SUB_870 * SUB_859;
+    //     float MUL_2970 = SUB_859 * SUB_859;
+    //     float ADD_2979 = MUL_2970 + MUL_2971;
+    //     float MUL_2982 = ADD_2979 * 2.0;
+    //     float SUB_2985 = 1.0 - MUL_2982;
+    //     float MUL_3019 = SUB_2985 * 0.015;
+    //     float MUL_852 = ADD_774 * SIN_843;
+    //     float ADD_853 = MUL_851 + MUL_852;
+    //     float MUL_2977 = ADD_853 * ADD_865;
+    //     float ADD_3005 = MUL_2977 + MUL_2973;
+    //     float MUL_3007 = ADD_3005 * 2.0;
+    //     float MUL_3031 = MUL_3007 * 0.075;
+    //     float MUL_2976 = ADD_853 * SUB_859;
+    //     float SUB_2992 = MUL_2976 - MUL_2972;
+    //     float MUL_2994 = SUB_2992 * 2.0;
+    //     float MUL_3025 = MUL_2994 * 0.015;
+    //     float ADD_3036 = MUL_3019 + MUL_3025;
+    //     float ADD_3039 = ADD_3036 + MUL_3031;
+    //     float ADD_3042 = ADD_838 + ADD_3039;
+    //     float ADD_2986 = MUL_2976 + MUL_2972;
+    //     float MUL_2988 = ADD_2986 * 2.0;
+    //     float MUL_3021 = MUL_2988 * 0.015;
+    //     float MUL_2975 = SUB_870 * ADD_853;
+    //     float MUL_2978 = SUB_859 * ADD_865;
+    //     float SUB_3008 = MUL_2978 - MUL_2975;
+    //     float MUL_3010 = SUB_3008 * 2.0;
+    //     float MUL_3033 = MUL_3010 * 0.075;
+    //     float MUL_2974 = ADD_853 * ADD_853;
+    //     float ADD_2995 = MUL_2971 + MUL_2974;
+    //     float MUL_2998 = ADD_2995 * 2.0;
+    //     float SUB_3001 = 1.0 - MUL_2998;
+    //     float MUL_3027 = SUB_3001 * 0.015;
+    //     float ADD_3037 = MUL_3021 + MUL_3027;
+    //     float ADD_3040 = ADD_3037 + MUL_3033;
+    //     float MUL_821 = SUB_725 * MUL_806;
+    //     float MUL_822 = ADD_708 * MUL_801;
+    //     float ADD_824 = MUL_821 + MUL_822;
+    //     float MUL_827 = ADD_824 * 2.0;
+    //     float ADD_839 = ADD_565 + MUL_827;
+    //     float ADD_3043 = ADD_839 + ADD_3040;
+    //     float SUB_2989 = MUL_2977 - MUL_2973;
+    //     float ADD_3002 = MUL_2978 + MUL_2975;
+    //     float ADD_3011 = MUL_2970 + MUL_2974;
+    //     float MUL_3014 = ADD_3011 * 2.0;
+    //     float SUB_3017 = 1.0 - MUL_3014;
+    //     float MUL_3035 = SUB_3017 * 0.075;
+    //     float MUL_3004 = ADD_3002 * 2.0;
+    //     float MUL_3029 = MUL_3004 * 0.015;
+    //     float MUL_2991 = SUB_2989 * 2.0;
+    //     float MUL_3023 = MUL_2991 * 0.015;
+    //     float ADD_3038 = MUL_3023 + MUL_3029;
+    //     float ADD_3041 = ADD_3038 + MUL_3035;
+    //     float MUL_829 = SUB_725 * MUL_801;
+    //     float MUL_831 = ADD_708 * MUL_806;
+    //     float SUB_833 = MUL_831 - MUL_829;
+    //     float MUL_836 = SUB_833 * 2.0;
+    //     float ADD_840 = ADD_566 + MUL_836;
+    //     float ADD_3044 = ADD_840 + ADD_3041;
+    //     float MUL_3058 = MUL_3007 * 0.07;
+    //     float ADD_3063 = ADD_838 + MUL_3058;
+    //     float MUL_3060 = MUL_3010 * 0.07;
+    //     float ADD_3064 = ADD_839 + MUL_3060;
+    //     float MUL_3062 = SUB_3017 * 0.07;
+    //     float ADD_3065 = ADD_840 + MUL_3062;
+    //     float MUL_3079 = MUL_3007 * 0.08;
+    //     float MUL_3073 = MUL_2994 * 0.04;
+    //     float MUL_3067 = SUB_2985 * 0.02;
+    //     float ADD_3084 = MUL_3067 + MUL_3073;
+    //     float ADD_3087 = ADD_3084 + MUL_3079;
+    //     float ADD_3090 = ADD_838 + ADD_3087;
+    //     float MUL_3081 = MUL_3010 * 0.08;
+    //     float MUL_3075 = SUB_3001 * 0.04;
+    //     float MUL_3069 = MUL_2988 * 0.02;
+    //     float ADD_3085 = MUL_3069 + MUL_3075;
+    //     float ADD_3088 = ADD_3085 + MUL_3081;
+    //     float ADD_3091 = ADD_839 + ADD_3088;
+    //     float MUL_3083 = SUB_3017 * 0.08;
+    //     float MUL_3077 = MUL_3004 * 0.04;
+    //     float MUL_3071 = MUL_2991 * 0.02;
+    //     float ADD_3086 = MUL_3071 + MUL_3077;
+    //     float ADD_3089 = ADD_3086 + MUL_3083;
+    //     float ADD_3092 = ADD_840 + ADD_3089;
+    //     float MUL_3100 = MUL_2994 * 0.02;
+    //     float MUL_3094 = SUB_2985 * 0.04;
+    //     float ADD_3111 = MUL_3094 + MUL_3100;
+    //     float ADD_3114 = ADD_3111 + MUL_3079;
+    //     float ADD_3117 = ADD_838 + ADD_3114;
+    //     float MUL_3102 = SUB_3001 * 0.02;
+    //     float MUL_3096 = MUL_2988 * 0.04;
+    //     float ADD_3112 = MUL_3096 + MUL_3102;
+    //     float ADD_3115 = ADD_3112 + MUL_3081;
+    //     float ADD_3118 = ADD_839 + ADD_3115;
+    //     float MUL_3104 = MUL_3004 * 0.02;
+    //     float MUL_3098 = MUL_2991 * 0.04;
+    //     float ADD_3113 = MUL_3098 + MUL_3104;
+    //     float ADD_3116 = ADD_3113 + MUL_3083;
+    //     float ADD_3119 = ADD_840 + ADD_3116;
+    //     float MUL_3133 = MUL_3007 * 0.085;
+    //     float MUL_3127 = MUL_2994 * 0.06;
+    //     float ADD_3138 = MUL_3094 + MUL_3127;
+    //     float ADD_3141 = ADD_3138 + MUL_3133;
+    //     float ADD_3144 = ADD_838 + ADD_3141;
+    //     float MUL_3135 = MUL_3010 * 0.085;
+    //     float MUL_3129 = SUB_3001 * 0.06;
+    //     float ADD_3139 = MUL_3096 + MUL_3129;
+    //     float ADD_3142 = ADD_3139 + MUL_3135;
+    //     float ADD_3145 = ADD_839 + ADD_3142;
+    //     float MUL_3137 = SUB_3017 * 0.085;
+    //     float MUL_3131 = MUL_3004 * 0.06;
+    //     float ADD_3140 = MUL_3098 + MUL_3131;
+    //     float ADD_3143 = ADD_3140 + MUL_3137;
+    //     float ADD_3146 = ADD_840 + ADD_3143;
+    //     float MUL_3148 = SUB_2985 * 0.06;
+    //     float ADD_3165 = MUL_3148 + MUL_3073;
+    //     float ADD_3168 = ADD_3165 + MUL_3133;
+    //     float ADD_3171 = ADD_838 + ADD_3168;
+    //     float MUL_3150 = MUL_2988 * 0.06;
+    //     float ADD_3166 = MUL_3150 + MUL_3075;
+    //     float ADD_3169 = ADD_3166 + MUL_3135;
+    //     float ADD_3172 = ADD_839 + ADD_3169;
+    //     float MUL_3152 = MUL_2991 * 0.06;
+    //     float ADD_3167 = MUL_3152 + MUL_3077;
+    //     float ADD_3170 = ADD_3167 + MUL_3137;
+    //     float ADD_3173 = ADD_840 + ADD_3170;
+    //     if (/*panda_link0 vs. panda_link7*/ sphere_sphere_self_collision(
+    //         0.0, 0.0, 0.05, 0.08, ADD_3042, ADD_3043, ADD_3044, 0.072))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (637, 793)
+    //     if (/*panda_link1 vs. panda_link7*/ sphere_sphere_self_collision(
+    //         SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_3042, ADD_3043, ADD_3044, 0.072))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (793, 793)
+    //     if (/*panda_link2 vs. panda_link7*/ sphere_sphere_self_collision(
+    //         ADD_1832, SUB_1833, ADD_1835, 0.154, ADD_3042, ADD_3043, ADD_3044, 0.072))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (793, 793)
+    //     if (/*panda_link5 vs. panda_link7*/ sphere_sphere_self_collision(
+    //         ADD_2402, ADD_2403, ADD_2404, 0.176, ADD_3042, ADD_3043, ADD_3044, 0.072))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (793, 793)
+
+    //     // if (local_cc_result[0]>0) return false;
+
+    //     if (/*panda_link7*/ sphere_environment_in_collision(environment, ADD_3042, ADD_3043, ADD_3044, 0.072))
+    //     {
+    //         if (sphere_environment_in_collision(environment, ADD_3063, ADD_3064, ADD_3065, 0.05))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3090, ADD_3091, ADD_3092, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3117, ADD_3118, ADD_3119, 0.025))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3144, ADD_3145, ADD_3146, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3171, ADD_3172, ADD_3173, 0.02))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (793, 793)
+    //     float MUL_1065 = SUB_870 * 0.9238795;
+    //     float MUL_1062 = ADD_865 * 0.9238795;
+    //     float MUL_1049 = SUB_859 * 0.9238795;
+    //     float MUL_1034 = ADD_853 * 0.9238795;
+    //     float MUL_1055 = SUB_870 * 0.3826834;
+    //     float SUB_1063 = MUL_1062 - MUL_1055;
+    //     float MUL_1072 = ADD_865 * 0.3826834;
+    //     float ADD_1074 = MUL_1065 + MUL_1072;
+    //     float MUL_1037 = SUB_859 * 0.3826834;
+    //     float SUB_1039 = MUL_1034 - MUL_1037;
+    //     float MUL_3241 = SUB_1039 * SUB_1063;
+    //     float MUL_1046 = ADD_853 * 0.3826834;
+    //     float ADD_1050 = MUL_1046 + MUL_1049;
+    //     float MUL_3237 = ADD_1074 * ADD_1050;
+    //     float ADD_3269 = MUL_3241 + MUL_3237;
+    //     float MUL_3271 = ADD_3269 * 2.0;
+    //     float MUL_931 = SUB_859 * 0.107;
+    //     float MUL_942 = SUB_870 * MUL_931;
+    //     float MUL_939 = ADD_853 * 0.107;
+    //     float MUL_944 = ADD_865 * MUL_939;
+    //     float ADD_945 = MUL_942 + MUL_944;
+    //     float MUL_947 = ADD_945 * 2.0;
+    //     float ADD_969 = ADD_838 + MUL_947;
+    //     float MUL_3295 = MUL_3271 * 0.022;
+    //     float ADD_3300 = ADD_969 + MUL_3295;
+    //     float MUL_3239 = ADD_1074 * SUB_1039;
+    //     float MUL_3242 = ADD_1050 * SUB_1063;
+    //     float SUB_3272 = MUL_3242 - MUL_3239;
+    //     float MUL_3274 = SUB_3272 * 2.0;
+    //     float MUL_3297 = MUL_3274 * 0.022;
+    //     float MUL_950 = SUB_870 * MUL_939;
+    //     float MUL_953 = ADD_865 * MUL_931;
+    //     float SUB_954 = MUL_953 - MUL_950;
+    //     float MUL_956 = SUB_954 * 2.0;
+    //     float ADD_970 = ADD_839 + MUL_956;
+    //     float ADD_3301 = ADD_970 + MUL_3297;
+    //     float MUL_3238 = SUB_1039 * SUB_1039;
+    //     float MUL_3234 = ADD_1050 * ADD_1050;
+    //     float ADD_3275 = MUL_3234 + MUL_3238;
+    //     float MUL_3278 = ADD_3275 * 2.0;
+    //     float SUB_3281 = 1.0 - MUL_3278;
+    //     float MUL_3299 = SUB_3281 * 0.022;
+    //     float MUL_961 = SUB_859 * MUL_931;
+    //     float MUL_959 = ADD_853 * MUL_939;
+    //     float ADD_962 = MUL_959 + MUL_961;
+    //     float MUL_965 = ADD_962 * 2.0;
+    //     float SUB_968 = 0.107 - MUL_965;
+    //     float ADD_971 = ADD_840 + SUB_968;
+    //     float ADD_3302 = ADD_971 + MUL_3299;
+    //     float MUL_3322 = MUL_3271 * 0.01;
+    //     float MUL_3236 = ADD_1074 * SUB_1063;
+    //     float MUL_3240 = SUB_1039 * ADD_1050;
+    //     float SUB_3256 = MUL_3240 - MUL_3236;
+    //     float MUL_3258 = SUB_3256 * 2.0;
+    //     float MUL_3311 = MUL_3258 * 0.075;
+    //     float SUB_3327 = MUL_3322 - MUL_3311;
+    //     float ADD_3330 = ADD_969 + SUB_3327;
+    //     float MUL_3324 = MUL_3274 * 0.01;
+    //     float MUL_3235 = SUB_1063 * SUB_1063;
+    //     float ADD_3259 = MUL_3235 + MUL_3238;
+    //     float MUL_3262 = ADD_3259 * 2.0;
+    //     float SUB_3265 = 1.0 - MUL_3262;
+    //     float MUL_3315 = SUB_3265 * 0.075;
+    //     float SUB_3328 = MUL_3324 - MUL_3315;
+    //     float ADD_3331 = ADD_970 + SUB_3328;
+    //     float ADD_3266 = MUL_3242 + MUL_3239;
+    //     float MUL_3326 = SUB_3281 * 0.01;
+    //     float MUL_3268 = ADD_3266 * 2.0;
+    //     float MUL_3319 = MUL_3268 * 0.075;
+    //     float SUB_3329 = MUL_3326 - MUL_3319;
+    //     float ADD_3332 = ADD_971 + SUB_3329;
+    //     float MUL_3341 = MUL_3258 * 0.045;
+    //     float SUB_3357 = MUL_3322 - MUL_3341;
+    //     float ADD_3360 = ADD_969 + SUB_3357;
+    //     float MUL_3345 = SUB_3265 * 0.045;
+    //     float SUB_3358 = MUL_3324 - MUL_3345;
+    //     float ADD_3361 = ADD_970 + SUB_3358;
+    //     float MUL_3349 = MUL_3268 * 0.045;
+    //     float SUB_3359 = MUL_3326 - MUL_3349;
+    //     float ADD_3362 = ADD_971 + SUB_3359;
+    //     float MUL_3371 = MUL_3258 * 0.015;
+    //     float SUB_3387 = MUL_3322 - MUL_3371;
+    //     float ADD_3390 = ADD_969 + SUB_3387;
+    //     float MUL_3375 = SUB_3265 * 0.015;
+    //     float SUB_3388 = MUL_3324 - MUL_3375;
+    //     float ADD_3391 = ADD_970 + SUB_3388;
+    //     float MUL_3379 = MUL_3268 * 0.015;
+    //     float SUB_3389 = MUL_3326 - MUL_3379;
+    //     float ADD_3392 = ADD_971 + SUB_3389;
+    //     float ADD_3411 = MUL_3371 + MUL_3322;
+    //     float ADD_3414 = ADD_969 + ADD_3411;
+    //     float ADD_3412 = MUL_3375 + MUL_3324;
+    //     float ADD_3415 = ADD_970 + ADD_3412;
+    //     float ADD_3413 = MUL_3379 + MUL_3326;
+    //     float ADD_3416 = ADD_971 + ADD_3413;
+    //     float ADD_3435 = MUL_3341 + MUL_3322;
+    //     float ADD_3438 = ADD_969 + ADD_3435;
+    //     float ADD_3436 = MUL_3345 + MUL_3324;
+    //     float ADD_3439 = ADD_970 + ADD_3436;
+    //     float ADD_3437 = MUL_3349 + MUL_3326;
+    //     float ADD_3440 = ADD_971 + ADD_3437;
+    //     float ADD_3459 = MUL_3311 + MUL_3322;
+    //     float ADD_3462 = ADD_969 + ADD_3459;
+    //     float ADD_3460 = MUL_3315 + MUL_3324;
+    //     float ADD_3463 = ADD_970 + ADD_3460;
+    //     float ADD_3461 = MUL_3319 + MUL_3326;
+    //     float ADD_3464 = ADD_971 + ADD_3461;
+    //     float MUL_3484 = MUL_3271 * 0.03;
+    //     float SUB_3489 = MUL_3484 - MUL_3311;
+    //     float ADD_3492 = ADD_969 + SUB_3489;
+    //     float MUL_3486 = MUL_3274 * 0.03;
+    //     float SUB_3490 = MUL_3486 - MUL_3315;
+    //     float ADD_3493 = ADD_970 + SUB_3490;
+    //     float MUL_3488 = SUB_3281 * 0.03;
+    //     float SUB_3491 = MUL_3488 - MUL_3319;
+    //     float ADD_3494 = ADD_971 + SUB_3491;
+    //     float SUB_3519 = MUL_3484 - MUL_3341;
+    //     float ADD_3522 = ADD_969 + SUB_3519;
+    //     float SUB_3520 = MUL_3486 - MUL_3345;
+    //     float ADD_3523 = ADD_970 + SUB_3520;
+    //     float SUB_3521 = MUL_3488 - MUL_3349;
+    //     float ADD_3524 = ADD_971 + SUB_3521;
+    //     float SUB_3549 = MUL_3484 - MUL_3371;
+    //     float ADD_3552 = ADD_969 + SUB_3549;
+    //     float SUB_3550 = MUL_3486 - MUL_3375;
+    //     float ADD_3553 = ADD_970 + SUB_3550;
+    //     float SUB_3551 = MUL_3488 - MUL_3379;
+    //     float ADD_3554 = ADD_971 + SUB_3551;
+    //     float ADD_3573 = MUL_3371 + MUL_3484;
+    //     float ADD_3576 = ADD_969 + ADD_3573;
+    //     float ADD_3574 = MUL_3375 + MUL_3486;
+    //     float ADD_3577 = ADD_970 + ADD_3574;
+    //     float ADD_3575 = MUL_3379 + MUL_3488;
+    //     float ADD_3578 = ADD_971 + ADD_3575;
+    //     float ADD_3597 = MUL_3341 + MUL_3484;
+    //     float ADD_3600 = ADD_969 + ADD_3597;
+    //     float ADD_3598 = MUL_3345 + MUL_3486;
+    //     float ADD_3601 = ADD_970 + ADD_3598;
+    //     float ADD_3599 = MUL_3349 + MUL_3488;
+    //     float ADD_3602 = ADD_971 + ADD_3599;
+    //     float ADD_3621 = MUL_3311 + MUL_3484;
+    //     float ADD_3624 = ADD_969 + ADD_3621;
+    //     float ADD_3622 = MUL_3315 + MUL_3486;
+    //     float ADD_3625 = ADD_970 + ADD_3622;
+    //     float ADD_3623 = MUL_3319 + MUL_3488;
+    //     float ADD_3626 = ADD_971 + ADD_3623;
+    //     float MUL_3646 = MUL_3271 * 0.05;
+    //     float SUB_3651 = MUL_3646 - MUL_3311;
+    //     float ADD_3654 = ADD_969 + SUB_3651;
+    //     float MUL_3648 = MUL_3274 * 0.05;
+    //     float SUB_3652 = MUL_3648 - MUL_3315;
+    //     float ADD_3655 = ADD_970 + SUB_3652;
+    //     float MUL_3650 = SUB_3281 * 0.05;
+    //     float SUB_3653 = MUL_3650 - MUL_3319;
+    //     float ADD_3656 = ADD_971 + SUB_3653;
+    //     float SUB_3681 = MUL_3646 - MUL_3341;
+    //     float ADD_3684 = ADD_969 + SUB_3681;
+    //     float SUB_3682 = MUL_3648 - MUL_3345;
+    //     float ADD_3685 = ADD_970 + SUB_3682;
+    //     float SUB_3683 = MUL_3650 - MUL_3349;
+    //     float ADD_3686 = ADD_971 + SUB_3683;
+    //     float SUB_3711 = MUL_3646 - MUL_3371;
+    //     float ADD_3714 = ADD_969 + SUB_3711;
+    //     float SUB_3712 = MUL_3648 - MUL_3375;
+    //     float ADD_3715 = ADD_970 + SUB_3712;
+    //     float SUB_3713 = MUL_3650 - MUL_3379;
+    //     float ADD_3716 = ADD_971 + SUB_3713;
+    //     float ADD_3735 = MUL_3371 + MUL_3646;
+    //     float ADD_3738 = ADD_969 + ADD_3735;
+    //     float ADD_3736 = MUL_3375 + MUL_3648;
+    //     float ADD_3739 = ADD_970 + ADD_3736;
+    //     float ADD_3737 = MUL_3379 + MUL_3650;
+    //     float ADD_3740 = ADD_971 + ADD_3737;
+    //     float ADD_3759 = MUL_3341 + MUL_3646;
+    //     float ADD_3762 = ADD_969 + ADD_3759;
+    //     float ADD_3760 = MUL_3345 + MUL_3648;
+    //     float ADD_3763 = ADD_970 + ADD_3760;
+    //     float ADD_3761 = MUL_3349 + MUL_3650;
+    //     float ADD_3764 = ADD_971 + ADD_3761;
+    //     float ADD_3783 = MUL_3311 + MUL_3646;
+    //     float ADD_3786 = ADD_969 + ADD_3783;
+    //     float ADD_3784 = MUL_3315 + MUL_3648;
+    //     float ADD_3787 = ADD_970 + ADD_3784;
+    //     float ADD_3785 = MUL_3319 + MUL_3650;
+    //     float ADD_3788 = ADD_971 + ADD_3785;
+    //     if (/*panda_hand*/ sphere_environment_in_collision(environment, ADD_3300, ADD_3301, ADD_3302, 0.104))
+    //     {
+    //         if (sphere_environment_in_collision(environment, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         // printf("about to check panda hand collision:\n");
+    //         if (sphere_environment_in_collision(environment, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             // printf("panda hand collision!");
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (793, 978)
+    //     if (/*panda_link0 vs. panda_hand*/ sphere_sphere_self_collision(
+    //         0.0, 0.0, 0.05, 0.08, ADD_3300, ADD_3301, ADD_3302, 0.104))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (978, 978)
+    //     if (/*panda_link1 vs. panda_hand*/ sphere_sphere_self_collision(
+    //         SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_3300, ADD_3301, ADD_3302, 0.104))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (978, 978)
+    //     if (/*panda_link2 vs. panda_hand*/ sphere_sphere_self_collision(
+    //         ADD_1832, SUB_1833, ADD_1835, 0.154, ADD_3300, ADD_3301, ADD_3302, 0.104))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (978, 978)
+    //     // if (local_cc_result[0]>0) return false;
+    //     if (/*panda_link5 vs. panda_hand*/ sphere_sphere_self_collision(
+    //         ADD_2402, ADD_2403, ADD_2404, 0.176, ADD_3300, ADD_3301, ADD_3302, 0.104))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3330, ADD_3331, ADD_3332, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3360, ADD_3361, ADD_3362, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3390, ADD_3391, ADD_3392, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3414, ADD_3415, ADD_3416, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3438, ADD_3439, ADD_3440, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3462, ADD_3463, ADD_3464, 0.028))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3492, ADD_3493, ADD_3494, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3522, ADD_3523, ADD_3524, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3552, ADD_3553, ADD_3554, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3576, ADD_3577, ADD_3578, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3600, ADD_3601, ADD_3602, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3624, ADD_3625, ADD_3626, 0.026))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3654, ADD_3655, ADD_3656, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3684, ADD_3685, ADD_3686, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3714, ADD_3715, ADD_3716, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3738, ADD_3739, ADD_3740, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3762, ADD_3763, ADD_3764, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3786, ADD_3787, ADD_3788, 0.024))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (978, 978)
+    //     // if (local_cc_result[0]>0) return false;
+    //     float MUL_3864 = ADD_3269 * 2.0;
+    //     float MUL_3851 = SUB_3256 * 2.0;
+    //     float MUL_1196 = SUB_1063 * 0.065;
+    //     float MUL_1199 = SUB_1039 * 0.065;
+    //     float MUL_1207 = ADD_1050 * MUL_1199;
+    //     float MUL_1203 = SUB_1039 * 0.0584;
+    //     float MUL_1209 = SUB_1063 * MUL_1203;
+    //     float MUL_1194 = ADD_1050 * 0.0584;
+    //     float SUB_1197 = MUL_1194 - MUL_1196;
+    //     float MUL_1206 = ADD_1074 * SUB_1197;
+    //     float ADD_1208 = MUL_1206 + MUL_1207;
+    //     float ADD_1210 = ADD_1208 + MUL_1209;
+    //     float MUL_1212 = ADD_1210 * 2.0;
+    //     float ADD_1235 = ADD_969 + MUL_1212;
+    //     float MUL_3888 = MUL_3864 * 0.033;
+    //     float MUL_3882 = MUL_3851 * 0.012;
+    //     float ADD_3893 = MUL_3882 + MUL_3888;
+    //     float ADD_3896 = ADD_1235 + ADD_3893;
+    //     float MUL_3867 = SUB_3272 * 2.0;
+    //     float MUL_3890 = MUL_3867 * 0.033;
+    //     float MUL_3855 = ADD_3259 * 2.0;
+    //     float SUB_3858 = 1.0 - MUL_3855;
+    //     float MUL_3884 = SUB_3858 * 0.012;
+    //     float ADD_3894 = MUL_3884 + MUL_3890;
+    //     float MUL_1215 = ADD_1074 * MUL_1203;
+    //     float MUL_1220 = SUB_1063 * SUB_1197;
+    //     float MUL_1217 = SUB_1039 * MUL_1199;
+    //     float ADD_1218 = MUL_1215 + MUL_1217;
+    //     float SUB_1221 = MUL_1220 - ADD_1218;
+    //     float MUL_1223 = SUB_1221 * 2.0;
+    //     float ADD_1225 = MUL_1223 + 0.065;
+    //     float ADD_1236 = ADD_970 + ADD_1225;
+    //     float ADD_3897 = ADD_1236 + ADD_3894;
+    //     float MUL_3871 = ADD_3275 * 2.0;
+    //     float SUB_3874 = 1.0 - MUL_3871;
+    //     float MUL_3892 = SUB_3874 * 0.033;
+    //     float MUL_3861 = ADD_3266 * 2.0;
+    //     float MUL_3886 = MUL_3861 * 0.012;
+    //     float ADD_3895 = MUL_3886 + MUL_3892;
+    //     float MUL_1226 = ADD_1074 * MUL_1199;
+    //     float MUL_1227 = SUB_1039 * MUL_1203;
+    //     float SUB_1228 = MUL_1226 - MUL_1227;
+    //     float MUL_1229 = ADD_1050 * SUB_1197;
+    //     float SUB_1230 = SUB_1228 - MUL_1229;
+    //     float MUL_1232 = SUB_1230 * 2.0;
+    //     float ADD_1234 = MUL_1232 + 0.0584;
+    //     float ADD_1237 = ADD_971 + ADD_1234;
+    //     float ADD_3898 = ADD_1237 + ADD_3895;
+    //     float MUL_3912 = MUL_3864 * 0.022;
+    //     float MUL_3906 = MUL_3851 * 0.015;
+    //     float ADD_3917 = MUL_3906 + MUL_3912;
+    //     float ADD_3920 = ADD_1235 + ADD_3917;
+    //     float MUL_3914 = MUL_3867 * 0.022;
+    //     float MUL_3908 = SUB_3858 * 0.015;
+    //     float ADD_3918 = MUL_3908 + MUL_3914;
+    //     float ADD_3921 = ADD_1236 + ADD_3918;
+    //     float MUL_3916 = SUB_3874 * 0.022;
+    //     float MUL_3910 = MUL_3861 * 0.015;
+    //     float ADD_3919 = MUL_3910 + MUL_3916;
+    //     float ADD_3922 = ADD_1237 + ADD_3919;
+    //     float MUL_3936 = MUL_3864 * 0.044;
+    //     float MUL_3930 = MUL_3851 * 0.008;
+    //     float ADD_3941 = MUL_3930 + MUL_3936;
+    //     float ADD_3944 = ADD_1235 + ADD_3941;
+    //     float MUL_3938 = MUL_3867 * 0.044;
+    //     float MUL_3932 = SUB_3858 * 0.008;
+    //     float ADD_3942 = MUL_3932 + MUL_3938;
+    //     float ADD_3945 = ADD_1236 + ADD_3942;
+    //     float MUL_3940 = SUB_3874 * 0.044;
+    //     float MUL_3934 = MUL_3861 * 0.008;
+    //     float ADD_3943 = MUL_3934 + MUL_3940;
+    //     float ADD_3946 = ADD_1237 + ADD_3943;
+    //     if (/*panda_leftfinger*/ sphere_environment_in_collision(
+    //         environment, ADD_3896, ADD_3897, ADD_3898, 0.024))
+    //     {
+    //         if (sphere_environment_in_collision(environment, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (978, 1050)
+    //     if (/*panda_link0 vs. panda_leftfinger*/ sphere_sphere_self_collision(
+    //         0.0, 0.0, 0.05, 0.08, ADD_3896, ADD_3897, ADD_3898, 0.024))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (1050, 1050)
+    //     if (/*panda_link1 vs. panda_leftfinger*/ sphere_sphere_self_collision(
+    //         SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_3896, ADD_3897, ADD_3898, 0.024))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (1050, 1050)
+    //     if (/*panda_link2 vs. panda_leftfinger*/ sphere_sphere_self_collision(
+    //         ADD_1832, SUB_1833, ADD_1835, 0.154, ADD_3896, ADD_3897, ADD_3898, 0.024))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (1050, 1050)
+    //     if (/*panda_link5 vs. panda_leftfinger*/ sphere_sphere_self_collision(
+    //         ADD_2402, ADD_2403, ADD_2404, 0.176, ADD_3896, ADD_3897, ADD_3898, 0.024))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3920, ADD_3921, ADD_3922, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_3944, ADD_3945, ADD_3946, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (1050, 1050)
+    //     float ADD_1331 = MUL_1194 + MUL_1196;
+    //     float MUL_3990 = ADD_3269 * 2.0;
+    //     float MUL_4020 = MUL_3990 * 0.033;
+    //     float MUL_3977 = SUB_3256 * 2.0;
+    //     float MUL_4009 = MUL_3977 * 0.012;
+    //     float SUB_4025 = MUL_4020 - MUL_4009;
+    //     float MUL_1342 = ADD_1074 * ADD_1331;
+    //     float SUB_1345 = MUL_1342 - MUL_1207;
+    //     float ADD_1347 = SUB_1345 + MUL_1209;
+    //     float MUL_1349 = ADD_1347 * 2.0;
+    //     float ADD_1377 = ADD_969 + MUL_1349;
+    //     float ADD_4028 = ADD_1377 + SUB_4025;
+    //     float SUB_1356 = MUL_1217 - MUL_1215;
+    //     float MUL_3993 = SUB_3272 * 2.0;
+    //     float MUL_4022 = MUL_3993 * 0.033;
+    //     float MUL_3981 = ADD_3259 * 2.0;
+    //     float SUB_3984 = 1.0 - MUL_3981;
+    //     float MUL_4013 = SUB_3984 * 0.012;
+    //     float SUB_4026 = MUL_4022 - MUL_4013;
+    //     float MUL_1357 = SUB_1063 * ADD_1331;
+    //     float ADD_1358 = SUB_1356 + MUL_1357;
+    //     float MUL_1360 = ADD_1358 * 2.0;
+    //     float SUB_1363 = MUL_1360 - 0.065;
+    //     float ADD_1378 = ADD_970 + SUB_1363;
+    //     float ADD_4029 = ADD_1378 + SUB_4026;
+    //     float ADD_1367 = MUL_1226 + MUL_1227;
+    //     float MUL_3997 = ADD_3275 * 2.0;
+    //     float SUB_4000 = 1.0 - MUL_3997;
+    //     float MUL_4024 = SUB_4000 * 0.033;
+    //     float MUL_3987 = ADD_3266 * 2.0;
+    //     float MUL_4017 = MUL_3987 * 0.012;
+    //     float SUB_4027 = MUL_4024 - MUL_4017;
+    //     float MUL_1369 = ADD_1050 * ADD_1331;
+    //     float ADD_1370 = ADD_1367 + MUL_1369;
+    //     float MUL_1373 = ADD_1370 * 2.0;
+    //     float SUB_1376 = 0.0584 - MUL_1373;
+    //     float ADD_1379 = ADD_971 + SUB_1376;
+    //     float ADD_4030 = ADD_1379 + SUB_4027;
+    //     float MUL_4050 = MUL_3990 * 0.022;
+    //     float MUL_4039 = MUL_3977 * 0.015;
+    //     float SUB_4055 = MUL_4050 - MUL_4039;
+    //     float ADD_4058 = ADD_1377 + SUB_4055;
+    //     float MUL_4052 = MUL_3993 * 0.022;
+    //     float MUL_4043 = SUB_3984 * 0.015;
+    //     float SUB_4056 = MUL_4052 - MUL_4043;
+    //     float ADD_4059 = ADD_1378 + SUB_4056;
+    //     float MUL_4054 = SUB_4000 * 0.022;
+    //     float MUL_4047 = MUL_3987 * 0.015;
+    //     float SUB_4057 = MUL_4054 - MUL_4047;
+    //     float ADD_4060 = ADD_1379 + SUB_4057;
+    //     float MUL_4080 = MUL_3990 * 0.044;
+    //     float MUL_4069 = MUL_3977 * 0.008;
+    //     float SUB_4085 = MUL_4080 - MUL_4069;
+    //     float ADD_4088 = ADD_1377 + SUB_4085;
+    //     float MUL_4082 = MUL_3993 * 0.044;
+    //     float MUL_4073 = SUB_3984 * 0.008;
+    //     float SUB_4086 = MUL_4082 - MUL_4073;
+    //     float ADD_4089 = ADD_1378 + SUB_4086;
+    //     float MUL_4084 = SUB_4000 * 0.044;
+    //     float MUL_4077 = MUL_3987 * 0.008;
+    //     float SUB_4087 = MUL_4084 - MUL_4077;
+    //     float ADD_4090 = ADD_1379 + SUB_4087;
+    //     if (/*panda_link0 vs. panda_rightfinger*/ sphere_sphere_self_collision(
+    //         0.0, 0.0, 0.05, 0.08, ADD_4028, ADD_4029, ADD_4030, 0.024))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.05, 0.08, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (1050, 1112)
+    //     if (/*panda_link1 vs. panda_rightfinger*/ sphere_sphere_self_collision(
+    //         SUB_1641, NEGATE_1643, 0.248, 0.154, ADD_4028, ADD_4029, ADD_4030, 0.024))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1656, NEGATE_1660, 0.333, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1680, NEGATE_1684, 0.333, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.213, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 0.0, 0.0, 0.163, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (1112, 1112)
+    //     if (/*panda_link2 vs. panda_rightfinger*/ sphere_sphere_self_collision(
+    //         ADD_1832, SUB_1833, ADD_1835, 0.154, ADD_4028, ADD_4029, ADD_4030, 0.024))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1849, MUL_1851, ADD_1854, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1868, MUL_1870, ADD_1873, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1882, NEGATE_1886, SUB_1897, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 MUL_1906, NEGATE_1910, SUB_1921, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (1112, 1112)
+    //     if (/*panda_link5 vs. panda_rightfinger*/ sphere_sphere_self_collision(
+    //         ADD_2402, ADD_2403, ADD_2404, 0.176, ADD_4028, ADD_4029, ADD_4030, 0.024))
+    //     {
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2423, ADD_2424, ADD_2425, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2444, ADD_2445, ADD_2446, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 SUB_2471, SUB_2472, SUB_2473, 0.06, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2501, ADD_2502, ADD_2503, 0.05, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2534, ADD_2535, ADD_2536, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2567, ADD_2568, ADD_2569, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2600, ADD_2601, ADD_2602, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2633, ADD_2634, ADD_2635, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2672, ADD_2673, ADD_2674, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2711, ADD_2712, ADD_2713, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2750, ADD_2751, ADD_2752, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_sphere_self_collision(
+    //                 ADD_2789, ADD_2790, ADD_2791, 0.025, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (1112, 1112)
+    //     if (/*panda_rightfinger*/ sphere_environment_in_collision(
+    //         environment, ADD_4028, ADD_4029, ADD_4030, 0.024))
+    //     {
+    //         if (sphere_environment_in_collision(environment, ADD_4058, ADD_4059, ADD_4060, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //         if (sphere_environment_in_collision(environment, ADD_4088, ADD_4089, ADD_4090, 0.012))
+    //         {
+    //             return false;
+    //         }
+    //     }  // (1112, 1112)
+
+    //     return true;
+    // }
+
 
     template <>
     __device__  __forceinline__ bool fkcc<ppln::robots::Fetch>(volatile float *q, ppln::collision::Environment<float> *environment, int tid) 
@@ -33129,4 +38167,5874 @@ namespace ppln::collision {
 
         return true;
     }
+
+template <>
+__device__ __forceinline__ bool fkcc<ppln::robots::Xarm7>(volatile float *q, ppln::collision::Environment<float> *environment, int tid)
+{
+    if (/*link_base*/ sphere_environment_in_collision(environment, -0.0004967, 0.0003452, 0.1138143, 0.069025))
+    {
+        return false;
+    } // (0, 0)
+    if (/*link_base*/ sphere_environment_in_collision(environment, -0.0092227, -0.0006288, 0.0462493, 0.090185))
+    {
+        return false;
+    } // (0, 0)
+    auto INPUT_0 = q[0];
+    auto DIV_14 = INPUT_0 * 0.5;
+    auto SIN_15 = sin(DIV_14);
+    auto COS_21 = cos(DIV_14);
+    auto MUL_2142 = COS_21 * SIN_15;
+    auto MUL_2161 = MUL_2142 * 2.0;
+    auto MUL_2191 = MUL_2161 * 0.0165373;
+    auto MUL_2141 = SIN_15 * SIN_15;
+    auto MUL_2151 = MUL_2141 * 2.0;
+    auto SUB_2154 = 1.0 - MUL_2151;
+    auto MUL_2181 = SUB_2154 * 0.0002066;
+    auto ADD_2205 = MUL_2181 + MUL_2191;
+    auto NEGATE_2206 = -ADD_2205;
+    auto MUL_2194 = SUB_2154 * 0.0165373;
+    auto MUL_2185 = MUL_2161 * 0.0002066;
+    auto SUB_2207 = MUL_2194 - MUL_2185;
+    if (/*link1*/ sphere_environment_in_collision(environment, NEGATE_2206, SUB_2207, 0.2667156, 0.081731))
+    {
+        return false;
+    } // (0, 16)
+    auto MUL_2227 = MUL_2161 * 0.0040117;
+    auto MUL_2216 = SUB_2154 * 1.36e-05;
+    auto SUB_2243 = MUL_2227 - MUL_2216;
+    auto MUL_2220 = MUL_2161 * 1.36e-05;
+    auto MUL_2230 = SUB_2154 * 0.0040117;
+    auto ADD_2244 = MUL_2220 + MUL_2230;
+    auto NEGATE_2245 = -ADD_2244;
+    if (/*link1*/ sphere_environment_in_collision(environment, SUB_2243, NEGATE_2245, 0.2000116, 0.073218))
+    {
+        return false;
+    } // (16, 23)
+    auto MUL_52 = COS_21 * 0.7071081;
+    auto MUL_68 = SIN_15 * 0.7071081;
+    auto MUL_80 = COS_21 * 0.7071055;
+    auto MUL_78 = SIN_15 * 0.7071055;
+    auto INPUT_1 = q[1];
+    auto DIV_123 = INPUT_1 * 0.5;
+    auto SIN_124 = sin(DIV_123);
+    auto COS_130 = cos(DIV_123);
+    auto MUL_149 = MUL_78 * COS_130;
+    auto MUL_154 = MUL_78 * SIN_124;
+    auto MUL_142 = MUL_68 * COS_130;
+    auto MUL_134 = MUL_68 * SIN_124;
+    auto MUL_132 = MUL_52 * COS_130;
+    auto ADD_136 = MUL_132 + MUL_134;
+    auto MUL_140 = MUL_52 * SIN_124;
+    auto SUB_144 = MUL_140 - MUL_142;
+    auto MUL_2252 = SUB_144 * SUB_144;
+    auto MUL_2259 = ADD_136 * SUB_144;
+    auto MUL_151 = MUL_80 * COS_130;
+    auto SUB_155 = MUL_151 - MUL_154;
+    auto MUL_2255 = SUB_155 * SUB_144;
+    auto MUL_146 = MUL_80 * SIN_124;
+    auto ADD_150 = MUL_146 + MUL_149;
+    auto MUL_2254 = SUB_155 * ADD_150;
+    auto ADD_2279 = MUL_2259 + MUL_2254;
+    auto MUL_2282 = ADD_2279 * 2.0;
+    auto MUL_2320 = MUL_2282 * 0.096901;
+    auto MUL_2253 = ADD_150 * ADD_150;
+    auto ADD_2264 = MUL_2252 + MUL_2253;
+    auto MUL_2267 = ADD_2264 * 2.0;
+    auto SUB_2270 = 1.0 - MUL_2267;
+    auto MUL_2309 = SUB_2270 * 0.000757;
+    auto SUB_2335 = MUL_2320 - MUL_2309;
+    auto MUL_2261 = ADD_136 * ADD_150;
+    auto SUB_2294 = MUL_2255 - MUL_2261;
+    auto MUL_2296 = SUB_2294 * 2.0;
+    auto MUL_2330 = MUL_2296 * 0.0733414;
+    auto ADD_2339 = SUB_2335 + MUL_2330;
+    auto SUB_2271 = MUL_2254 - MUL_2259;
+    auto MUL_2273 = SUB_2271 * 2.0;
+    auto MUL_2313 = MUL_2273 * 0.000757;
+    auto MUL_2257 = SUB_155 * ADD_136;
+    auto MUL_2263 = SUB_144 * ADD_150;
+    auto ADD_2297 = MUL_2263 + MUL_2257;
+    auto MUL_2299 = ADD_2297 * 2.0;
+    auto MUL_2332 = MUL_2299 * 0.0733414;
+    auto MUL_2256 = ADD_136 * ADD_136;
+    auto ADD_2284 = MUL_2253 + MUL_2256;
+    auto MUL_2287 = ADD_2284 * 2.0;
+    auto SUB_2290 = 1.0 - MUL_2287;
+    auto MUL_2323 = SUB_2290 * 0.096901;
+    auto ADD_2336 = MUL_2313 + MUL_2323;
+    auto SUB_2340 = MUL_2332 - ADD_2336;
+    auto SUB_2291 = MUL_2263 - MUL_2257;
+    auto ADD_2274 = MUL_2261 + MUL_2255;
+    auto ADD_2300 = MUL_2252 + MUL_2256;
+    auto MUL_2303 = ADD_2300 * 2.0;
+    auto SUB_2306 = 1.0 - MUL_2303;
+    auto MUL_2334 = SUB_2306 * 0.0733414;
+    auto MUL_2293 = SUB_2291 * 2.0;
+    auto MUL_2327 = MUL_2293 * 0.096901;
+    auto MUL_2277 = ADD_2274 * 2.0;
+    auto MUL_2317 = MUL_2277 * 0.000757;
+    auto SUB_2338 = MUL_2317 - MUL_2327;
+    auto ADD_2341 = SUB_2338 + MUL_2334;
+    auto ADD_2342 = 0.267 + ADD_2341;
+    if (/*link2*/ sphere_environment_in_collision(environment, ADD_2339, SUB_2340, ADD_2342, 0.076167))
+    {
+        return false;
+    } // (23, 89)
+    auto MUL_2358 = MUL_2282 * 0.130811;
+    auto MUL_2368 = MUL_2296 * 0.0015624;
+    auto MUL_2347 = SUB_2270 * 0.000316;
+    auto SUB_2373 = MUL_2358 - MUL_2347;
+    auto ADD_2377 = SUB_2373 + MUL_2368;
+    auto MUL_2370 = MUL_2299 * 0.0015624;
+    auto MUL_2361 = SUB_2290 * 0.130811;
+    auto MUL_2351 = MUL_2273 * 0.000316;
+    auto ADD_2374 = MUL_2351 + MUL_2361;
+    auto SUB_2378 = MUL_2370 - ADD_2374;
+    auto MUL_2372 = SUB_2306 * 0.0015624;
+    auto MUL_2365 = MUL_2293 * 0.130811;
+    auto MUL_2355 = MUL_2277 * 0.000316;
+    auto SUB_2376 = MUL_2355 - MUL_2365;
+    auto ADD_2379 = SUB_2376 + MUL_2372;
+    auto ADD_2380 = 0.267 + ADD_2379;
+    if (/*link2*/ sphere_environment_in_collision(environment, ADD_2377, SUB_2378, ADD_2380, 0.08042))
+    {
+        return false;
+    } // (89, 105)
+    auto MUL_2406 = MUL_2296 * 0.0973214;
+    auto MUL_2385 = SUB_2270 * 0.001686;
+    auto MUL_2396 = MUL_2282 * 9.5e-05;
+    auto SUB_2411 = MUL_2396 - MUL_2385;
+    auto ADD_2415 = SUB_2411 + MUL_2406;
+    auto MUL_2408 = MUL_2299 * 0.0973214;
+    auto MUL_2399 = SUB_2290 * 9.5e-05;
+    auto MUL_2389 = MUL_2273 * 0.001686;
+    auto ADD_2412 = MUL_2389 + MUL_2399;
+    auto SUB_2416 = MUL_2408 - ADD_2412;
+    auto MUL_2410 = SUB_2306 * 0.0973214;
+    auto MUL_2403 = MUL_2293 * 9.5e-05;
+    auto MUL_2393 = MUL_2277 * 0.001686;
+    auto SUB_2414 = MUL_2393 - MUL_2403;
+    auto ADD_2417 = SUB_2414 + MUL_2410;
+    auto ADD_2418 = 0.267 + ADD_2417;
+    if (/*link2*/ sphere_environment_in_collision(environment, ADD_2415, SUB_2416, ADD_2418, 0.059766))
+    {
+        return false;
+    } // (105, 121)
+    auto MUL_2440 = MUL_2296 * 0.0926994;
+    auto MUL_2430 = MUL_2282 * 0.035309;
+    auto MUL_2422 = SUB_2270 * 0.002131;
+    auto ADD_2445 = MUL_2422 + MUL_2430;
+    auto ADD_2449 = ADD_2445 + MUL_2440;
+    auto MUL_2442 = MUL_2299 * 0.0926994;
+    auto MUL_2433 = SUB_2290 * 0.035309;
+    auto MUL_2424 = MUL_2273 * 0.002131;
+    auto SUB_2446 = MUL_2424 - MUL_2433;
+    auto ADD_2450 = SUB_2446 + MUL_2442;
+    auto MUL_2444 = SUB_2306 * 0.0926994;
+    auto MUL_2437 = MUL_2293 * 0.035309;
+    auto MUL_2426 = MUL_2277 * 0.002131;
+    auto ADD_2447 = MUL_2426 + MUL_2437;
+    auto SUB_2451 = MUL_2444 - ADD_2447;
+    auto ADD_2452 = 0.267 + SUB_2451;
+    if (/*link2*/ sphere_environment_in_collision(environment, ADD_2449, ADD_2450, ADD_2452, 0.06067))
+    {
+        return false;
+    } // (121, 137)
+    auto MUL_188 = SUB_155 * 0.7071081;
+    auto MUL_217 = SUB_155 * 0.7071055;
+    auto MUL_204 = ADD_150 * 0.7071081;
+    auto MUL_214 = ADD_150 * 0.7071055;
+    auto MUL_211 = SUB_144 * 0.7071081;
+    auto SUB_215 = MUL_214 - MUL_211;
+    auto MUL_202 = SUB_144 * 0.7071055;
+    auto ADD_205 = MUL_202 + MUL_204;
+    auto MUL_219 = ADD_136 * 0.7071081;
+    auto ADD_221 = MUL_217 + MUL_219;
+    auto MUL_190 = ADD_136 * 0.7071055;
+    auto SUB_192 = MUL_188 - MUL_190;
+    auto MUL_230 = ADD_150 * 0.293;
+    auto MUL_241 = SUB_155 * MUL_230;
+    auto MUL_234 = ADD_136 * 0.293;
+    auto MUL_242 = SUB_144 * MUL_234;
+    auto ADD_243 = MUL_241 + MUL_242;
+    auto MUL_246 = ADD_243 * 2.0;
+    auto INPUT_2 = q[2];
+    auto DIV_268 = INPUT_2 * 0.5;
+    auto SIN_269 = sin(DIV_268);
+    auto COS_275 = cos(DIV_268);
+    auto MUL_292 = ADD_221 * COS_275;
+    auto MUL_287 = ADD_221 * SIN_269;
+    auto MUL_290 = SUB_215 * COS_275;
+    auto ADD_291 = MUL_287 + MUL_290;
+    auto MUL_2456 = ADD_291 * ADD_291;
+    auto MUL_295 = SUB_215 * SIN_269;
+    auto SUB_296 = MUL_292 - MUL_295;
+    auto MUL_2457 = SUB_296 * ADD_291;
+    auto MUL_277 = SUB_192 * COS_275;
+    auto MUL_282 = SUB_192 * SIN_269;
+    auto MUL_284 = ADD_205 * COS_275;
+    auto SUB_285 = MUL_284 - MUL_282;
+    auto MUL_2458 = SUB_296 * SUB_285;
+    auto MUL_2455 = SUB_285 * SUB_285;
+    auto ADD_2464 = MUL_2455 + MUL_2456;
+    auto MUL_2467 = ADD_2464 * 2.0;
+    auto SUB_2470 = 1.0 - MUL_2467;
+    auto MUL_2504 = SUB_2470 * 0.0519145;
+    auto MUL_278 = ADD_205 * SIN_269;
+    auto ADD_279 = MUL_277 + MUL_278;
+    auto MUL_2462 = ADD_279 * ADD_291;
+    auto ADD_2490 = MUL_2462 + MUL_2458;
+    auto MUL_2492 = ADD_2490 * 2.0;
+    auto MUL_2522 = MUL_2492 * 0.0003989;
+    auto MUL_2461 = ADD_279 * SUB_285;
+    auto SUB_2477 = MUL_2461 - MUL_2457;
+    auto MUL_2479 = SUB_2477 * 2.0;
+    auto MUL_2511 = MUL_2479 * 0.0012796;
+    auto SUB_2527 = MUL_2504 - MUL_2511;
+    auto ADD_2530 = SUB_2527 + MUL_2522;
+    auto ADD_2533 = MUL_246 + ADD_2530;
+    auto ADD_2471 = MUL_2461 + MUL_2457;
+    auto MUL_2473 = ADD_2471 * 2.0;
+    auto MUL_2506 = MUL_2473 * 0.0519145;
+    auto MUL_2460 = SUB_296 * ADD_279;
+    auto MUL_2463 = SUB_285 * ADD_291;
+    auto SUB_2493 = MUL_2463 - MUL_2460;
+    auto MUL_2495 = SUB_2493 * 2.0;
+    auto MUL_2524 = MUL_2495 * 0.0003989;
+    auto MUL_2459 = ADD_279 * ADD_279;
+    auto ADD_2480 = MUL_2456 + MUL_2459;
+    auto MUL_2483 = ADD_2480 * 2.0;
+    auto SUB_2486 = 1.0 - MUL_2483;
+    auto MUL_2515 = SUB_2486 * 0.0012796;
+    auto SUB_2528 = MUL_2506 - MUL_2515;
+    auto ADD_2531 = SUB_2528 + MUL_2524;
+    auto MUL_252 = ADD_150 * MUL_230;
+    auto MUL_250 = ADD_136 * MUL_234;
+    auto ADD_253 = MUL_250 + MUL_252;
+    auto MUL_255 = ADD_253 * 2.0;
+    auto SUB_258 = MUL_255 - 0.293;
+    auto ADD_2534 = SUB_258 + ADD_2531;
+    auto SUB_2474 = MUL_2462 - MUL_2458;
+    auto ADD_2487 = MUL_2463 + MUL_2460;
+    auto ADD_2496 = MUL_2455 + MUL_2459;
+    auto MUL_2499 = ADD_2496 * 2.0;
+    auto SUB_2502 = 1.0 - MUL_2499;
+    auto MUL_2526 = SUB_2502 * 0.0003989;
+    auto MUL_2489 = ADD_2487 * 2.0;
+    auto MUL_2519 = MUL_2489 * 0.0012796;
+    auto MUL_2476 = SUB_2474 * 2.0;
+    auto MUL_2508 = MUL_2476 * 0.0519145;
+    auto SUB_2529 = MUL_2508 - MUL_2519;
+    auto ADD_2532 = SUB_2529 + MUL_2526;
+    auto MUL_259 = SUB_155 * MUL_234;
+    auto MUL_261 = SUB_144 * MUL_230;
+    auto SUB_262 = MUL_259 - MUL_261;
+    auto MUL_264 = SUB_262 * 2.0;
+    auto ADD_266 = 0.267 + MUL_264;
+    auto ADD_2535 = ADD_266 + ADD_2532;
+    if (/*link3*/ sphere_environment_in_collision(environment, ADD_2533, ADD_2534, ADD_2535, 0.084492))
+    {
+        return false;
+    } // (137, 229)
+    auto MUL_2552 = MUL_2492 * 0.0528491;
+    auto MUL_2545 = MUL_2479 * 0.0143234;
+    auto MUL_2539 = SUB_2470 * 0.0040755;
+    auto ADD_2562 = MUL_2539 + MUL_2545;
+    auto SUB_2565 = ADD_2562 - MUL_2552;
+    auto ADD_2568 = MUL_246 + SUB_2565;
+    auto MUL_2556 = MUL_2495 * 0.0528491;
+    auto MUL_2547 = SUB_2486 * 0.0143234;
+    auto MUL_2541 = MUL_2473 * 0.0040755;
+    auto ADD_2563 = MUL_2541 + MUL_2547;
+    auto SUB_2566 = ADD_2563 - MUL_2556;
+    auto ADD_2569 = SUB_258 + SUB_2566;
+    auto MUL_2560 = SUB_2502 * 0.0528491;
+    auto MUL_2549 = MUL_2489 * 0.0143234;
+    auto MUL_2543 = MUL_2476 * 0.0040755;
+    auto ADD_2564 = MUL_2543 + MUL_2549;
+    auto SUB_2567 = ADD_2564 - MUL_2560;
+    auto ADD_2570 = ADD_266 + SUB_2567;
+    if (/*link3*/ sphere_environment_in_collision(environment, ADD_2568, ADD_2569, ADD_2570, 0.078054))
+    {
+        return false;
+    } // (229, 247)
+    auto MUL_329 = SUB_296 * 0.7071081;
+    auto MUL_357 = SUB_296 * 0.7071055;
+    auto MUL_344 = ADD_291 * 0.7071081;
+    auto MUL_354 = ADD_291 * 0.7071055;
+    auto MUL_351 = SUB_285 * 0.7071081;
+    auto SUB_355 = MUL_354 - MUL_351;
+    auto MUL_342 = SUB_285 * 0.7071055;
+    auto ADD_345 = MUL_342 + MUL_344;
+    auto MUL_359 = ADD_279 * 0.7071081;
+    auto SUB_360 = MUL_357 - MUL_359;
+    auto MUL_331 = ADD_279 * 0.7071055;
+    auto ADD_332 = MUL_329 + MUL_331;
+    auto MUL_377 = ADD_291 * 0.0525;
+    auto MUL_382 = ADD_291 * MUL_377;
+    auto MUL_372 = SUB_285 * 0.0525;
+    auto MUL_380 = SUB_285 * MUL_372;
+    auto ADD_384 = MUL_380 + MUL_382;
+    auto MUL_387 = ADD_384 * 2.0;
+    auto SUB_390 = 0.0525 - MUL_387;
+    auto ADD_409 = MUL_246 + SUB_390;
+    auto INPUT_3 = q[3];
+    auto DIV_413 = INPUT_3 * 0.5;
+    auto SIN_414 = sin(DIV_413);
+    auto COS_420 = cos(DIV_413);
+    auto MUL_437 = SUB_360 * COS_420;
+    auto MUL_432 = SUB_360 * SIN_414;
+    auto MUL_435 = SUB_355 * COS_420;
+    auto ADD_436 = MUL_432 + MUL_435;
+    auto MUL_2574 = ADD_436 * ADD_436;
+    auto MUL_440 = SUB_355 * SIN_414;
+    auto SUB_441 = MUL_437 - MUL_440;
+    auto MUL_2575 = SUB_441 * ADD_436;
+    auto MUL_422 = ADD_332 * COS_420;
+    auto MUL_427 = ADD_332 * SIN_414;
+    auto MUL_429 = ADD_345 * COS_420;
+    auto SUB_430 = MUL_429 - MUL_427;
+    auto MUL_2576 = SUB_441 * SUB_430;
+    auto MUL_2573 = SUB_430 * SUB_430;
+    auto ADD_2582 = MUL_2573 + MUL_2574;
+    auto MUL_2585 = ADD_2582 * 2.0;
+    auto SUB_2588 = 1.0 - MUL_2585;
+    auto MUL_2622 = SUB_2588 * 0.0782684;
+    auto MUL_423 = ADD_345 * SIN_414;
+    auto ADD_424 = MUL_422 + MUL_423;
+    auto MUL_2580 = ADD_424 * ADD_436;
+    auto ADD_2608 = MUL_2580 + MUL_2576;
+    auto MUL_2610 = ADD_2608 * 2.0;
+    auto MUL_2640 = MUL_2610 * 0.0003464;
+    auto MUL_2579 = ADD_424 * SUB_430;
+    auto SUB_2595 = MUL_2579 - MUL_2575;
+    auto MUL_2597 = SUB_2595 * 2.0;
+    auto MUL_2629 = MUL_2597 * 0.1121414;
+    auto SUB_2645 = MUL_2622 - MUL_2629;
+    auto ADD_2648 = SUB_2645 + MUL_2640;
+    auto ADD_2651 = ADD_409 + ADD_2648;
+    auto ADD_2589 = MUL_2579 + MUL_2575;
+    auto MUL_2591 = ADD_2589 * 2.0;
+    auto MUL_2624 = MUL_2591 * 0.0782684;
+    auto MUL_2578 = SUB_441 * ADD_424;
+    auto MUL_2581 = SUB_430 * ADD_436;
+    auto SUB_2611 = MUL_2581 - MUL_2578;
+    auto MUL_2613 = SUB_2611 * 2.0;
+    auto MUL_2642 = MUL_2613 * 0.0003464;
+    auto MUL_2577 = ADD_424 * ADD_424;
+    auto ADD_2598 = MUL_2574 + MUL_2577;
+    auto MUL_2601 = ADD_2598 * 2.0;
+    auto SUB_2604 = 1.0 - MUL_2601;
+    auto MUL_2633 = SUB_2604 * 0.1121414;
+    auto SUB_2646 = MUL_2624 - MUL_2633;
+    auto ADD_2649 = SUB_2646 + MUL_2642;
+    auto MUL_392 = SUB_296 * MUL_377;
+    auto MUL_393 = ADD_279 * MUL_372;
+    auto ADD_395 = MUL_392 + MUL_393;
+    auto MUL_398 = ADD_395 * 2.0;
+    auto ADD_410 = SUB_258 + MUL_398;
+    auto ADD_2652 = ADD_410 + ADD_2649;
+    auto SUB_2592 = MUL_2580 - MUL_2576;
+    auto ADD_2605 = MUL_2581 + MUL_2578;
+    auto ADD_2614 = MUL_2573 + MUL_2577;
+    auto MUL_2617 = ADD_2614 * 2.0;
+    auto SUB_2620 = 1.0 - MUL_2617;
+    auto MUL_2644 = SUB_2620 * 0.0003464;
+    auto MUL_2607 = ADD_2605 * 2.0;
+    auto MUL_2637 = MUL_2607 * 0.1121414;
+    auto MUL_2594 = SUB_2592 * 2.0;
+    auto MUL_2626 = MUL_2594 * 0.0782684;
+    auto SUB_2647 = MUL_2626 - MUL_2637;
+    auto ADD_2650 = SUB_2647 + MUL_2644;
+    auto MUL_400 = SUB_296 * MUL_372;
+    auto MUL_402 = ADD_279 * MUL_377;
+    auto SUB_404 = MUL_402 - MUL_400;
+    auto MUL_407 = SUB_404 * 2.0;
+    auto ADD_411 = ADD_266 + MUL_407;
+    auto ADD_2653 = ADD_411 + ADD_2650;
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_2651, ADD_2652, ADD_2653, 0.078117))
+    {
+        return false;
+    } // (247, 341)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_2651, ADD_2652, ADD_2653, 0.078117))
+    {
+        return false;
+    } // (341, 341)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_2651, ADD_2652, ADD_2653, 0.078117))
+    {
+        return false;
+    } // (341, 341)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_2651, ADD_2652, ADD_2653, 0.078117))
+    {
+        return false;
+    } // (341, 341)
+    if (/*link4*/ sphere_environment_in_collision(environment, ADD_2651, ADD_2652, ADD_2653, 0.078117))
+    {
+        return false;
+    } // (341, 341)
+    if (/*link_base vs. link4*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_2651, ADD_2652, ADD_2653, 0.078117))
+    {
+        return false;
+    } // (341, 341)
+    if (/*link_base vs. link4*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_2651, ADD_2652, ADD_2653, 0.078117))
+    {
+        return false;
+    } // (341, 341)
+    auto MUL_2664 = MUL_2597 * 0.0815054;
+    auto MUL_2657 = SUB_2588 * 0.0781274;
+    auto SUB_2680 = MUL_2657 - MUL_2664;
+    auto MUL_2675 = MUL_2610 * 0.0428034;
+    auto ADD_2683 = SUB_2680 + MUL_2675;
+    auto ADD_2686 = ADD_409 + ADD_2683;
+    auto MUL_2677 = MUL_2613 * 0.0428034;
+    auto MUL_2668 = SUB_2604 * 0.0815054;
+    auto MUL_2659 = MUL_2591 * 0.0781274;
+    auto SUB_2681 = MUL_2659 - MUL_2668;
+    auto ADD_2684 = SUB_2681 + MUL_2677;
+    auto ADD_2687 = ADD_410 + ADD_2684;
+    auto MUL_2679 = SUB_2620 * 0.0428034;
+    auto MUL_2672 = MUL_2607 * 0.0815054;
+    auto MUL_2661 = MUL_2594 * 0.0781274;
+    auto SUB_2682 = MUL_2661 - MUL_2672;
+    auto ADD_2685 = SUB_2682 + MUL_2679;
+    auto ADD_2688 = ADD_411 + ADD_2685;
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_2686, ADD_2687, ADD_2688, 0.073968))
+    {
+        return false;
+    } // (341, 359)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_2686, ADD_2687, ADD_2688, 0.073968))
+    {
+        return false;
+    } // (359, 359)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_2686, ADD_2687, ADD_2688, 0.073968))
+    {
+        return false;
+    } // (359, 359)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_2686, ADD_2687, ADD_2688, 0.073968))
+    {
+        return false;
+    } // (359, 359)
+    if (/*link4*/ sphere_environment_in_collision(environment, ADD_2686, ADD_2687, ADD_2688, 0.073968))
+    {
+        return false;
+    } // (359, 359)
+    if (/*link_base vs. link4*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_2686, ADD_2687, ADD_2688, 0.073968))
+    {
+        return false;
+    } // (359, 359)
+    if (/*link_base vs. link4*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_2686, ADD_2687, ADD_2688, 0.073968))
+    {
+        return false;
+    } // (359, 359)
+    auto MUL_2710 = MUL_2610 * 0.0868004;
+    auto MUL_2693 = SUB_2588 * 0.0024276;
+    auto MUL_2704 = MUL_2597 * 0.0015466;
+    auto SUB_2715 = MUL_2704 - MUL_2693;
+    auto ADD_2718 = SUB_2715 + MUL_2710;
+    auto ADD_2721 = ADD_409 + ADD_2718;
+    auto MUL_2712 = MUL_2613 * 0.0868004;
+    auto MUL_2706 = SUB_2604 * 0.0015466;
+    auto MUL_2697 = MUL_2591 * 0.0024276;
+    auto SUB_2716 = MUL_2706 - MUL_2697;
+    auto ADD_2719 = SUB_2716 + MUL_2712;
+    auto ADD_2722 = ADD_410 + ADD_2719;
+    auto MUL_2714 = SUB_2620 * 0.0868004;
+    auto MUL_2708 = MUL_2607 * 0.0015466;
+    auto MUL_2701 = MUL_2594 * 0.0024276;
+    auto SUB_2717 = MUL_2708 - MUL_2701;
+    auto ADD_2720 = SUB_2717 + MUL_2714;
+    auto ADD_2723 = ADD_411 + ADD_2720;
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_2721, ADD_2722, ADD_2723, 0.051268))
+    {
+        return false;
+    } // (359, 377)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_2721, ADD_2722, ADD_2723, 0.051268))
+    {
+        return false;
+    } // (377, 377)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_2721, ADD_2722, ADD_2723, 0.051268))
+    {
+        return false;
+    } // (377, 377)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_2721, ADD_2722, ADD_2723, 0.051268))
+    {
+        return false;
+    } // (377, 377)
+    if (/*link4*/ sphere_environment_in_collision(environment, ADD_2721, ADD_2722, ADD_2723, 0.051268))
+    {
+        return false;
+    } // (377, 377)
+    if (/*link_base vs. link4*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_2721, ADD_2722, ADD_2723, 0.051268))
+    {
+        return false;
+    } // (377, 377)
+    if (/*link_base vs. link4*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_2721, ADD_2722, ADD_2723, 0.051268))
+    {
+        return false;
+    } // (377, 377)
+    auto MUL_2745 = MUL_2610 * 0.0872614;
+    auto MUL_2734 = MUL_2597 * 0.0118454;
+    auto MUL_2727 = SUB_2588 * 0.0104884;
+    auto SUB_2750 = MUL_2727 - MUL_2734;
+    auto ADD_2753 = SUB_2750 + MUL_2745;
+    auto ADD_2756 = ADD_409 + ADD_2753;
+    auto MUL_2747 = MUL_2613 * 0.0872614;
+    auto MUL_2738 = SUB_2604 * 0.0118454;
+    auto MUL_2729 = MUL_2591 * 0.0104884;
+    auto SUB_2751 = MUL_2729 - MUL_2738;
+    auto ADD_2754 = SUB_2751 + MUL_2747;
+    auto ADD_2757 = ADD_410 + ADD_2754;
+    auto MUL_2749 = SUB_2620 * 0.0872614;
+    auto MUL_2742 = MUL_2607 * 0.0118454;
+    auto MUL_2731 = MUL_2594 * 0.0104884;
+    auto SUB_2752 = MUL_2731 - MUL_2742;
+    auto ADD_2755 = SUB_2752 + MUL_2749;
+    auto ADD_2758 = ADD_411 + ADD_2755;
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_2756, ADD_2757, ADD_2758, 0.054297))
+    {
+        return false;
+    } // (377, 395)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_2756, ADD_2757, ADD_2758, 0.054297))
+    {
+        return false;
+    } // (395, 395)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_2756, ADD_2757, ADD_2758, 0.054297))
+    {
+        return false;
+    } // (395, 395)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_2756, ADD_2757, ADD_2758, 0.054297))
+    {
+        return false;
+    } // (395, 395)
+    if (/*link4*/ sphere_environment_in_collision(environment, ADD_2756, ADD_2757, ADD_2758, 0.054297))
+    {
+        return false;
+    } // (395, 395)
+    if (/*link_base vs. link4*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_2756, ADD_2757, ADD_2758, 0.054297))
+    {
+        return false;
+    } // (395, 395)
+    if (/*link_base vs. link4*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_2756, ADD_2757, ADD_2758, 0.054297))
+    {
+        return false;
+    } // (395, 395)
+    auto MUL_2780 = MUL_2610 * 0.0824634;
+    auto MUL_2769 = MUL_2597 * 0.0491104;
+    auto MUL_2762 = SUB_2588 * 0.0434094;
+    auto SUB_2785 = MUL_2762 - MUL_2769;
+    auto ADD_2788 = SUB_2785 + MUL_2780;
+    auto ADD_2791 = ADD_409 + ADD_2788;
+    auto MUL_2782 = MUL_2613 * 0.0824634;
+    auto MUL_2773 = SUB_2604 * 0.0491104;
+    auto MUL_2764 = MUL_2591 * 0.0434094;
+    auto SUB_2786 = MUL_2764 - MUL_2773;
+    auto ADD_2789 = SUB_2786 + MUL_2782;
+    auto ADD_2792 = ADD_410 + ADD_2789;
+    auto MUL_2784 = SUB_2620 * 0.0824634;
+    auto MUL_2777 = MUL_2607 * 0.0491104;
+    auto MUL_2766 = MUL_2594 * 0.0434094;
+    auto SUB_2787 = MUL_2766 - MUL_2777;
+    auto ADD_2790 = SUB_2787 + MUL_2784;
+    auto ADD_2793 = ADD_411 + ADD_2790;
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_2791, ADD_2792, ADD_2793, 0.057218))
+    {
+        return false;
+    } // (395, 413)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_2791, ADD_2792, ADD_2793, 0.057218))
+    {
+        return false;
+    } // (413, 413)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_2791, ADD_2792, ADD_2793, 0.057218))
+    {
+        return false;
+    } // (413, 413)
+    if (/*link2 vs. link4*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_2791, ADD_2792, ADD_2793, 0.057218))
+    {
+        return false;
+    } // (413, 413)
+    if (/*link4*/ sphere_environment_in_collision(environment, ADD_2791, ADD_2792, ADD_2793, 0.057218))
+    {
+        return false;
+    } // (413, 413)
+    if (/*link_base vs. link4*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_2791, ADD_2792, ADD_2793, 0.057218))
+    {
+        return false;
+    } // (413, 413)
+    if (/*link_base vs. link4*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_2791, ADD_2792, ADD_2793, 0.057218))
+    {
+        return false;
+    } // (413, 413)
+    auto MUL_474 = SUB_441 * 0.7071081;
+    auto MUL_502 = SUB_441 * 0.7071055;
+    auto MUL_489 = ADD_436 * 0.7071081;
+    auto MUL_499 = ADD_436 * 0.7071055;
+    auto MUL_496 = SUB_430 * 0.7071081;
+    auto SUB_500 = MUL_499 - MUL_496;
+    auto MUL_487 = SUB_430 * 0.7071055;
+    auto ADD_490 = MUL_487 + MUL_489;
+    auto MUL_504 = ADD_424 * 0.7071081;
+    auto SUB_505 = MUL_502 - MUL_504;
+    auto MUL_476 = ADD_424 * 0.7071055;
+    auto ADD_477 = MUL_474 + MUL_476;
+    auto MUL_514 = ADD_436 * 0.3425;
+    auto MUL_529 = SUB_441 * MUL_514;
+    auto MUL_518 = ADD_424 * 0.3425;
+    auto MUL_527 = ADD_436 * 0.0775;
+    auto MUL_533 = ADD_436 * MUL_527;
+    auto MUL_521 = SUB_430 * 0.0775;
+    auto ADD_522 = MUL_518 + MUL_521;
+    auto MUL_530 = SUB_430 * ADD_522;
+    auto SUB_532 = MUL_529 - MUL_530;
+    auto SUB_535 = SUB_532 - MUL_533;
+    auto MUL_537 = SUB_535 * 2.0;
+    auto ADD_539 = MUL_537 + 0.0775;
+    auto ADD_562 = ADD_409 + ADD_539;
+    auto INPUT_4 = q[4];
+    auto DIV_566 = INPUT_4 * 0.5;
+    auto SIN_567 = sin(DIV_566);
+    auto COS_573 = cos(DIV_566);
+    auto MUL_590 = SUB_505 * COS_573;
+    auto MUL_585 = SUB_505 * SIN_567;
+    auto MUL_588 = SUB_500 * COS_573;
+    auto ADD_589 = MUL_585 + MUL_588;
+    auto MUL_2797 = ADD_589 * ADD_589;
+    auto MUL_593 = SUB_500 * SIN_567;
+    auto SUB_594 = MUL_590 - MUL_593;
+    auto MUL_2798 = SUB_594 * ADD_589;
+    auto MUL_575 = ADD_477 * COS_573;
+    auto MUL_580 = ADD_477 * SIN_567;
+    auto MUL_582 = ADD_490 * COS_573;
+    auto SUB_583 = MUL_582 - MUL_580;
+    auto MUL_2799 = SUB_594 * SUB_583;
+    auto MUL_2796 = SUB_583 * SUB_583;
+    auto ADD_2805 = MUL_2796 + MUL_2797;
+    auto MUL_2808 = ADD_2805 * 2.0;
+    auto SUB_2811 = 1.0 - MUL_2808;
+    auto MUL_2846 = SUB_2811 * 0.0001834;
+    auto MUL_576 = ADD_490 * SIN_567;
+    auto ADD_577 = MUL_575 + MUL_576;
+    auto MUL_2803 = ADD_577 * ADD_589;
+    auto ADD_2831 = MUL_2803 + MUL_2799;
+    auto MUL_2833 = ADD_2831 * 2.0;
+    auto MUL_2864 = MUL_2833 * 0.0052996;
+    auto MUL_2802 = ADD_577 * SUB_583;
+    auto SUB_2818 = MUL_2802 - MUL_2798;
+    auto MUL_2820 = SUB_2818 * 2.0;
+    auto MUL_2857 = MUL_2820 * 0.0457522;
+    auto SUB_2874 = MUL_2857 - MUL_2846;
+    auto SUB_2877 = SUB_2874 - MUL_2864;
+    auto ADD_2880 = ADD_562 + SUB_2877;
+    auto ADD_2812 = MUL_2802 + MUL_2798;
+    auto MUL_2814 = ADD_2812 * 2.0;
+    auto MUL_2850 = MUL_2814 * 0.0001834;
+    auto MUL_2801 = SUB_594 * ADD_577;
+    auto MUL_2804 = SUB_583 * ADD_589;
+    auto SUB_2834 = MUL_2804 - MUL_2801;
+    auto MUL_2836 = SUB_2834 * 2.0;
+    auto MUL_2868 = MUL_2836 * 0.0052996;
+    auto MUL_2800 = ADD_577 * ADD_577;
+    auto ADD_2821 = MUL_2797 + MUL_2800;
+    auto MUL_2824 = ADD_2821 * 2.0;
+    auto SUB_2827 = 1.0 - MUL_2824;
+    auto MUL_2859 = SUB_2827 * 0.0457522;
+    auto SUB_2875 = MUL_2859 - MUL_2850;
+    auto SUB_2878 = SUB_2875 - MUL_2868;
+    auto MUL_541 = SUB_441 * MUL_527;
+    auto MUL_545 = ADD_436 * MUL_514;
+    auto MUL_542 = ADD_424 * ADD_522;
+    auto ADD_544 = MUL_541 + MUL_542;
+    auto ADD_546 = ADD_544 + MUL_545;
+    auto MUL_548 = ADD_546 * 2.0;
+    auto SUB_551 = MUL_548 - 0.3425;
+    auto ADD_563 = ADD_410 + SUB_551;
+    auto ADD_2881 = ADD_563 + SUB_2878;
+    auto SUB_2815 = MUL_2803 - MUL_2799;
+    auto ADD_2828 = MUL_2804 + MUL_2801;
+    auto ADD_2837 = MUL_2796 + MUL_2800;
+    auto MUL_2840 = ADD_2837 * 2.0;
+    auto SUB_2843 = 1.0 - MUL_2840;
+    auto MUL_2872 = SUB_2843 * 0.0052996;
+    auto MUL_2830 = ADD_2828 * 2.0;
+    auto MUL_2861 = MUL_2830 * 0.0457522;
+    auto MUL_2817 = SUB_2815 * 2.0;
+    auto MUL_2854 = MUL_2817 * 0.0001834;
+    auto SUB_2876 = MUL_2861 - MUL_2854;
+    auto SUB_2879 = SUB_2876 - MUL_2872;
+    auto MUL_552 = SUB_441 * ADD_522;
+    auto MUL_557 = SUB_430 * MUL_514;
+    auto MUL_554 = ADD_424 * MUL_527;
+    auto SUB_556 = MUL_554 - MUL_552;
+    auto SUB_558 = SUB_556 - MUL_557;
+    auto MUL_560 = SUB_558 * 2.0;
+    auto ADD_564 = ADD_411 + MUL_560;
+    auto ADD_2882 = ADD_564 + SUB_2879;
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_2880, ADD_2881, ADD_2882, 0.059255))
+    {
+        return false;
+    } // (413, 517)
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_2880, ADD_2881, ADD_2882, 0.059255))
+    {
+        return false;
+    } // (517, 517)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_2880, ADD_2881, ADD_2882, 0.059255))
+    {
+        return false;
+    } // (517, 517)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_2880, ADD_2881, ADD_2882, 0.059255))
+    {
+        return false;
+    } // (517, 517)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_2880, ADD_2881, ADD_2882, 0.059255))
+    {
+        return false;
+    } // (517, 517)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_2880, ADD_2881, ADD_2882, 0.059255))
+    {
+        return false;
+    } // (517, 517)
+    if (/*link5*/ sphere_environment_in_collision(environment, ADD_2880, ADD_2881, ADD_2882, 0.059255))
+    {
+        return false;
+    } // (517, 517)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_2880, ADD_2881, ADD_2882, 0.059255))
+    {
+        return false;
+    } // (517, 517)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_2880, ADD_2881, ADD_2882, 0.059255))
+    {
+        return false;
+    } // (517, 517)
+    auto MUL_2905 = MUL_2833 * 0.1456606;
+    auto MUL_2887 = SUB_2811 * 6.4e-06;
+    auto MUL_2898 = MUL_2820 * 2e-07;
+    auto SUB_2915 = MUL_2898 - MUL_2887;
+    auto SUB_2918 = SUB_2915 - MUL_2905;
+    auto ADD_2921 = ADD_562 + SUB_2918;
+    auto MUL_2909 = MUL_2836 * 0.1456606;
+    auto MUL_2900 = SUB_2827 * 2e-07;
+    auto MUL_2891 = MUL_2814 * 6.4e-06;
+    auto SUB_2916 = MUL_2900 - MUL_2891;
+    auto SUB_2919 = SUB_2916 - MUL_2909;
+    auto ADD_2922 = ADD_563 + SUB_2919;
+    auto MUL_2913 = SUB_2843 * 0.1456606;
+    auto MUL_2902 = MUL_2830 * 2e-07;
+    auto MUL_2895 = MUL_2817 * 6.4e-06;
+    auto SUB_2917 = MUL_2902 - MUL_2895;
+    auto SUB_2920 = SUB_2917 - MUL_2913;
+    auto ADD_2923 = ADD_564 + SUB_2920;
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_2921, ADD_2922, ADD_2923, 0.050339))
+    {
+        return false;
+    } // (517, 535)
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_2921, ADD_2922, ADD_2923, 0.050339))
+    {
+        return false;
+    } // (535, 535)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_2921, ADD_2922, ADD_2923, 0.050339))
+    {
+        return false;
+    } // (535, 535)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_2921, ADD_2922, ADD_2923, 0.050339))
+    {
+        return false;
+    } // (535, 535)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_2921, ADD_2922, ADD_2923, 0.050339))
+    {
+        return false;
+    } // (535, 535)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_2921, ADD_2922, ADD_2923, 0.050339))
+    {
+        return false;
+    } // (535, 535)
+    if (/*link5*/ sphere_environment_in_collision(environment, ADD_2921, ADD_2922, ADD_2923, 0.050339))
+    {
+        return false;
+    } // (535, 535)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_2921, ADD_2922, ADD_2923, 0.050339))
+    {
+        return false;
+    } // (535, 535)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_2921, ADD_2922, ADD_2923, 0.050339))
+    {
+        return false;
+    } // (535, 535)
+    auto MUL_2946 = MUL_2833 * 0.1406406;
+    auto MUL_2939 = MUL_2820 * 0.0174862;
+    auto MUL_2928 = SUB_2811 * 0.0009724;
+    auto SUB_2956 = MUL_2939 - MUL_2928;
+    auto SUB_2959 = SUB_2956 - MUL_2946;
+    auto ADD_2962 = ADD_562 + SUB_2959;
+    auto MUL_2950 = MUL_2836 * 0.1406406;
+    auto MUL_2941 = SUB_2827 * 0.0174862;
+    auto MUL_2932 = MUL_2814 * 0.0009724;
+    auto SUB_2957 = MUL_2941 - MUL_2932;
+    auto SUB_2960 = SUB_2957 - MUL_2950;
+    auto ADD_2963 = ADD_563 + SUB_2960;
+    auto MUL_2954 = SUB_2843 * 0.1406406;
+    auto MUL_2943 = MUL_2830 * 0.0174862;
+    auto MUL_2936 = MUL_2817 * 0.0009724;
+    auto SUB_2958 = MUL_2943 - MUL_2936;
+    auto SUB_2961 = SUB_2958 - MUL_2954;
+    auto ADD_2964 = ADD_564 + SUB_2961;
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_2962, ADD_2963, ADD_2964, 0.049716))
+    {
+        return false;
+    } // (535, 553)
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_2962, ADD_2963, ADD_2964, 0.049716))
+    {
+        return false;
+    } // (553, 553)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_2962, ADD_2963, ADD_2964, 0.049716))
+    {
+        return false;
+    } // (553, 553)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_2962, ADD_2963, ADD_2964, 0.049716))
+    {
+        return false;
+    } // (553, 553)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_2962, ADD_2963, ADD_2964, 0.049716))
+    {
+        return false;
+    } // (553, 553)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_2962, ADD_2963, ADD_2964, 0.049716))
+    {
+        return false;
+    } // (553, 553)
+    if (/*link5*/ sphere_environment_in_collision(environment, ADD_2962, ADD_2963, ADD_2964, 0.049716))
+    {
+        return false;
+    } // (553, 553)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_2962, ADD_2963, ADD_2964, 0.049716))
+    {
+        return false;
+    } // (553, 553)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_2962, ADD_2963, ADD_2964, 0.049716))
+    {
+        return false;
+    } // (553, 553)
+    auto MUL_2981 = MUL_2833 * 0.1117826;
+    auto MUL_2974 = MUL_2820 * 0.0451102;
+    auto MUL_2968 = SUB_2811 * 0.0001206;
+    auto ADD_2991 = MUL_2968 + MUL_2974;
+    auto SUB_2994 = ADD_2991 - MUL_2981;
+    auto ADD_2997 = ADD_562 + SUB_2994;
+    auto MUL_2985 = MUL_2836 * 0.1117826;
+    auto MUL_2976 = SUB_2827 * 0.0451102;
+    auto MUL_2970 = MUL_2814 * 0.0001206;
+    auto ADD_2992 = MUL_2970 + MUL_2976;
+    auto SUB_2995 = ADD_2992 - MUL_2985;
+    auto ADD_2998 = ADD_563 + SUB_2995;
+    auto MUL_2989 = SUB_2843 * 0.1117826;
+    auto MUL_2978 = MUL_2830 * 0.0451102;
+    auto MUL_2972 = MUL_2817 * 0.0001206;
+    auto ADD_2993 = MUL_2972 + MUL_2978;
+    auto SUB_2996 = ADD_2993 - MUL_2989;
+    auto ADD_2999 = ADD_564 + SUB_2996;
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_2997, ADD_2998, ADD_2999, 0.042043))
+    {
+        return false;
+    } // (553, 571)
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_2997, ADD_2998, ADD_2999, 0.042043))
+    {
+        return false;
+    } // (571, 571)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_2997, ADD_2998, ADD_2999, 0.042043))
+    {
+        return false;
+    } // (571, 571)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_2997, ADD_2998, ADD_2999, 0.042043))
+    {
+        return false;
+    } // (571, 571)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_2997, ADD_2998, ADD_2999, 0.042043))
+    {
+        return false;
+    } // (571, 571)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_2997, ADD_2998, ADD_2999, 0.042043))
+    {
+        return false;
+    } // (571, 571)
+    if (/*link5*/ sphere_environment_in_collision(environment, ADD_2997, ADD_2998, ADD_2999, 0.042043))
+    {
+        return false;
+    } // (571, 571)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_2997, ADD_2998, ADD_2999, 0.042043))
+    {
+        return false;
+    } // (571, 571)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_2997, ADD_2998, ADD_2999, 0.042043))
+    {
+        return false;
+    } // (571, 571)
+    auto MUL_3016 = MUL_2833 * 0.0708646;
+    auto MUL_3009 = MUL_2820 * 0.0692702;
+    auto MUL_3003 = SUB_2811 * 0.0096056;
+    auto ADD_3026 = MUL_3003 + MUL_3009;
+    auto SUB_3029 = ADD_3026 - MUL_3016;
+    auto ADD_3032 = ADD_562 + SUB_3029;
+    auto MUL_3020 = MUL_2836 * 0.0708646;
+    auto MUL_3011 = SUB_2827 * 0.0692702;
+    auto MUL_3005 = MUL_2814 * 0.0096056;
+    auto ADD_3027 = MUL_3005 + MUL_3011;
+    auto SUB_3030 = ADD_3027 - MUL_3020;
+    auto ADD_3033 = ADD_563 + SUB_3030;
+    auto MUL_3024 = SUB_2843 * 0.0708646;
+    auto MUL_3013 = MUL_2830 * 0.0692702;
+    auto MUL_3007 = MUL_2817 * 0.0096056;
+    auto ADD_3028 = MUL_3007 + MUL_3013;
+    auto SUB_3031 = ADD_3028 - MUL_3024;
+    auto ADD_3034 = ADD_564 + SUB_3031;
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3032, ADD_3033, ADD_3034, 0.038992))
+    {
+        return false;
+    } // (571, 589)
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3032, ADD_3033, ADD_3034, 0.038992))
+    {
+        return false;
+    } // (589, 589)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3032, ADD_3033, ADD_3034, 0.038992))
+    {
+        return false;
+    } // (589, 589)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3032, ADD_3033, ADD_3034, 0.038992))
+    {
+        return false;
+    } // (589, 589)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3032, ADD_3033, ADD_3034, 0.038992))
+    {
+        return false;
+    } // (589, 589)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3032, ADD_3033, ADD_3034, 0.038992))
+    {
+        return false;
+    } // (589, 589)
+    if (/*link5*/ sphere_environment_in_collision(environment, ADD_3032, ADD_3033, ADD_3034, 0.038992))
+    {
+        return false;
+    } // (589, 589)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3032, ADD_3033, ADD_3034, 0.038992))
+    {
+        return false;
+    } // (589, 589)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3032, ADD_3033, ADD_3034, 0.038992))
+    {
+        return false;
+    } // (589, 589)
+    auto MUL_3057 = MUL_2833 * 0.0716086;
+    auto MUL_3050 = MUL_2820 * 0.0690292;
+    auto MUL_3039 = SUB_2811 * 0.0138714;
+    auto SUB_3067 = MUL_3050 - MUL_3039;
+    auto SUB_3070 = SUB_3067 - MUL_3057;
+    auto ADD_3073 = ADD_562 + SUB_3070;
+    auto MUL_3061 = MUL_2836 * 0.0716086;
+    auto MUL_3052 = SUB_2827 * 0.0690292;
+    auto MUL_3043 = MUL_2814 * 0.0138714;
+    auto SUB_3068 = MUL_3052 - MUL_3043;
+    auto SUB_3071 = SUB_3068 - MUL_3061;
+    auto ADD_3074 = ADD_563 + SUB_3071;
+    auto MUL_3065 = SUB_2843 * 0.0716086;
+    auto MUL_3054 = MUL_2830 * 0.0690292;
+    auto MUL_3047 = MUL_2817 * 0.0138714;
+    auto SUB_3069 = MUL_3054 - MUL_3047;
+    auto SUB_3072 = SUB_3069 - MUL_3065;
+    auto ADD_3075 = ADD_564 + SUB_3072;
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3073, ADD_3074, ADD_3075, 0.038827))
+    {
+        return false;
+    } // (589, 607)
+    if (/*link1 vs. link5*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3073, ADD_3074, ADD_3075, 0.038827))
+    {
+        return false;
+    } // (607, 607)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3073, ADD_3074, ADD_3075, 0.038827))
+    {
+        return false;
+    } // (607, 607)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3073, ADD_3074, ADD_3075, 0.038827))
+    {
+        return false;
+    } // (607, 607)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3073, ADD_3074, ADD_3075, 0.038827))
+    {
+        return false;
+    } // (607, 607)
+    if (/*link2 vs. link5*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3073, ADD_3074, ADD_3075, 0.038827))
+    {
+        return false;
+    } // (607, 607)
+    if (/*link5*/ sphere_environment_in_collision(environment, ADD_3073, ADD_3074, ADD_3075, 0.038827))
+    {
+        return false;
+    } // (607, 607)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3073, ADD_3074, ADD_3075, 0.038827))
+    {
+        return false;
+    } // (607, 607)
+    if (/*link_base vs. link5*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3073, ADD_3074, ADD_3075, 0.038827))
+    {
+        return false;
+    } // (607, 607)
+    auto MUL_627 = SUB_594 * 0.7071081;
+    auto MUL_655 = SUB_594 * 0.7071055;
+    auto MUL_642 = ADD_589 * 0.7071081;
+    auto MUL_652 = ADD_589 * 0.7071055;
+    auto MUL_649 = SUB_583 * 0.7071081;
+    auto SUB_653 = MUL_652 - MUL_649;
+    auto MUL_640 = SUB_583 * 0.7071055;
+    auto ADD_643 = MUL_640 + MUL_642;
+    auto MUL_657 = ADD_577 * 0.7071081;
+    auto SUB_658 = MUL_655 - MUL_657;
+    auto MUL_629 = ADD_577 * 0.7071055;
+    auto ADD_630 = MUL_627 + MUL_629;
+    auto INPUT_5 = q[5];
+    auto DIV_695 = INPUT_5 * 0.5;
+    auto SIN_696 = sin(DIV_695);
+    auto COS_702 = cos(DIV_695);
+    auto MUL_714 = SUB_658 * SIN_696;
+    auto MUL_719 = SUB_658 * COS_702;
+    auto MUL_722 = SUB_653 * SIN_696;
+    auto SUB_723 = MUL_719 - MUL_722;
+    auto MUL_717 = SUB_653 * COS_702;
+    auto ADD_718 = MUL_714 + MUL_717;
+    auto MUL_3080 = SUB_723 * ADD_718;
+    auto MUL_3079 = ADD_718 * ADD_718;
+    auto MUL_705 = ADD_643 * SIN_696;
+    auto MUL_711 = ADD_643 * COS_702;
+    auto MUL_709 = ADD_630 * SIN_696;
+    auto SUB_712 = MUL_711 - MUL_709;
+    auto MUL_3081 = SUB_723 * SUB_712;
+    auto MUL_3078 = SUB_712 * SUB_712;
+    auto ADD_3087 = MUL_3078 + MUL_3079;
+    auto MUL_3090 = ADD_3087 * 2.0;
+    auto SUB_3093 = 1.0 - MUL_3090;
+    auto MUL_3127 = SUB_3093 * 0.0140132;
+    auto MUL_704 = ADD_630 * COS_702;
+    auto ADD_706 = MUL_704 + MUL_705;
+    auto MUL_3085 = ADD_706 * ADD_718;
+    auto ADD_3113 = MUL_3085 + MUL_3081;
+    auto MUL_3115 = ADD_3113 * 2.0;
+    auto MUL_3139 = MUL_3115 * 0.0238072;
+    auto MUL_3084 = ADD_706 * SUB_712;
+    auto SUB_3100 = MUL_3084 - MUL_3080;
+    auto MUL_3102 = SUB_3100 * 2.0;
+    auto MUL_3133 = MUL_3102 * 0.0002622;
+    auto ADD_3144 = MUL_3127 + MUL_3133;
+    auto ADD_3147 = ADD_3144 + MUL_3139;
+    auto ADD_3150 = ADD_562 + ADD_3147;
+    auto ADD_3094 = MUL_3084 + MUL_3080;
+    auto MUL_3096 = ADD_3094 * 2.0;
+    auto MUL_3129 = MUL_3096 * 0.0140132;
+    auto MUL_3083 = SUB_723 * ADD_706;
+    auto MUL_3086 = SUB_712 * ADD_718;
+    auto SUB_3116 = MUL_3086 - MUL_3083;
+    auto MUL_3118 = SUB_3116 * 2.0;
+    auto MUL_3141 = MUL_3118 * 0.0238072;
+    auto MUL_3082 = ADD_706 * ADD_706;
+    auto ADD_3103 = MUL_3079 + MUL_3082;
+    auto MUL_3106 = ADD_3103 * 2.0;
+    auto SUB_3109 = 1.0 - MUL_3106;
+    auto MUL_3135 = SUB_3109 * 0.0002622;
+    auto ADD_3145 = MUL_3129 + MUL_3135;
+    auto ADD_3148 = ADD_3145 + MUL_3141;
+    auto ADD_3151 = ADD_563 + ADD_3148;
+    auto SUB_3097 = MUL_3085 - MUL_3081;
+    auto ADD_3110 = MUL_3086 + MUL_3083;
+    auto ADD_3119 = MUL_3078 + MUL_3082;
+    auto MUL_3122 = ADD_3119 * 2.0;
+    auto SUB_3125 = 1.0 - MUL_3122;
+    auto MUL_3143 = SUB_3125 * 0.0238072;
+    auto MUL_3112 = ADD_3110 * 2.0;
+    auto MUL_3137 = MUL_3112 * 0.0002622;
+    auto MUL_3099 = SUB_3097 * 2.0;
+    auto MUL_3131 = MUL_3099 * 0.0140132;
+    auto ADD_3146 = MUL_3131 + MUL_3137;
+    auto ADD_3149 = ADD_3146 + MUL_3143;
+    auto ADD_3152 = ADD_564 + ADD_3149;
+    if (/*link1 vs. link6*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3150, ADD_3151, ADD_3152, 0.062253))
+    {
+        return false;
+    } // (607, 683)
+    if (/*link1 vs. link6*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3150, ADD_3151, ADD_3152, 0.062253))
+    {
+        return false;
+    } // (683, 683)
+    if (/*link2 vs. link6*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3150, ADD_3151, ADD_3152, 0.062253))
+    {
+        return false;
+    } // (683, 683)
+    if (/*link2 vs. link6*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3150, ADD_3151, ADD_3152, 0.062253))
+    {
+        return false;
+    } // (683, 683)
+    if (/*link2 vs. link6*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3150, ADD_3151, ADD_3152, 0.062253))
+    {
+        return false;
+    } // (683, 683)
+    if (/*link2 vs. link6*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3150, ADD_3151, ADD_3152, 0.062253))
+    {
+        return false;
+    } // (683, 683)
+    if (/*link6*/ sphere_environment_in_collision(environment, ADD_3150, ADD_3151, ADD_3152, 0.062253))
+    {
+        return false;
+    } // (683, 683)
+    if (/*link_base vs. link6*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3150, ADD_3151, ADD_3152, 0.062253))
+    {
+        return false;
+    } // (683, 683)
+    if (/*link_base vs. link6*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3150, ADD_3151, ADD_3152, 0.062253))
+    {
+        return false;
+    } // (683, 683)
+    auto MUL_3156 = SUB_3093 * 0.0751212;
+    auto MUL_3162 = MUL_3102 * 0.0191462;
+    auto ADD_3173 = MUL_3156 + MUL_3162;
+    auto MUL_3168 = MUL_3115 * 0.0005702;
+    auto ADD_3176 = ADD_3173 + MUL_3168;
+    auto ADD_3179 = ADD_562 + ADD_3176;
+    auto MUL_3170 = MUL_3118 * 0.0005702;
+    auto MUL_3164 = SUB_3109 * 0.0191462;
+    auto MUL_3158 = MUL_3096 * 0.0751212;
+    auto ADD_3174 = MUL_3158 + MUL_3164;
+    auto ADD_3177 = ADD_3174 + MUL_3170;
+    auto ADD_3180 = ADD_563 + ADD_3177;
+    auto MUL_3172 = SUB_3125 * 0.0005702;
+    auto MUL_3166 = MUL_3112 * 0.0191462;
+    auto MUL_3160 = MUL_3099 * 0.0751212;
+    auto ADD_3175 = MUL_3160 + MUL_3166;
+    auto ADD_3178 = ADD_3175 + MUL_3172;
+    auto ADD_3181 = ADD_564 + ADD_3178;
+    if (/*link1 vs. link6*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3179, ADD_3180, ADD_3181, 0.068336))
+    {
+        return false;
+    } // (683, 701)
+    if (/*link1 vs. link6*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3179, ADD_3180, ADD_3181, 0.068336))
+    {
+        return false;
+    } // (701, 701)
+    if (/*link2 vs. link6*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3179, ADD_3180, ADD_3181, 0.068336))
+    {
+        return false;
+    } // (701, 701)
+    if (/*link2 vs. link6*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3179, ADD_3180, ADD_3181, 0.068336))
+    {
+        return false;
+    } // (701, 701)
+    if (/*link2 vs. link6*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3179, ADD_3180, ADD_3181, 0.068336))
+    {
+        return false;
+    } // (701, 701)
+    if (/*link2 vs. link6*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3179, ADD_3180, ADD_3181, 0.068336))
+    {
+        return false;
+    } // (701, 701)
+    if (/*link6*/ sphere_environment_in_collision(environment, ADD_3179, ADD_3180, ADD_3181, 0.068336))
+    {
+        return false;
+    } // (701, 701)
+    if (/*link_base vs. link6*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3179, ADD_3180, ADD_3181, 0.068336))
+    {
+        return false;
+    } // (701, 701)
+    if (/*link_base vs. link6*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3179, ADD_3180, ADD_3181, 0.068336))
+    {
+        return false;
+    } // (701, 701)
+    auto MUL_757 = SUB_723 * 0.7071081;
+    auto MUL_789 = SUB_723 * 0.7071055;
+    auto MUL_774 = ADD_718 * 0.7071081;
+    auto MUL_786 = ADD_718 * 0.7071055;
+    auto MUL_783 = SUB_712 * 0.7071081;
+    auto ADD_787 = MUL_783 + MUL_786;
+    auto MUL_771 = SUB_712 * 0.7071055;
+    auto SUB_776 = MUL_771 - MUL_774;
+    auto MUL_792 = ADD_706 * 0.7071081;
+    auto ADD_794 = MUL_789 + MUL_792;
+    auto MUL_760 = ADD_706 * 0.7071055;
+    auto SUB_761 = MUL_760 - MUL_757;
+    auto MUL_802 = ADD_718 * 0.097;
+    auto MUL_814 = SUB_723 * MUL_802;
+    auto MUL_805 = ADD_706 * 0.097;
+    auto MUL_812 = ADD_718 * 0.076;
+    auto MUL_818 = ADD_718 * MUL_812;
+    auto MUL_807 = SUB_712 * 0.076;
+    auto SUB_808 = MUL_805 - MUL_807;
+    auto MUL_816 = SUB_712 * SUB_808;
+    auto SUB_817 = MUL_816 - MUL_814;
+    auto SUB_820 = SUB_817 - MUL_818;
+    auto MUL_822 = SUB_820 * 2.0;
+    auto ADD_824 = MUL_822 + 0.076;
+    auto ADD_846 = ADD_562 + ADD_824;
+    auto INPUT_6 = q[6];
+    auto DIV_850 = INPUT_6 * 0.5;
+    auto SIN_851 = sin(DIV_850);
+    auto COS_857 = cos(DIV_850);
+    auto MUL_874 = ADD_794 * COS_857;
+    auto MUL_869 = ADD_794 * SIN_851;
+    auto MUL_872 = ADD_787 * COS_857;
+    auto ADD_873 = MUL_869 + MUL_872;
+    auto MUL_3185 = ADD_873 * ADD_873;
+    auto MUL_877 = ADD_787 * SIN_851;
+    auto SUB_878 = MUL_874 - MUL_877;
+    auto MUL_3186 = SUB_878 * ADD_873;
+    auto MUL_859 = SUB_761 * COS_857;
+    auto MUL_864 = SUB_761 * SIN_851;
+    auto MUL_866 = SUB_776 * COS_857;
+    auto SUB_867 = MUL_866 - MUL_864;
+    auto MUL_3187 = SUB_878 * SUB_867;
+    auto MUL_3184 = SUB_867 * SUB_867;
+    auto ADD_3193 = MUL_3184 + MUL_3185;
+    auto MUL_3196 = ADD_3193 * 2.0;
+    auto SUB_3199 = 1.0 - MUL_3196;
+    auto MUL_3234 = SUB_3199 * 0.01185;
+    auto MUL_860 = SUB_776 * SIN_851;
+    auto ADD_861 = MUL_859 + MUL_860;
+    auto MUL_3191 = ADD_861 * ADD_873;
+    auto ADD_3219 = MUL_3191 + MUL_3187;
+    auto MUL_3221 = ADD_3219 * 2.0;
+    auto MUL_3258 = MUL_3221 * 0.0135;
+    auto MUL_3190 = ADD_861 * SUB_867;
+    auto SUB_3206 = MUL_3190 - MUL_3186;
+    auto MUL_3208 = SUB_3206 * 2.0;
+    auto MUL_3246 = MUL_3208 * 0.0230566;
+    auto ADD_3268 = MUL_3234 + MUL_3246;
+    auto ADD_3274 = ADD_3268 + MUL_3258;
+    auto SUB_3280 = ADD_846 - ADD_3274;
+    auto ADD_3200 = MUL_3190 + MUL_3186;
+    auto MUL_3202 = ADD_3200 * 2.0;
+    auto MUL_3238 = MUL_3202 * 0.01185;
+    auto MUL_3189 = SUB_878 * ADD_861;
+    auto MUL_3192 = SUB_867 * ADD_873;
+    auto SUB_3222 = MUL_3192 - MUL_3189;
+    auto MUL_3224 = SUB_3222 * 2.0;
+    auto MUL_3262 = MUL_3224 * 0.0135;
+    auto MUL_3188 = ADD_861 * ADD_861;
+    auto ADD_3209 = MUL_3185 + MUL_3188;
+    auto MUL_3212 = ADD_3209 * 2.0;
+    auto SUB_3215 = 1.0 - MUL_3212;
+    auto MUL_3250 = SUB_3215 * 0.0230566;
+    auto ADD_3270 = MUL_3238 + MUL_3250;
+    auto ADD_3276 = ADD_3270 + MUL_3262;
+    auto MUL_826 = SUB_723 * MUL_812;
+    auto MUL_829 = ADD_718 * MUL_802;
+    auto MUL_827 = ADD_706 * SUB_808;
+    auto SUB_828 = MUL_826 - MUL_827;
+    auto SUB_831 = SUB_828 - MUL_829;
+    auto MUL_833 = SUB_831 * 2.0;
+    auto ADD_835 = MUL_833 + 0.097;
+    auto ADD_847 = ADD_563 + ADD_835;
+    auto SUB_3281 = ADD_847 - ADD_3276;
+    auto SUB_3203 = MUL_3191 - MUL_3187;
+    auto ADD_3216 = MUL_3192 + MUL_3189;
+    auto ADD_3225 = MUL_3184 + MUL_3188;
+    auto MUL_3228 = ADD_3225 * 2.0;
+    auto SUB_3231 = 1.0 - MUL_3228;
+    auto MUL_3266 = SUB_3231 * 0.0135;
+    auto MUL_3218 = ADD_3216 * 2.0;
+    auto MUL_3254 = MUL_3218 * 0.0230566;
+    auto MUL_3205 = SUB_3203 * 2.0;
+    auto MUL_3242 = MUL_3205 * 0.01185;
+    auto ADD_3272 = MUL_3242 + MUL_3254;
+    auto ADD_3278 = ADD_3272 + MUL_3266;
+    auto MUL_836 = SUB_723 * SUB_808;
+    auto MUL_840 = SUB_712 * MUL_802;
+    auto MUL_837 = ADD_706 * MUL_812;
+    auto ADD_839 = MUL_836 + MUL_837;
+    auto ADD_842 = ADD_839 + MUL_840;
+    auto MUL_844 = ADD_842 * 2.0;
+    auto ADD_848 = ADD_564 + MUL_844;
+    auto SUB_3282 = ADD_848 - ADD_3278;
+    if (/*link1 vs. link7*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, SUB_3280, SUB_3281, SUB_3282, 0.035856))
+    {
+        return false;
+    } // (701, 805)
+    if (/*link1 vs. link7*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, SUB_3280, SUB_3281, SUB_3282, 0.035856))
+    {
+        return false;
+    } // (805, 805)
+    if (/*link2 vs. link7*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, SUB_3280, SUB_3281, SUB_3282, 0.035856))
+    {
+        return false;
+    } // (805, 805)
+    if (/*link2 vs. link7*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, SUB_3280, SUB_3281, SUB_3282, 0.035856))
+    {
+        return false;
+    } // (805, 805)
+    if (/*link2 vs. link7*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, SUB_3280, SUB_3281, SUB_3282, 0.035856))
+    {
+        return false;
+    } // (805, 805)
+    if (/*link2 vs. link7*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, SUB_3280, SUB_3281, SUB_3282, 0.035856))
+    {
+        return false;
+    } // (805, 805)
+    if (/*link7*/ sphere_environment_in_collision(environment, SUB_3280, SUB_3281, SUB_3282, 0.035856))
+    {
+        return false;
+    } // (805, 805)
+    if (/*link_base vs. link7*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, SUB_3280, SUB_3281, SUB_3282, 0.035856))
+    {
+        return false;
+    } // (805, 805)
+    if (/*link_base vs. link7*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, SUB_3280, SUB_3281, SUB_3282, 0.035856))
+    {
+        return false;
+    } // (805, 805)
+    auto MUL_3292 = MUL_3208 * 1.4e-06;
+    auto MUL_3286 = SUB_3199 * 1e-06;
+    auto ADD_3309 = MUL_3286 + MUL_3292;
+    auto SUB_3312 = ADD_3309 - MUL_3258;
+    auto ADD_3315 = ADD_846 + SUB_3312;
+    auto MUL_3294 = SUB_3215 * 1.4e-06;
+    auto MUL_3288 = MUL_3202 * 1e-06;
+    auto ADD_3310 = MUL_3288 + MUL_3294;
+    auto SUB_3313 = ADD_3310 - MUL_3262;
+    auto ADD_3316 = ADD_847 + SUB_3313;
+    auto MUL_3296 = MUL_3218 * 1.4e-06;
+    auto MUL_3290 = MUL_3205 * 1e-06;
+    auto ADD_3311 = MUL_3290 + MUL_3296;
+    auto SUB_3314 = ADD_3311 - MUL_3266;
+    auto ADD_3317 = ADD_848 + SUB_3314;
+    if (/*link1 vs. link7*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3315, ADD_3316, ADD_3317, 0.040074))
+    {
+        return false;
+    } // (805, 820)
+    if (/*link1 vs. link7*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3315, ADD_3316, ADD_3317, 0.040074))
+    {
+        return false;
+    } // (820, 820)
+    if (/*link2 vs. link7*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3315, ADD_3316, ADD_3317, 0.040074))
+    {
+        return false;
+    } // (820, 820)
+    if (/*link2 vs. link7*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3315, ADD_3316, ADD_3317, 0.040074))
+    {
+        return false;
+    } // (820, 820)
+    if (/*link2 vs. link7*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3315, ADD_3316, ADD_3317, 0.040074))
+    {
+        return false;
+    } // (820, 820)
+    if (/*link2 vs. link7*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3315, ADD_3316, ADD_3317, 0.040074))
+    {
+        return false;
+    } // (820, 820)
+    if (/*link7*/ sphere_environment_in_collision(environment, ADD_3315, ADD_3316, ADD_3317, 0.040074))
+    {
+        return false;
+    } // (820, 820)
+    if (/*link_base vs. link7*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3315, ADD_3316, ADD_3317, 0.040074))
+    {
+        return false;
+    } // (820, 820)
+    if (/*link_base vs. link7*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3315, ADD_3316, ADD_3317, 0.040074))
+    {
+        return false;
+    } // (820, 820)
+    auto MUL_3405 = ADD_3219 * 2.0;
+    auto MUL_3392 = SUB_3206 * 2.0;
+    auto MUL_3380 = ADD_3193 * 2.0;
+    auto SUB_3383 = 1.0 - MUL_3380;
+    auto MUL_3441 = MUL_3405 * 0.0545314;
+    auto MUL_3418 = SUB_3383 * 0.0019334;
+    auto MUL_3430 = MUL_3392 * 4.87e-05;
+    auto ADD_3446 = MUL_3418 + MUL_3430;
+    auto SUB_3452 = MUL_3441 - ADD_3446;
+    auto ADD_3455 = ADD_846 + SUB_3452;
+    auto MUL_3408 = SUB_3222 * 2.0;
+    auto MUL_3443 = MUL_3408 * 0.0545314;
+    auto MUL_3396 = ADD_3209 * 2.0;
+    auto SUB_3399 = 1.0 - MUL_3396;
+    auto MUL_3434 = SUB_3399 * 4.87e-05;
+    auto MUL_3386 = ADD_3200 * 2.0;
+    auto MUL_3422 = MUL_3386 * 0.0019334;
+    auto ADD_3448 = MUL_3422 + MUL_3434;
+    auto SUB_3453 = MUL_3443 - ADD_3448;
+    auto ADD_3456 = ADD_847 + SUB_3453;
+    auto MUL_3412 = ADD_3225 * 2.0;
+    auto SUB_3415 = 1.0 - MUL_3412;
+    auto MUL_3445 = SUB_3415 * 0.0545314;
+    auto MUL_3402 = ADD_3216 * 2.0;
+    auto MUL_3438 = MUL_3402 * 4.87e-05;
+    auto MUL_3389 = SUB_3203 * 2.0;
+    auto MUL_3426 = MUL_3389 * 0.0019334;
+    auto ADD_3450 = MUL_3426 + MUL_3438;
+    auto SUB_3454 = MUL_3445 - ADD_3450;
+    auto ADD_3457 = ADD_848 + SUB_3454;
+    if (/*link1 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (820, 850)
+    if (/*link1 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link2 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link2 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link2 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link2 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link4 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link4 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link4 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link4 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link4 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link5 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link5 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link5 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link5 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link5 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link5 vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link_base vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*link_base vs. xarm_gripper_base_link*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    if (/*xarm_gripper_base_link*/ sphere_environment_in_collision(environment, ADD_3455, ADD_3456, ADD_3457, 0.067393))
+    {
+        return false;
+    } // (850, 850)
+    auto MUL_1175 = SUB_867 * 0.059098;
+    auto MUL_1184 = ADD_861 * 0.059098;
+    auto MUL_1190 = ADD_873 * MUL_1184;
+    auto MUL_1177 = ADD_873 * 0.035;
+    auto SUB_1178 = MUL_1175 - MUL_1177;
+    auto MUL_1187 = SUB_878 * SUB_1178;
+    auto MUL_1180 = ADD_861 * 0.035;
+    auto MUL_1188 = SUB_867 * MUL_1180;
+    auto ADD_1189 = MUL_1187 + MUL_1188;
+    auto ADD_1191 = ADD_1189 + MUL_1190;
+    auto MUL_1193 = ADD_1191 * 2.0;
+    auto ADD_1216 = ADD_846 + MUL_1193;
+    auto INPUT_7 = q[7];
+    auto DIV_1220 = INPUT_7 * 0.5;
+    auto SIN_1221 = sin(DIV_1220);
+    auto COS_1227 = cos(DIV_1220);
+    auto MUL_1244 = SUB_878 * COS_1227;
+    auto MUL_1228 = SUB_878 * SIN_1221;
+    auto MUL_1242 = ADD_873 * COS_1227;
+    auto MUL_1236 = ADD_873 * SIN_1221;
+    auto MUL_1235 = SUB_867 * COS_1227;
+    auto ADD_1237 = MUL_1235 + MUL_1236;
+    auto MUL_1240 = SUB_867 * SIN_1221;
+    auto SUB_1243 = MUL_1242 - MUL_1240;
+    auto MUL_1229 = ADD_861 * COS_1227;
+    auto ADD_1230 = MUL_1228 + MUL_1229;
+    auto MUL_3467 = ADD_1230 * SUB_1243;
+    auto MUL_3466 = ADD_1230 * ADD_1237;
+    auto MUL_1245 = ADD_861 * SIN_1221;
+    auto SUB_1246 = MUL_1244 - MUL_1245;
+    auto MUL_3462 = SUB_1246 * SUB_1243;
+    auto SUB_3482 = MUL_3466 - MUL_3462;
+    auto MUL_3484 = SUB_3482 * 2.0;
+    auto MUL_3515 = MUL_3484 * 0.0273888;
+    auto MUL_3463 = SUB_1246 * ADD_1237;
+    auto ADD_3495 = MUL_3467 + MUL_3463;
+    auto MUL_3497 = ADD_3495 * 2.0;
+    auto MUL_3521 = MUL_3497 * 0.0142867;
+    auto ADD_3526 = MUL_3515 + MUL_3521;
+    auto ADD_3529 = ADD_1216 + ADD_3526;
+    auto MUL_3465 = SUB_1246 * ADD_1230;
+    auto MUL_3461 = SUB_1243 * SUB_1243;
+    auto MUL_3468 = ADD_1237 * SUB_1243;
+    auto SUB_3498 = MUL_3468 - MUL_3465;
+    auto MUL_3500 = SUB_3498 * 2.0;
+    auto MUL_3523 = MUL_3500 * 0.0142867;
+    auto MUL_3464 = ADD_1230 * ADD_1230;
+    auto ADD_3485 = MUL_3461 + MUL_3464;
+    auto MUL_3488 = ADD_3485 * 2.0;
+    auto SUB_3491 = 1.0 - MUL_3488;
+    auto MUL_3517 = SUB_3491 * 0.0273888;
+    auto ADD_3527 = MUL_3517 + MUL_3523;
+    auto MUL_1196 = SUB_878 * MUL_1184;
+    auto MUL_1201 = ADD_873 * SUB_1178;
+    auto MUL_1198 = ADD_861 * MUL_1180;
+    auto ADD_1199 = MUL_1196 + MUL_1198;
+    auto SUB_1202 = MUL_1201 - ADD_1199;
+    auto MUL_1204 = SUB_1202 * 2.0;
+    auto ADD_1206 = MUL_1204 + 0.035;
+    auto ADD_1217 = ADD_847 + ADD_1206;
+    auto ADD_3530 = ADD_1217 + ADD_3527;
+    auto ADD_3492 = MUL_3468 + MUL_3465;
+    auto MUL_3494 = ADD_3492 * 2.0;
+    auto MUL_3519 = MUL_3494 * 0.0273888;
+    auto MUL_3460 = ADD_1237 * ADD_1237;
+    auto ADD_3501 = MUL_3460 + MUL_3464;
+    auto MUL_3504 = ADD_3501 * 2.0;
+    auto SUB_3507 = 1.0 - MUL_3504;
+    auto MUL_3525 = SUB_3507 * 0.0142867;
+    auto ADD_3528 = MUL_3519 + MUL_3525;
+    auto MUL_1207 = SUB_878 * MUL_1180;
+    auto MUL_1210 = SUB_867 * SUB_1178;
+    auto MUL_1208 = ADD_861 * MUL_1184;
+    auto SUB_1209 = MUL_1207 - MUL_1208;
+    auto SUB_1211 = SUB_1209 - MUL_1210;
+    auto MUL_1213 = SUB_1211 * 2.0;
+    auto ADD_1215 = MUL_1213 + 0.059098;
+    auto ADD_1218 = ADD_848 + ADD_1215;
+    auto ADD_3531 = ADD_1218 + ADD_3528;
+    if (/*left_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (850, 929)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3529, ADD_3530, ADD_3531, 0.010627))
+    {
+        return false;
+    } // (929, 929)
+    auto MUL_3541 = MUL_3484 * 0.0380438;
+    auto MUL_3547 = MUL_3497 * 0.0196237;
+    auto ADD_3552 = MUL_3541 + MUL_3547;
+    auto ADD_3555 = ADD_1216 + ADD_3552;
+    auto MUL_3549 = MUL_3500 * 0.0196237;
+    auto MUL_3543 = SUB_3491 * 0.0380438;
+    auto ADD_3553 = MUL_3543 + MUL_3549;
+    auto ADD_3556 = ADD_1217 + ADD_3553;
+    auto MUL_3551 = SUB_3507 * 0.0196237;
+    auto MUL_3545 = MUL_3494 * 0.0380438;
+    auto ADD_3554 = MUL_3545 + MUL_3551;
+    auto ADD_3557 = ADD_1218 + ADD_3554;
+    if (/*left_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (929, 941)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3555, ADD_3556, ADD_3557, 0.009961))
+    {
+        return false;
+    } // (941, 941)
+    auto MUL_3567 = MUL_3484 * 0.0140268;
+    auto MUL_3573 = MUL_3497 * 0.0068667;
+    auto ADD_3578 = MUL_3567 + MUL_3573;
+    auto ADD_3581 = ADD_1216 + ADD_3578;
+    auto MUL_3575 = MUL_3500 * 0.0068667;
+    auto MUL_3569 = SUB_3491 * 0.0140268;
+    auto ADD_3579 = MUL_3569 + MUL_3575;
+    auto ADD_3582 = ADD_1217 + ADD_3579;
+    auto MUL_3577 = SUB_3507 * 0.0068667;
+    auto MUL_3571 = MUL_3494 * 0.0140268;
+    auto ADD_3580 = MUL_3571 + MUL_3577;
+    auto ADD_3583 = ADD_1218 + ADD_3580;
+    if (/*left_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (941, 953)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3581, ADD_3582, ADD_3583, 0.011889))
+    {
+        return false;
+    } // (953, 953)
+    auto MUL_3599 = MUL_3497 * 0.0384227;
+    auto MUL_3593 = MUL_3484 * 0.0374248;
+    auto ADD_3604 = MUL_3593 + MUL_3599;
+    auto ADD_3607 = ADD_1216 + ADD_3604;
+    auto MUL_3601 = MUL_3500 * 0.0384227;
+    auto MUL_3595 = SUB_3491 * 0.0374248;
+    auto ADD_3605 = MUL_3595 + MUL_3601;
+    auto ADD_3608 = ADD_1217 + ADD_3605;
+    auto MUL_3603 = SUB_3507 * 0.0384227;
+    auto MUL_3597 = MUL_3494 * 0.0374248;
+    auto ADD_3606 = MUL_3597 + MUL_3603;
+    auto ADD_3609 = ADD_1218 + ADD_3606;
+    if (/*left_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (953, 965)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3607, ADD_3608, ADD_3609, 0.011043))
+    {
+        return false;
+    } // (965, 965)
+    auto MUL_3620 = MUL_3484 * 0.0166292;
+    auto MUL_3632 = MUL_3497 * 0.0010083;
+    auto ADD_3642 = MUL_3620 + MUL_3632;
+    auto SUB_3648 = ADD_1216 - ADD_3642;
+    auto MUL_3636 = MUL_3500 * 0.0010083;
+    auto MUL_3624 = SUB_3491 * 0.0166292;
+    auto ADD_3644 = MUL_3624 + MUL_3636;
+    auto SUB_3649 = ADD_1217 - ADD_3644;
+    auto MUL_3640 = SUB_3507 * 0.0010083;
+    auto MUL_3628 = MUL_3494 * 0.0166292;
+    auto ADD_3646 = MUL_3628 + MUL_3640;
+    auto SUB_3650 = ADD_1218 - ADD_3646;
+    if (/*left_outer_knuckle*/ sphere_environment_in_collision(environment, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (965, 977)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, SUB_3648, SUB_3649, SUB_3650, 0.010146))
+    {
+        return false;
+    } // (977, 977)
+    auto MUL_3660 = MUL_3484 * 0.0433398;
+    auto MUL_3666 = MUL_3497 * 0.0257157;
+    auto ADD_3671 = MUL_3660 + MUL_3666;
+    auto ADD_3674 = ADD_1216 + ADD_3671;
+    auto MUL_3668 = MUL_3500 * 0.0257157;
+    auto MUL_3662 = SUB_3491 * 0.0433398;
+    auto ADD_3672 = MUL_3662 + MUL_3668;
+    auto ADD_3675 = ADD_1217 + ADD_3672;
+    auto MUL_3670 = SUB_3507 * 0.0257157;
+    auto MUL_3664 = MUL_3494 * 0.0433398;
+    auto ADD_3673 = MUL_3664 + MUL_3670;
+    auto ADD_3676 = ADD_1218 + ADD_3673;
+    if (/*left_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (977, 989)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3674, ADD_3675, ADD_3676, 0.010936))
+    {
+        return false;
+    } // (989, 989)
+    auto ADD_3469 = MUL_3460 + MUL_3461;
+    auto MUL_3472 = ADD_3469 * 2.0;
+    auto SUB_3475 = 1.0 - MUL_3472;
+    auto MUL_3681 = SUB_3475 * 1e-06;
+    auto MUL_3693 = MUL_3484 * 0.0053232;
+    auto ADD_3715 = MUL_3681 + MUL_3693;
+    auto MUL_3705 = MUL_3497 * 0.0007103;
+    auto ADD_3721 = ADD_3715 + MUL_3705;
+    auto SUB_3727 = ADD_1216 - ADD_3721;
+    auto ADD_3476 = MUL_3466 + MUL_3462;
+    auto MUL_3709 = MUL_3500 * 0.0007103;
+    auto MUL_3697 = SUB_3491 * 0.0053232;
+    auto MUL_3478 = ADD_3476 * 2.0;
+    auto MUL_3685 = MUL_3478 * 1e-06;
+    auto ADD_3717 = MUL_3685 + MUL_3697;
+    auto ADD_3723 = ADD_3717 + MUL_3709;
+    auto SUB_3728 = ADD_1217 - ADD_3723;
+    auto SUB_3479 = MUL_3467 - MUL_3463;
+    auto MUL_3713 = SUB_3507 * 0.0007103;
+    auto MUL_3701 = MUL_3494 * 0.0053232;
+    auto MUL_3481 = SUB_3479 * 2.0;
+    auto MUL_3689 = MUL_3481 * 1e-06;
+    auto ADD_3719 = MUL_3689 + MUL_3701;
+    auto ADD_3725 = ADD_3719 + MUL_3713;
+    auto SUB_3729 = ADD_1218 - ADD_3725;
+    if (/*left_outer_knuckle*/ sphere_environment_in_collision(environment, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (989, 1014)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, SUB_3727, SUB_3728, SUB_3729, 0.009771))
+    {
+        return false;
+    } // (1014, 1014)
+    auto MUL_3739 = MUL_3484 * 0.0032618;
+    auto MUL_3745 = MUL_3497 * 0.0012197;
+    auto ADD_3750 = MUL_3739 + MUL_3745;
+    auto ADD_3753 = ADD_1216 + ADD_3750;
+    auto MUL_3747 = MUL_3500 * 0.0012197;
+    auto MUL_3741 = SUB_3491 * 0.0032618;
+    auto ADD_3751 = MUL_3741 + MUL_3747;
+    auto ADD_3754 = ADD_1217 + ADD_3751;
+    auto MUL_3749 = SUB_3507 * 0.0012197;
+    auto MUL_3743 = MUL_3494 * 0.0032618;
+    auto ADD_3752 = MUL_3743 + MUL_3749;
+    auto ADD_3755 = ADD_1218 + ADD_3752;
+    if (/*left_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1014, 1026)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link1 vs. left_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link2 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link4 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link5 vs. left_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    if (/*link_base vs. left_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3753, ADD_3754, ADD_3755, 0.009442))
+    {
+        return false;
+    } // (1026, 1026)
+    auto MUL_1309 = ADD_1237 * 0.042039;
+    auto MUL_1318 = ADD_1230 * 0.042039;
+    auto MUL_1324 = SUB_1243 * MUL_1318;
+    auto MUL_1311 = SUB_1243 * 0.035465;
+    auto SUB_1312 = MUL_1309 - MUL_1311;
+    auto MUL_1321 = SUB_1246 * SUB_1312;
+    auto MUL_1314 = ADD_1230 * 0.035465;
+    auto MUL_1322 = ADD_1237 * MUL_1314;
+    auto ADD_1323 = MUL_1321 + MUL_1322;
+    auto ADD_1325 = ADD_1323 + MUL_1324;
+    auto MUL_1327 = ADD_1325 * 2.0;
+    auto ADD_1350 = ADD_1216 + MUL_1327;
+    auto INPUT_8 = q[8];
+    auto DIV_1354 = INPUT_8 * 0.5;
+    auto SIN_1355 = sin(DIV_1354);
+    auto COS_1364 = cos(DIV_1354);
+    auto MUL_1358 = SIN_1355 * 1.0;
+    auto MUL_1365 = SUB_1246 * MUL_1358;
+    auto MUL_1383 = SUB_1246 * COS_1364;
+    auto MUL_1374 = SUB_1243 * MUL_1358;
+    auto MUL_1381 = SUB_1243 * COS_1364;
+    auto MUL_1379 = ADD_1237 * MUL_1358;
+    auto ADD_1382 = MUL_1379 + MUL_1381;
+    auto MUL_3759 = ADD_1382 * ADD_1382;
+    auto MUL_1373 = ADD_1237 * COS_1364;
+    auto SUB_1376 = MUL_1373 - MUL_1374;
+    auto MUL_3758 = SUB_1376 * SUB_1376;
+    auto ADD_3767 = MUL_3758 + MUL_3759;
+    auto MUL_3770 = ADD_3767 * 2.0;
+    auto SUB_3773 = 1.0 - MUL_3770;
+    auto MUL_3808 = SUB_3773 * 0.0068274;
+    auto MUL_1384 = ADD_1230 * MUL_1358;
+    auto ADD_1386 = MUL_1383 + MUL_1384;
+    auto MUL_3761 = ADD_1386 * SUB_1376;
+    auto MUL_3760 = ADD_1386 * ADD_1382;
+    auto MUL_1367 = ADD_1230 * COS_1364;
+    auto SUB_1368 = MUL_1367 - MUL_1365;
+    auto MUL_3764 = SUB_1368 * SUB_1376;
+    auto SUB_3780 = MUL_3764 - MUL_3760;
+    auto MUL_3782 = SUB_3780 * 2.0;
+    auto MUL_3820 = MUL_3782 * 0.021922;
+    auto ADD_3836 = MUL_3808 + MUL_3820;
+    auto MUL_3765 = SUB_1368 * ADD_1382;
+    auto ADD_3793 = MUL_3765 + MUL_3761;
+    auto MUL_3795 = ADD_3793 * 2.0;
+    auto MUL_3831 = MUL_3795 * 0.0564198;
+    auto SUB_3842 = MUL_3831 - ADD_3836;
+    auto ADD_3845 = ADD_1350 + SUB_3842;
+    auto ADD_3774 = MUL_3764 + MUL_3760;
+    auto MUL_3776 = ADD_3774 * 2.0;
+    auto MUL_3812 = MUL_3776 * 0.0068274;
+    auto MUL_3763 = ADD_1386 * SUB_1368;
+    auto MUL_3766 = SUB_1376 * ADD_1382;
+    auto SUB_3796 = MUL_3766 - MUL_3763;
+    auto MUL_3798 = SUB_3796 * 2.0;
+    auto MUL_3833 = MUL_3798 * 0.0564198;
+    auto MUL_3762 = SUB_1368 * SUB_1368;
+    auto ADD_3783 = MUL_3759 + MUL_3762;
+    auto MUL_3786 = ADD_3783 * 2.0;
+    auto SUB_3789 = 1.0 - MUL_3786;
+    auto MUL_3824 = SUB_3789 * 0.021922;
+    auto ADD_3838 = MUL_3812 + MUL_3824;
+    auto SUB_3843 = MUL_3833 - ADD_3838;
+    auto MUL_1330 = SUB_1246 * MUL_1318;
+    auto MUL_1335 = SUB_1243 * SUB_1312;
+    auto MUL_1332 = ADD_1230 * MUL_1314;
+    auto ADD_1333 = MUL_1330 + MUL_1332;
+    auto SUB_1336 = MUL_1335 - ADD_1333;
+    auto MUL_1338 = SUB_1336 * 2.0;
+    auto ADD_1340 = MUL_1338 + 0.035465;
+    auto ADD_1351 = ADD_1217 + ADD_1340;
+    auto ADD_3846 = ADD_1351 + SUB_3843;
+    auto SUB_3777 = MUL_3765 - MUL_3761;
+    auto ADD_3790 = MUL_3766 + MUL_3763;
+    auto ADD_3799 = MUL_3758 + MUL_3762;
+    auto MUL_3802 = ADD_3799 * 2.0;
+    auto SUB_3805 = 1.0 - MUL_3802;
+    auto MUL_3835 = SUB_3805 * 0.0564198;
+    auto MUL_3792 = ADD_3790 * 2.0;
+    auto MUL_3828 = MUL_3792 * 0.021922;
+    auto MUL_3779 = SUB_3777 * 2.0;
+    auto MUL_3816 = MUL_3779 * 0.0068274;
+    auto ADD_3840 = MUL_3816 + MUL_3828;
+    auto SUB_3844 = MUL_3835 - ADD_3840;
+    auto MUL_1341 = SUB_1246 * MUL_1314;
+    auto MUL_1344 = ADD_1237 * SUB_1312;
+    auto MUL_1342 = ADD_1230 * MUL_1318;
+    auto SUB_1343 = MUL_1341 - MUL_1342;
+    auto SUB_1345 = SUB_1343 - MUL_1344;
+    auto MUL_1347 = SUB_1345 * 2.0;
+    auto ADD_1349 = MUL_1347 + 0.042039;
+    auto ADD_1352 = ADD_1218 + ADD_1349;
+    auto ADD_3847 = ADD_1352 + SUB_3844;
+    if (/*left_finger*/ sphere_environment_in_collision(environment, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1026, 1119)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3845, ADD_3846, ADD_3847, 0.011817))
+    {
+        return false;
+    } // (1119, 1119)
+    auto MUL_3858 = MUL_3782 * 0.00106;
+    auto MUL_3869 = MUL_3795 * 0.0006358;
+    auto MUL_3851 = SUB_3773 * 9.26e-05;
+    auto SUB_3874 = MUL_3851 - MUL_3858;
+    auto ADD_3877 = SUB_3874 + MUL_3869;
+    auto ADD_3880 = ADD_1350 + ADD_3877;
+    auto MUL_3871 = MUL_3798 * 0.0006358;
+    auto MUL_3862 = SUB_3789 * 0.00106;
+    auto MUL_3853 = MUL_3776 * 9.26e-05;
+    auto SUB_3875 = MUL_3853 - MUL_3862;
+    auto ADD_3878 = SUB_3875 + MUL_3871;
+    auto ADD_3881 = ADD_1351 + ADD_3878;
+    auto MUL_3873 = SUB_3805 * 0.0006358;
+    auto MUL_3866 = MUL_3792 * 0.00106;
+    auto MUL_3855 = MUL_3779 * 9.26e-05;
+    auto SUB_3876 = MUL_3855 - MUL_3866;
+    auto ADD_3879 = SUB_3876 + MUL_3873;
+    auto ADD_3882 = ADD_1352 + ADD_3879;
+    if (/*left_finger*/ sphere_environment_in_collision(environment, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1119, 1137)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3880, ADD_3881, ADD_3882, 0.012013))
+    {
+        return false;
+    } // (1137, 1137)
+    auto MUL_3904 = MUL_3795 * 0.0538348;
+    auto MUL_3893 = MUL_3782 * 0.0216;
+    auto MUL_3886 = SUB_3773 * 0.0082426;
+    auto SUB_3909 = MUL_3886 - MUL_3893;
+    auto ADD_3912 = SUB_3909 + MUL_3904;
+    auto ADD_3915 = ADD_1350 + ADD_3912;
+    auto MUL_3906 = MUL_3798 * 0.0538348;
+    auto MUL_3897 = SUB_3789 * 0.0216;
+    auto MUL_3888 = MUL_3776 * 0.0082426;
+    auto SUB_3910 = MUL_3888 - MUL_3897;
+    auto ADD_3913 = SUB_3910 + MUL_3906;
+    auto ADD_3916 = ADD_1351 + ADD_3913;
+    auto MUL_3908 = SUB_3805 * 0.0538348;
+    auto MUL_3901 = MUL_3792 * 0.0216;
+    auto MUL_3890 = MUL_3779 * 0.0082426;
+    auto SUB_3911 = MUL_3890 - MUL_3901;
+    auto ADD_3914 = SUB_3911 + MUL_3908;
+    auto ADD_3917 = ADD_1352 + ADD_3914;
+    if (/*left_finger*/ sphere_environment_in_collision(environment, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1137, 1155)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3915, ADD_3916, ADD_3917, 0.010925))
+    {
+        return false;
+    } // (1155, 1155)
+    auto MUL_3928 = MUL_3782 * 0.011309;
+    auto MUL_3939 = MUL_3795 * 0.0109158;
+    auto MUL_3921 = SUB_3773 * 0.0001976;
+    auto SUB_3944 = MUL_3921 - MUL_3928;
+    auto ADD_3947 = SUB_3944 + MUL_3939;
+    auto ADD_3950 = ADD_1350 + ADD_3947;
+    auto MUL_3941 = MUL_3798 * 0.0109158;
+    auto MUL_3932 = SUB_3789 * 0.011309;
+    auto MUL_3923 = MUL_3776 * 0.0001976;
+    auto SUB_3945 = MUL_3923 - MUL_3932;
+    auto ADD_3948 = SUB_3945 + MUL_3941;
+    auto ADD_3951 = ADD_1351 + ADD_3948;
+    auto MUL_3943 = SUB_3805 * 0.0109158;
+    auto MUL_3936 = MUL_3792 * 0.011309;
+    auto MUL_3925 = MUL_3779 * 0.0001976;
+    auto SUB_3946 = MUL_3925 - MUL_3936;
+    auto ADD_3949 = SUB_3946 + MUL_3943;
+    auto ADD_3952 = ADD_1352 + ADD_3949;
+    if (/*left_finger*/ sphere_environment_in_collision(environment, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1155, 1173)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3950, ADD_3951, ADD_3952, 0.014404))
+    {
+        return false;
+    } // (1173, 1173)
+    auto MUL_3980 = MUL_3795 * 0.0430448;
+    auto MUL_3969 = MUL_3782 * 0.019362;
+    auto MUL_3957 = SUB_3773 * 0.0055284;
+    auto ADD_3985 = MUL_3957 + MUL_3969;
+    auto SUB_3991 = MUL_3980 - ADD_3985;
+    auto ADD_3994 = ADD_1350 + SUB_3991;
+    auto MUL_3982 = MUL_3798 * 0.0430448;
+    auto MUL_3973 = SUB_3789 * 0.019362;
+    auto MUL_3961 = MUL_3776 * 0.0055284;
+    auto ADD_3987 = MUL_3961 + MUL_3973;
+    auto SUB_3992 = MUL_3982 - ADD_3987;
+    auto ADD_3995 = ADD_1351 + SUB_3992;
+    auto MUL_3984 = SUB_3805 * 0.0430448;
+    auto MUL_3977 = MUL_3792 * 0.019362;
+    auto MUL_3965 = MUL_3779 * 0.0055284;
+    auto ADD_3989 = MUL_3965 + MUL_3977;
+    auto SUB_3993 = MUL_3984 - ADD_3989;
+    auto ADD_3996 = ADD_1352 + SUB_3993;
+    if (/*left_finger*/ sphere_environment_in_collision(environment, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1173, 1191)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_3994, ADD_3995, ADD_3996, 0.01579))
+    {
+        return false;
+    } // (1191, 1191)
+    auto MUL_4018 = MUL_3795 * 0.0286468;
+    auto MUL_4007 = MUL_3782 * 0.019691;
+    auto MUL_4000 = SUB_3773 * 0.0058196;
+    auto SUB_4023 = MUL_4000 - MUL_4007;
+    auto ADD_4026 = SUB_4023 + MUL_4018;
+    auto ADD_4029 = ADD_1350 + ADD_4026;
+    auto MUL_4020 = MUL_3798 * 0.0286468;
+    auto MUL_4011 = SUB_3789 * 0.019691;
+    auto MUL_4002 = MUL_3776 * 0.0058196;
+    auto SUB_4024 = MUL_4002 - MUL_4011;
+    auto ADD_4027 = SUB_4024 + MUL_4020;
+    auto ADD_4030 = ADD_1351 + ADD_4027;
+    auto MUL_4022 = SUB_3805 * 0.0286468;
+    auto MUL_4015 = MUL_3792 * 0.019691;
+    auto MUL_4004 = MUL_3779 * 0.0058196;
+    auto SUB_4025 = MUL_4004 - MUL_4015;
+    auto ADD_4028 = SUB_4025 + MUL_4022;
+    auto ADD_4031 = ADD_1352 + ADD_4028;
+    if (/*left_finger*/ sphere_environment_in_collision(environment, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1191, 1209)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4029, ADD_4030, ADD_4031, 0.014978))
+    {
+        return false;
+    } // (1209, 1209)
+    auto MUL_4059 = MUL_3795 * 0.0247798;
+    auto MUL_4048 = MUL_3782 * 0.019748;
+    auto MUL_4036 = SUB_3773 * 0.0066194;
+    auto ADD_4064 = MUL_4036 + MUL_4048;
+    auto SUB_4070 = MUL_4059 - ADD_4064;
+    auto ADD_4073 = ADD_1350 + SUB_4070;
+    auto MUL_4061 = MUL_3798 * 0.0247798;
+    auto MUL_4052 = SUB_3789 * 0.019748;
+    auto MUL_4040 = MUL_3776 * 0.0066194;
+    auto ADD_4066 = MUL_4040 + MUL_4052;
+    auto SUB_4071 = MUL_4061 - ADD_4066;
+    auto ADD_4074 = ADD_1351 + SUB_4071;
+    auto MUL_4063 = SUB_3805 * 0.0247798;
+    auto MUL_4056 = MUL_3792 * 0.019748;
+    auto MUL_4044 = MUL_3779 * 0.0066194;
+    auto ADD_4068 = MUL_4044 + MUL_4056;
+    auto SUB_4072 = MUL_4063 - ADD_4068;
+    auto ADD_4075 = ADD_1352 + SUB_4072;
+    if (/*left_finger*/ sphere_environment_in_collision(environment, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1209, 1227)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4073, ADD_4074, ADD_4075, 0.014536))
+    {
+        return false;
+    } // (1227, 1227)
+    auto MUL_4097 = MUL_3795 * 0.0440138;
+    auto MUL_4086 = MUL_3782 * 0.021418;
+    auto MUL_4079 = SUB_3773 * 0.0100316;
+    auto SUB_4102 = MUL_4079 - MUL_4086;
+    auto ADD_4105 = SUB_4102 + MUL_4097;
+    auto ADD_4108 = ADD_1350 + ADD_4105;
+    auto MUL_4099 = MUL_3798 * 0.0440138;
+    auto MUL_4090 = SUB_3789 * 0.021418;
+    auto MUL_4081 = MUL_3776 * 0.0100316;
+    auto SUB_4103 = MUL_4081 - MUL_4090;
+    auto ADD_4106 = SUB_4103 + MUL_4099;
+    auto ADD_4109 = ADD_1351 + ADD_4106;
+    auto MUL_4101 = SUB_3805 * 0.0440138;
+    auto MUL_4094 = MUL_3792 * 0.021418;
+    auto MUL_4083 = MUL_3779 * 0.0100316;
+    auto SUB_4104 = MUL_4083 - MUL_4094;
+    auto ADD_4107 = SUB_4104 + MUL_4101;
+    auto ADD_4110 = ADD_1352 + ADD_4107;
+    if (/*left_finger*/ sphere_environment_in_collision(environment, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1227, 1245)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link1 vs. left_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link2 vs. left_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link3 vs. left_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link4 vs. left_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    if (/*link_base vs. left_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4108, ADD_4109, ADD_4110, 0.009536))
+    {
+        return false;
+    } // (1245, 1245)
+    auto MUL_1449 = SUB_867 * 0.074098;
+    auto MUL_1458 = ADD_861 * 0.074098;
+    auto MUL_1464 = ADD_873 * MUL_1458;
+    auto MUL_1451 = ADD_873 * 0.02;
+    auto SUB_1452 = MUL_1449 - MUL_1451;
+    auto MUL_1461 = SUB_878 * SUB_1452;
+    auto MUL_1454 = ADD_861 * 0.02;
+    auto MUL_1462 = SUB_867 * MUL_1454;
+    auto ADD_1463 = MUL_1461 + MUL_1462;
+    auto ADD_1465 = ADD_1463 + MUL_1464;
+    auto MUL_1467 = ADD_1465 * 2.0;
+    auto ADD_1490 = ADD_846 + MUL_1467;
+    auto INPUT_9 = q[9];
+    auto DIV_1494 = INPUT_9 * 0.5;
+    auto SIN_1495 = sin(DIV_1494);
+    auto COS_1501 = cos(DIV_1494);
+    auto MUL_1518 = SUB_878 * COS_1501;
+    auto MUL_1502 = SUB_878 * SIN_1495;
+    auto MUL_1516 = ADD_873 * COS_1501;
+    auto MUL_1510 = ADD_873 * SIN_1495;
+    auto MUL_1509 = SUB_867 * COS_1501;
+    auto ADD_1511 = MUL_1509 + MUL_1510;
+    auto MUL_4113 = ADD_1511 * ADD_1511;
+    auto MUL_1514 = SUB_867 * SIN_1495;
+    auto SUB_1517 = MUL_1516 - MUL_1514;
+    auto MUL_4114 = SUB_1517 * SUB_1517;
+    auto ADD_4122 = MUL_4113 + MUL_4114;
+    auto MUL_4125 = ADD_4122 * 2.0;
+    auto SUB_4128 = 1.0 - MUL_4125;
+    auto MUL_4163 = SUB_4128 * 0.0118702;
+    auto MUL_1503 = ADD_861 * COS_1501;
+    auto ADD_1504 = MUL_1502 + MUL_1503;
+    auto MUL_4120 = ADD_1504 * SUB_1517;
+    auto MUL_4119 = ADD_1504 * ADD_1511;
+    auto MUL_1519 = ADD_861 * SIN_1495;
+    auto SUB_1520 = MUL_1518 - MUL_1519;
+    auto MUL_4115 = SUB_1520 * SUB_1517;
+    auto SUB_4135 = MUL_4119 - MUL_4115;
+    auto MUL_4137 = SUB_4135 * 2.0;
+    auto MUL_4174 = MUL_4137 * 0.0089222;
+    auto SUB_4185 = MUL_4174 - MUL_4163;
+    auto MUL_4116 = SUB_1520 * ADD_1511;
+    auto ADD_4148 = MUL_4120 + MUL_4116;
+    auto MUL_4150 = ADD_4148 * 2.0;
+    auto MUL_4180 = MUL_4150 * 0.0100551;
+    auto ADD_4188 = SUB_4185 + MUL_4180;
+    auto ADD_4191 = ADD_1490 + ADD_4188;
+    auto ADD_4129 = MUL_4119 + MUL_4115;
+    auto MUL_4131 = ADD_4129 * 2.0;
+    auto MUL_4167 = MUL_4131 * 0.0118702;
+    auto MUL_4118 = SUB_1520 * ADD_1504;
+    auto MUL_4121 = ADD_1511 * SUB_1517;
+    auto SUB_4151 = MUL_4121 - MUL_4118;
+    auto MUL_4153 = SUB_4151 * 2.0;
+    auto MUL_4182 = MUL_4153 * 0.0100551;
+    auto MUL_4117 = ADD_1504 * ADD_1504;
+    auto ADD_4138 = MUL_4114 + MUL_4117;
+    auto MUL_4141 = ADD_4138 * 2.0;
+    auto SUB_4144 = 1.0 - MUL_4141;
+    auto MUL_4176 = SUB_4144 * 0.0089222;
+    auto SUB_4186 = MUL_4176 - MUL_4167;
+    auto ADD_4189 = SUB_4186 + MUL_4182;
+    auto MUL_1470 = SUB_878 * MUL_1458;
+    auto MUL_1475 = ADD_873 * SUB_1452;
+    auto MUL_1472 = ADD_861 * MUL_1454;
+    auto ADD_1473 = MUL_1470 + MUL_1472;
+    auto SUB_1476 = MUL_1475 - ADD_1473;
+    auto MUL_1478 = SUB_1476 * 2.0;
+    auto ADD_1480 = MUL_1478 + 0.02;
+    auto ADD_1491 = ADD_847 + ADD_1480;
+    auto ADD_4192 = ADD_1491 + ADD_4189;
+    auto SUB_4132 = MUL_4120 - MUL_4116;
+    auto ADD_4145 = MUL_4121 + MUL_4118;
+    auto ADD_4154 = MUL_4113 + MUL_4117;
+    auto MUL_4157 = ADD_4154 * 2.0;
+    auto SUB_4160 = 1.0 - MUL_4157;
+    auto MUL_4184 = SUB_4160 * 0.0100551;
+    auto MUL_4147 = ADD_4145 * 2.0;
+    auto MUL_4178 = MUL_4147 * 0.0089222;
+    auto MUL_4134 = SUB_4132 * 2.0;
+    auto MUL_4171 = MUL_4134 * 0.0118702;
+    auto SUB_4187 = MUL_4178 - MUL_4171;
+    auto ADD_4190 = SUB_4187 + MUL_4184;
+    auto MUL_1481 = SUB_878 * MUL_1454;
+    auto MUL_1484 = SUB_867 * SUB_1452;
+    auto MUL_1482 = ADD_861 * MUL_1458;
+    auto SUB_1483 = MUL_1481 - MUL_1482;
+    auto SUB_1485 = SUB_1483 - MUL_1484;
+    auto MUL_1487 = SUB_1485 * 2.0;
+    auto ADD_1489 = MUL_1487 + 0.074098;
+    auto ADD_1492 = ADD_848 + ADD_1489;
+    auto ADD_4193 = ADD_1492 + ADD_4190;
+    if (/*left_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1245, 1337)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4191, ADD_4192, ADD_4193, 0.008317))
+    {
+        return false;
+    } // (1337, 1337)
+    auto MUL_4197 = SUB_4128 * 0.0115568;
+    auto MUL_4209 = MUL_4150 * 0.0008421;
+    auto MUL_4203 = MUL_4137 * 0.0003362;
+    auto ADD_4214 = MUL_4197 + MUL_4203;
+    auto ADD_4217 = ADD_4214 + MUL_4209;
+    auto ADD_4220 = ADD_1490 + ADD_4217;
+    auto MUL_4211 = MUL_4153 * 0.0008421;
+    auto MUL_4205 = SUB_4144 * 0.0003362;
+    auto MUL_4199 = MUL_4131 * 0.0115568;
+    auto ADD_4215 = MUL_4199 + MUL_4205;
+    auto ADD_4218 = ADD_4215 + MUL_4211;
+    auto ADD_4221 = ADD_1491 + ADD_4218;
+    auto MUL_4213 = SUB_4160 * 0.0008421;
+    auto MUL_4207 = MUL_4147 * 0.0003362;
+    auto MUL_4201 = MUL_4134 * 0.0115568;
+    auto ADD_4216 = MUL_4201 + MUL_4207;
+    auto ADD_4219 = ADD_4216 + MUL_4213;
+    auto ADD_4222 = ADD_1492 + ADD_4219;
+    if (/*left_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1337, 1355)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4220, ADD_4221, ADD_4222, 0.007824))
+    {
+        return false;
+    } // (1355, 1355)
+    auto MUL_4238 = MUL_4150 * 0.0385971;
+    auto MUL_4232 = MUL_4137 * 0.0321412;
+    auto MUL_4226 = SUB_4128 * 0.0086848;
+    auto ADD_4243 = MUL_4226 + MUL_4232;
+    auto ADD_4246 = ADD_4243 + MUL_4238;
+    auto ADD_4249 = ADD_1490 + ADD_4246;
+    auto MUL_4240 = MUL_4153 * 0.0385971;
+    auto MUL_4234 = SUB_4144 * 0.0321412;
+    auto MUL_4228 = MUL_4131 * 0.0086848;
+    auto ADD_4244 = MUL_4228 + MUL_4234;
+    auto ADD_4247 = ADD_4244 + MUL_4240;
+    auto ADD_4250 = ADD_1491 + ADD_4247;
+    auto MUL_4242 = SUB_4160 * 0.0385971;
+    auto MUL_4236 = MUL_4147 * 0.0321412;
+    auto MUL_4230 = MUL_4134 * 0.0086848;
+    auto ADD_4245 = MUL_4230 + MUL_4236;
+    auto ADD_4248 = ADD_4245 + MUL_4242;
+    auto ADD_4251 = ADD_1492 + ADD_4248;
+    if (/*left_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1355, 1373)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4249, ADD_4250, ADD_4251, 0.012342))
+    {
+        return false;
+    } // (1373, 1373)
+    auto MUL_4255 = SUB_4128 * 0.0114248;
+    auto MUL_4267 = MUL_4150 * 0.0091201;
+    auto MUL_4261 = MUL_4137 * 0.0075602;
+    auto ADD_4272 = MUL_4255 + MUL_4261;
+    auto ADD_4275 = ADD_4272 + MUL_4267;
+    auto ADD_4278 = ADD_1490 + ADD_4275;
+    auto MUL_4269 = MUL_4153 * 0.0091201;
+    auto MUL_4263 = SUB_4144 * 0.0075602;
+    auto MUL_4257 = MUL_4131 * 0.0114248;
+    auto ADD_4273 = MUL_4257 + MUL_4263;
+    auto ADD_4276 = ADD_4273 + MUL_4269;
+    auto ADD_4279 = ADD_1491 + ADD_4276;
+    auto MUL_4271 = SUB_4160 * 0.0091201;
+    auto MUL_4265 = MUL_4147 * 0.0075602;
+    auto MUL_4259 = MUL_4134 * 0.0114248;
+    auto ADD_4274 = MUL_4259 + MUL_4265;
+    auto ADD_4277 = ADD_4274 + MUL_4271;
+    auto ADD_4280 = ADD_1492 + ADD_4277;
+    if (/*left_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1373, 1391)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4278, ADD_4279, ADD_4280, 0.010167))
+    {
+        return false;
+    } // (1391, 1391)
+    auto MUL_4302 = MUL_4150 * 0.0370861;
+    auto MUL_4296 = MUL_4137 * 0.0307972;
+    auto MUL_4285 = SUB_4128 * 0.0091192;
+    auto SUB_4307 = MUL_4296 - MUL_4285;
+    auto ADD_4310 = SUB_4307 + MUL_4302;
+    auto ADD_4313 = ADD_1490 + ADD_4310;
+    auto MUL_4304 = MUL_4153 * 0.0370861;
+    auto MUL_4298 = SUB_4144 * 0.0307972;
+    auto MUL_4289 = MUL_4131 * 0.0091192;
+    auto SUB_4308 = MUL_4298 - MUL_4289;
+    auto ADD_4311 = SUB_4308 + MUL_4304;
+    auto ADD_4314 = ADD_1491 + ADD_4311;
+    auto MUL_4306 = SUB_4160 * 0.0370861;
+    auto MUL_4300 = MUL_4147 * 0.0307972;
+    auto MUL_4293 = MUL_4134 * 0.0091192;
+    auto SUB_4309 = MUL_4300 - MUL_4293;
+    auto ADD_4312 = SUB_4309 + MUL_4306;
+    auto ADD_4315 = ADD_1492 + ADD_4312;
+    if (/*left_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1391, 1409)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4313, ADD_4314, ADD_4315, 0.013839))
+    {
+        return false;
+    } // (1409, 1409)
+    auto MUL_4320 = SUB_4128 * 0.0114952;
+    auto MUL_4337 = MUL_4150 * 0.0020581;
+    auto MUL_4331 = MUL_4137 * 0.0015802;
+    auto SUB_4342 = MUL_4331 - MUL_4320;
+    auto ADD_4345 = SUB_4342 + MUL_4337;
+    auto ADD_4348 = ADD_1490 + ADD_4345;
+    auto MUL_4339 = MUL_4153 * 0.0020581;
+    auto MUL_4333 = SUB_4144 * 0.0015802;
+    auto MUL_4324 = MUL_4131 * 0.0114952;
+    auto SUB_4343 = MUL_4333 - MUL_4324;
+    auto ADD_4346 = SUB_4343 + MUL_4339;
+    auto ADD_4349 = ADD_1491 + ADD_4346;
+    auto MUL_4341 = SUB_4160 * 0.0020581;
+    auto MUL_4335 = MUL_4147 * 0.0015802;
+    auto MUL_4328 = MUL_4134 * 0.0114952;
+    auto SUB_4344 = MUL_4335 - MUL_4328;
+    auto ADD_4347 = SUB_4344 + MUL_4341;
+    auto ADD_4350 = ADD_1492 + ADD_4347;
+    if (/*left_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1409, 1427)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4348, ADD_4349, ADD_4350, 0.009292))
+    {
+        return false;
+    } // (1427, 1427)
+    auto MUL_4372 = MUL_4150 * 0.0217671;
+    auto MUL_4366 = MUL_4137 * 0.0175642;
+    auto MUL_4355 = SUB_4128 * 0.0055252;
+    auto SUB_4377 = MUL_4366 - MUL_4355;
+    auto ADD_4380 = SUB_4377 + MUL_4372;
+    auto ADD_4383 = ADD_1490 + ADD_4380;
+    auto MUL_4374 = MUL_4153 * 0.0217671;
+    auto MUL_4368 = SUB_4144 * 0.0175642;
+    auto MUL_4359 = MUL_4131 * 0.0055252;
+    auto SUB_4378 = MUL_4368 - MUL_4359;
+    auto ADD_4381 = SUB_4378 + MUL_4374;
+    auto ADD_4384 = ADD_1491 + ADD_4381;
+    auto MUL_4376 = SUB_4160 * 0.0217671;
+    auto MUL_4370 = MUL_4147 * 0.0175642;
+    auto MUL_4363 = MUL_4134 * 0.0055252;
+    auto SUB_4379 = MUL_4370 - MUL_4363;
+    auto ADD_4382 = SUB_4379 + MUL_4376;
+    auto ADD_4385 = ADD_1492 + ADD_4382;
+    if (/*left_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1427, 1445)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4383, ADD_4384, ADD_4385, 0.01406))
+    {
+        return false;
+    } // (1445, 1445)
+    auto MUL_4401 = MUL_4150 * 0.0241161;
+    auto MUL_4395 = MUL_4137 * 0.0203132;
+    auto MUL_4389 = SUB_4128 * 0.0065988;
+    auto ADD_4406 = MUL_4389 + MUL_4395;
+    auto ADD_4409 = ADD_4406 + MUL_4401;
+    auto ADD_4412 = ADD_1490 + ADD_4409;
+    auto MUL_4403 = MUL_4153 * 0.0241161;
+    auto MUL_4397 = SUB_4144 * 0.0203132;
+    auto MUL_4391 = MUL_4131 * 0.0065988;
+    auto ADD_4407 = MUL_4391 + MUL_4397;
+    auto ADD_4410 = ADD_4407 + MUL_4403;
+    auto ADD_4413 = ADD_1491 + ADD_4410;
+    auto MUL_4405 = SUB_4160 * 0.0241161;
+    auto MUL_4399 = MUL_4147 * 0.0203132;
+    auto MUL_4393 = MUL_4134 * 0.0065988;
+    auto ADD_4408 = MUL_4393 + MUL_4399;
+    auto ADD_4411 = ADD_4408 + MUL_4405;
+    auto ADD_4414 = ADD_1492 + ADD_4411;
+    if (/*left_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1445, 1463)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link1 vs. left_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link2 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link4 vs. left_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    if (/*link_base vs. left_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4412, ADD_4413, ADD_4414, 0.014987))
+    {
+        return false;
+    } // (1463, 1463)
+    auto ADD_1588 = MUL_1175 + MUL_1177;
+    auto MUL_1599 = SUB_878 * ADD_1588;
+    auto SUB_1602 = MUL_1599 - MUL_1188;
+    auto ADD_1604 = SUB_1602 + MUL_1190;
+    auto MUL_1606 = ADD_1604 * 2.0;
+    auto ADD_1634 = ADD_846 + MUL_1606;
+    auto INPUT_10 = q[10];
+    auto DIV_1638 = INPUT_10 * 0.5;
+    auto SIN_1639 = sin(DIV_1638);
+    auto COS_1648 = cos(DIV_1638);
+    auto MUL_1642 = SIN_1639 * 1.0;
+    auto MUL_1649 = SUB_878 * MUL_1642;
+    auto MUL_1667 = SUB_878 * COS_1648;
+    auto MUL_1658 = ADD_873 * MUL_1642;
+    auto MUL_1665 = ADD_873 * COS_1648;
+    auto MUL_1663 = SUB_867 * MUL_1642;
+    auto ADD_1666 = MUL_1663 + MUL_1665;
+    auto MUL_1657 = SUB_867 * COS_1648;
+    auto SUB_1660 = MUL_1657 - MUL_1658;
+    auto MUL_1668 = ADD_861 * MUL_1642;
+    auto ADD_1670 = MUL_1667 + MUL_1668;
+    auto MUL_4420 = ADD_1670 * SUB_1660;
+    auto MUL_4419 = ADD_1670 * ADD_1666;
+    auto MUL_1651 = ADD_861 * COS_1648;
+    auto SUB_1652 = MUL_1651 - MUL_1649;
+    auto MUL_4423 = SUB_1652 * SUB_1660;
+    auto SUB_4439 = MUL_4423 - MUL_4419;
+    auto MUL_4441 = SUB_4439 * 2.0;
+    auto MUL_4473 = MUL_4441 * 0.0376258;
+    auto MUL_4424 = SUB_1652 * ADD_1666;
+    auto ADD_4452 = MUL_4424 + MUL_4420;
+    auto MUL_4454 = ADD_4452 * 2.0;
+    auto MUL_4484 = MUL_4454 * 0.0384037;
+    auto SUB_4489 = MUL_4484 - MUL_4473;
+    auto ADD_4492 = ADD_1634 + SUB_4489;
+    auto SUB_1613 = MUL_1198 - MUL_1196;
+    auto MUL_4422 = ADD_1670 * SUB_1652;
+    auto MUL_4425 = SUB_1660 * ADD_1666;
+    auto SUB_4455 = MUL_4425 - MUL_4422;
+    auto MUL_4457 = SUB_4455 * 2.0;
+    auto MUL_4486 = MUL_4457 * 0.0384037;
+    auto MUL_4418 = ADD_1666 * ADD_1666;
+    auto MUL_4421 = SUB_1652 * SUB_1652;
+    auto ADD_4442 = MUL_4418 + MUL_4421;
+    auto MUL_4445 = ADD_4442 * 2.0;
+    auto SUB_4448 = 1.0 - MUL_4445;
+    auto MUL_4477 = SUB_4448 * 0.0376258;
+    auto SUB_4490 = MUL_4486 - MUL_4477;
+    auto MUL_1614 = ADD_873 * ADD_1588;
+    auto ADD_1615 = SUB_1613 + MUL_1614;
+    auto MUL_1617 = ADD_1615 * 2.0;
+    auto SUB_1620 = MUL_1617 - 0.035;
+    auto ADD_1635 = ADD_847 + SUB_1620;
+    auto ADD_4493 = ADD_1635 + SUB_4490;
+    auto ADD_4449 = MUL_4425 + MUL_4422;
+    auto ADD_1624 = MUL_1207 + MUL_1208;
+    auto MUL_4451 = ADD_4449 * 2.0;
+    auto MUL_4481 = MUL_4451 * 0.0376258;
+    auto MUL_4417 = SUB_1660 * SUB_1660;
+    auto ADD_4458 = MUL_4417 + MUL_4421;
+    auto MUL_4461 = ADD_4458 * 2.0;
+    auto SUB_4464 = 1.0 - MUL_4461;
+    auto MUL_4488 = SUB_4464 * 0.0384037;
+    auto SUB_4491 = MUL_4488 - MUL_4481;
+    auto MUL_1626 = SUB_867 * ADD_1588;
+    auto ADD_1627 = ADD_1624 + MUL_1626;
+    auto MUL_1630 = ADD_1627 * 2.0;
+    auto SUB_1633 = 0.059098 - MUL_1630;
+    auto ADD_1636 = ADD_848 + SUB_1633;
+    auto ADD_4494 = ADD_1636 + SUB_4491;
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1463, 1533)
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    if (/*right_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_4492, ADD_4493, ADD_4494, 0.01116))
+    {
+        return false;
+    } // (1533, 1533)
+    auto MUL_4505 = MUL_4441 * 0.0269928;
+    auto MUL_4516 = MUL_4454 * 0.0139097;
+    auto SUB_4521 = MUL_4516 - MUL_4505;
+    auto ADD_4524 = ADD_1634 + SUB_4521;
+    auto MUL_4518 = MUL_4457 * 0.0139097;
+    auto MUL_4509 = SUB_4448 * 0.0269928;
+    auto SUB_4522 = MUL_4518 - MUL_4509;
+    auto ADD_4525 = ADD_1635 + SUB_4522;
+    auto MUL_4520 = SUB_4464 * 0.0139097;
+    auto MUL_4513 = MUL_4451 * 0.0269928;
+    auto SUB_4523 = MUL_4520 - MUL_4513;
+    auto ADD_4526 = ADD_1636 + SUB_4523;
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1533, 1545)
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    if (/*right_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_4524, ADD_4525, ADD_4526, 0.010094))
+    {
+        return false;
+    } // (1545, 1545)
+    auto MUL_4537 = MUL_4441 * 0.0375178;
+    auto MUL_4548 = MUL_4454 * 0.0191997;
+    auto SUB_4553 = MUL_4548 - MUL_4537;
+    auto ADD_4556 = ADD_1634 + SUB_4553;
+    auto MUL_4550 = MUL_4457 * 0.0191997;
+    auto MUL_4541 = SUB_4448 * 0.0375178;
+    auto SUB_4554 = MUL_4550 - MUL_4541;
+    auto ADD_4557 = ADD_1635 + SUB_4554;
+    auto MUL_4552 = SUB_4464 * 0.0191997;
+    auto MUL_4545 = MUL_4451 * 0.0375178;
+    auto SUB_4555 = MUL_4552 - MUL_4545;
+    auto ADD_4558 = ADD_1636 + SUB_4555;
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1545, 1557)
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    if (/*right_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_4556, ADD_4557, ADD_4558, 0.010124))
+    {
+        return false;
+    } // (1557, 1557)
+    auto MUL_4569 = MUL_4441 * 0.0434288;
+    auto MUL_4580 = MUL_4454 * 0.0253837;
+    auto SUB_4585 = MUL_4580 - MUL_4569;
+    auto ADD_4588 = ADD_1634 + SUB_4585;
+    auto MUL_4582 = MUL_4457 * 0.0253837;
+    auto MUL_4573 = SUB_4448 * 0.0434288;
+    auto SUB_4586 = MUL_4582 - MUL_4573;
+    auto ADD_4589 = ADD_1635 + SUB_4586;
+    auto MUL_4584 = SUB_4464 * 0.0253837;
+    auto MUL_4577 = MUL_4451 * 0.0434288;
+    auto SUB_4587 = MUL_4584 - MUL_4577;
+    auto ADD_4590 = ADD_1636 + SUB_4587;
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1557, 1569)
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    if (/*right_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_4588, ADD_4589, ADD_4590, 0.0107))
+    {
+        return false;
+    } // (1569, 1569)
+    auto MUL_4601 = MUL_4441 * 0.0040588;
+    auto MUL_4612 = MUL_4454 * 0.0018847;
+    auto SUB_4617 = MUL_4612 - MUL_4601;
+    auto ADD_4620 = ADD_1634 + SUB_4617;
+    auto MUL_4614 = MUL_4457 * 0.0018847;
+    auto MUL_4605 = SUB_4448 * 0.0040588;
+    auto SUB_4618 = MUL_4614 - MUL_4605;
+    auto ADD_4621 = ADD_1635 + SUB_4618;
+    auto MUL_4616 = SUB_4464 * 0.0018847;
+    auto MUL_4609 = MUL_4451 * 0.0040588;
+    auto SUB_4619 = MUL_4616 - MUL_4609;
+    auto ADD_4622 = ADD_1636 + SUB_4619;
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1569, 1581)
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    if (/*right_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_4620, ADD_4621, ADD_4622, 0.010999))
+    {
+        return false;
+    } // (1581, 1581)
+    auto MUL_4632 = MUL_4441 * 0.0177522;
+    auto MUL_4639 = MUL_4454 * 0.0011083;
+    auto SUB_4649 = MUL_4632 - MUL_4639;
+    auto ADD_4652 = ADD_1634 + SUB_4649;
+    auto MUL_4643 = MUL_4457 * 0.0011083;
+    auto MUL_4634 = SUB_4448 * 0.0177522;
+    auto SUB_4650 = MUL_4634 - MUL_4643;
+    auto ADD_4653 = ADD_1635 + SUB_4650;
+    auto MUL_4647 = SUB_4464 * 0.0011083;
+    auto MUL_4636 = MUL_4451 * 0.0177522;
+    auto SUB_4651 = MUL_4636 - MUL_4647;
+    auto ADD_4654 = ADD_1636 + SUB_4651;
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1581, 1593)
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    if (/*right_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_4652, ADD_4653, ADD_4654, 0.009128))
+    {
+        return false;
+    } // (1593, 1593)
+    auto MUL_4665 = MUL_4441 * 0.0160208;
+    auto MUL_4676 = MUL_4454 * 0.0084897;
+    auto SUB_4681 = MUL_4676 - MUL_4665;
+    auto ADD_4684 = ADD_1634 + SUB_4681;
+    auto MUL_4678 = MUL_4457 * 0.0084897;
+    auto MUL_4669 = SUB_4448 * 0.0160208;
+    auto SUB_4682 = MUL_4678 - MUL_4669;
+    auto ADD_4685 = ADD_1635 + SUB_4682;
+    auto MUL_4680 = SUB_4464 * 0.0084897;
+    auto MUL_4673 = MUL_4451 * 0.0160208;
+    auto SUB_4683 = MUL_4680 - MUL_4673;
+    auto ADD_4686 = ADD_1636 + SUB_4683;
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1593, 1605)
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    if (/*right_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_4684, ADD_4685, ADD_4686, 0.010231))
+    {
+        return false;
+    } // (1605, 1605)
+    auto MUL_4696 = MUL_4441 * 0.0060212;
+    auto MUL_4703 = MUL_4454 * 0.0005103;
+    auto SUB_4713 = MUL_4696 - MUL_4703;
+    auto ADD_4716 = ADD_1634 + SUB_4713;
+    auto MUL_4707 = MUL_4457 * 0.0005103;
+    auto MUL_4698 = SUB_4448 * 0.0060212;
+    auto SUB_4714 = MUL_4698 - MUL_4707;
+    auto ADD_4717 = ADD_1635 + SUB_4714;
+    auto MUL_4711 = SUB_4464 * 0.0005103;
+    auto MUL_4700 = MUL_4451 * 0.0060212;
+    auto SUB_4715 = MUL_4700 - MUL_4711;
+    auto ADD_4718 = ADD_1636 + SUB_4715;
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1605, 1617)
+    if (/*link1 vs. right_outer_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link2 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link4 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2880, ADD_2881, ADD_2882, 0.059255, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2921, ADD_2922, ADD_2923, 0.050339, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2962, ADD_2963, ADD_2964, 0.049716, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_2997, ADD_2998, ADD_2999, 0.042043, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3032, ADD_3033, ADD_3034, 0.038992, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link5 vs. right_outer_knuckle*/ sphere_sphere_self_collision(ADD_3073, ADD_3074, ADD_3075, 0.038827, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*link_base vs. right_outer_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    if (/*right_outer_knuckle*/ sphere_environment_in_collision(environment, ADD_4716, ADD_4717, ADD_4718, 0.009298))
+    {
+        return false;
+    } // (1617, 1617)
+    auto MUL_1733 = SUB_1660 * 0.042039;
+    auto MUL_1736 = ADD_1666 * 0.035465;
+    auto ADD_1738 = MUL_1733 + MUL_1736;
+    auto MUL_1749 = ADD_1670 * ADD_1738;
+    auto MUL_1746 = SUB_1652 * 0.042039;
+    auto MUL_1753 = ADD_1666 * MUL_1746;
+    auto MUL_1741 = SUB_1652 * 0.035465;
+    auto MUL_1750 = SUB_1660 * MUL_1741;
+    auto SUB_1752 = MUL_1749 - MUL_1750;
+    auto ADD_1754 = SUB_1752 + MUL_1753;
+    auto MUL_1756 = ADD_1754 * 2.0;
+    auto ADD_1784 = ADD_1634 + MUL_1756;
+    auto INPUT_11 = q[11];
+    auto DIV_1788 = INPUT_11 * 0.5;
+    auto SIN_1789 = sin(DIV_1788);
+    auto COS_1795 = cos(DIV_1788);
+    auto MUL_1812 = ADD_1670 * COS_1795;
+    auto MUL_1796 = ADD_1670 * SIN_1789;
+    auto MUL_1803 = SUB_1660 * COS_1795;
+    auto MUL_1808 = SUB_1660 * SIN_1789;
+    auto MUL_1810 = ADD_1666 * COS_1795;
+    auto SUB_1811 = MUL_1810 - MUL_1808;
+    auto MUL_4722 = SUB_1811 * SUB_1811;
+    auto MUL_1804 = ADD_1666 * SIN_1789;
+    auto ADD_1805 = MUL_1803 + MUL_1804;
+    auto MUL_4721 = ADD_1805 * ADD_1805;
+    auto ADD_4730 = MUL_4721 + MUL_4722;
+    auto MUL_4733 = ADD_4730 * 2.0;
+    auto SUB_4736 = 1.0 - MUL_4733;
+    auto MUL_4771 = SUB_4736 * 0.0089122;
+    auto MUL_1797 = SUB_1652 * COS_1795;
+    auto ADD_1798 = MUL_1796 + MUL_1797;
+    auto MUL_4728 = ADD_1798 * SUB_1811;
+    auto MUL_4727 = ADD_1798 * ADD_1805;
+    auto MUL_1813 = SUB_1652 * SIN_1789;
+    auto SUB_1814 = MUL_1812 - MUL_1813;
+    auto MUL_4723 = SUB_1814 * SUB_1811;
+    auto SUB_4743 = MUL_4727 - MUL_4723;
+    auto MUL_4745 = SUB_4743 * 2.0;
+    auto MUL_4782 = MUL_4745 * 0.0206848;
+    auto SUB_4793 = MUL_4782 - MUL_4771;
+    auto MUL_4724 = SUB_1814 * ADD_1805;
+    auto ADD_4756 = MUL_4728 + MUL_4724;
+    auto MUL_4758 = ADD_4756 * 2.0;
+    auto MUL_4788 = MUL_4758 * 0.050488;
+    auto ADD_4796 = SUB_4793 + MUL_4788;
+    auto ADD_4799 = ADD_1784 + ADD_4796;
+    auto ADD_4737 = MUL_4727 + MUL_4723;
+    auto MUL_4739 = ADD_4737 * 2.0;
+    auto MUL_4775 = MUL_4739 * 0.0089122;
+    auto MUL_4726 = SUB_1814 * ADD_1798;
+    auto MUL_4729 = ADD_1805 * SUB_1811;
+    auto SUB_4759 = MUL_4729 - MUL_4726;
+    auto MUL_4761 = SUB_4759 * 2.0;
+    auto MUL_4790 = MUL_4761 * 0.050488;
+    auto MUL_4725 = ADD_1798 * ADD_1798;
+    auto ADD_4746 = MUL_4722 + MUL_4725;
+    auto MUL_4749 = ADD_4746 * 2.0;
+    auto SUB_4752 = 1.0 - MUL_4749;
+    auto MUL_4784 = SUB_4752 * 0.0206848;
+    auto SUB_4794 = MUL_4784 - MUL_4775;
+    auto ADD_4797 = SUB_4794 + MUL_4790;
+    auto MUL_1759 = ADD_1670 * MUL_1746;
+    auto MUL_1764 = ADD_1666 * ADD_1738;
+    auto MUL_1761 = SUB_1652 * MUL_1741;
+    auto SUB_1763 = MUL_1761 - MUL_1759;
+    auto ADD_1765 = SUB_1763 + MUL_1764;
+    auto MUL_1767 = ADD_1765 * 2.0;
+    auto SUB_1770 = MUL_1767 - 0.035465;
+    auto ADD_1785 = ADD_1635 + SUB_1770;
+    auto ADD_4800 = ADD_1785 + ADD_4797;
+    auto SUB_4740 = MUL_4728 - MUL_4724;
+    auto ADD_4753 = MUL_4729 + MUL_4726;
+    auto ADD_4762 = MUL_4721 + MUL_4725;
+    auto MUL_4765 = ADD_4762 * 2.0;
+    auto SUB_4768 = 1.0 - MUL_4765;
+    auto MUL_4792 = SUB_4768 * 0.050488;
+    auto MUL_4755 = ADD_4753 * 2.0;
+    auto MUL_4786 = MUL_4755 * 0.0206848;
+    auto MUL_4742 = SUB_4740 * 2.0;
+    auto MUL_4779 = MUL_4742 * 0.0089122;
+    auto SUB_4795 = MUL_4786 - MUL_4779;
+    auto ADD_4798 = SUB_4795 + MUL_4792;
+    auto MUL_1771 = ADD_1670 * MUL_1741;
+    auto MUL_1776 = SUB_1660 * ADD_1738;
+    auto MUL_1773 = SUB_1652 * MUL_1746;
+    auto ADD_1774 = MUL_1771 + MUL_1773;
+    auto ADD_1777 = ADD_1774 + MUL_1776;
+    auto MUL_1780 = ADD_1777 * 2.0;
+    auto SUB_1783 = 0.042039 - MUL_1780;
+    auto ADD_1786 = ADD_1636 + SUB_1783;
+    auto ADD_4801 = ADD_1786 + ADD_4798;
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1617, 1709)
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    if (/*right_finger*/ sphere_environment_in_collision(environment, ADD_4799, ADD_4800, ADD_4801, 0.012829))
+    {
+        return false;
+    } // (1709, 1709)
+    auto MUL_4823 = MUL_4758 * 0.015538;
+    auto MUL_4817 = MUL_4745 * 0.0149288;
+    auto MUL_4806 = SUB_4736 * 0.0005932;
+    auto SUB_4828 = MUL_4817 - MUL_4806;
+    auto ADD_4831 = SUB_4828 + MUL_4823;
+    auto ADD_4834 = ADD_1784 + ADD_4831;
+    auto MUL_4825 = MUL_4761 * 0.015538;
+    auto MUL_4819 = SUB_4752 * 0.0149288;
+    auto MUL_4810 = MUL_4739 * 0.0005932;
+    auto SUB_4829 = MUL_4819 - MUL_4810;
+    auto ADD_4832 = SUB_4829 + MUL_4825;
+    auto ADD_4835 = ADD_1785 + ADD_4832;
+    auto MUL_4827 = SUB_4768 * 0.015538;
+    auto MUL_4821 = MUL_4755 * 0.0149288;
+    auto MUL_4814 = MUL_4742 * 0.0005932;
+    auto SUB_4830 = MUL_4821 - MUL_4814;
+    auto ADD_4833 = SUB_4830 + MUL_4827;
+    auto ADD_4836 = ADD_1786 + ADD_4833;
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1709, 1727)
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    if (/*right_finger*/ sphere_environment_in_collision(environment, ADD_4834, ADD_4835, ADD_4836, 0.013561))
+    {
+        return false;
+    } // (1727, 1727)
+    auto MUL_4852 = MUL_4758 * 0.050708;
+    auto MUL_4846 = MUL_4745 * 0.0181438;
+    auto MUL_4840 = SUB_4736 * 0.0002198;
+    auto ADD_4857 = MUL_4840 + MUL_4846;
+    auto ADD_4860 = ADD_4857 + MUL_4852;
+    auto ADD_4863 = ADD_1784 + ADD_4860;
+    auto MUL_4854 = MUL_4761 * 0.050708;
+    auto MUL_4848 = SUB_4752 * 0.0181438;
+    auto MUL_4842 = MUL_4739 * 0.0002198;
+    auto ADD_4858 = MUL_4842 + MUL_4848;
+    auto ADD_4861 = ADD_4858 + MUL_4854;
+    auto ADD_4864 = ADD_1785 + ADD_4861;
+    auto MUL_4856 = SUB_4768 * 0.050708;
+    auto MUL_4850 = MUL_4755 * 0.0181438;
+    auto MUL_4844 = MUL_4742 * 0.0002198;
+    auto ADD_4859 = MUL_4844 + MUL_4850;
+    auto ADD_4862 = ADD_4859 + MUL_4856;
+    auto ADD_4865 = ADD_1786 + ADD_4862;
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1727, 1745)
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    if (/*right_finger*/ sphere_environment_in_collision(environment, ADD_4863, ADD_4864, ADD_4865, 0.013052))
+    {
+        return false;
+    } // (1745, 1745)
+    auto MUL_4887 = MUL_4758 * 0.031142;
+    auto MUL_4881 = MUL_4745 * 0.0199998;
+    auto MUL_4870 = SUB_4736 * 0.0090622;
+    auto SUB_4892 = MUL_4881 - MUL_4870;
+    auto ADD_4895 = SUB_4892 + MUL_4887;
+    auto ADD_4898 = ADD_1784 + ADD_4895;
+    auto MUL_4889 = MUL_4761 * 0.031142;
+    auto MUL_4883 = SUB_4752 * 0.0199998;
+    auto MUL_4874 = MUL_4739 * 0.0090622;
+    auto SUB_4893 = MUL_4883 - MUL_4874;
+    auto ADD_4896 = SUB_4893 + MUL_4889;
+    auto ADD_4899 = ADD_1785 + ADD_4896;
+    auto MUL_4891 = SUB_4768 * 0.031142;
+    auto MUL_4885 = MUL_4755 * 0.0199998;
+    auto MUL_4878 = MUL_4742 * 0.0090622;
+    auto SUB_4894 = MUL_4885 - MUL_4878;
+    auto ADD_4897 = SUB_4894 + MUL_4891;
+    auto ADD_4900 = ADD_1786 + ADD_4897;
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1745, 1763)
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    if (/*right_finger*/ sphere_environment_in_collision(environment, ADD_4898, ADD_4899, ADD_4900, 0.012987))
+    {
+        return false;
+    } // (1763, 1763)
+    auto MUL_4910 = MUL_4745 * 0.0037448;
+    auto MUL_4916 = MUL_4758 * 0.003164;
+    auto MUL_4904 = SUB_4736 * 0.0008108;
+    auto ADD_4921 = MUL_4904 + MUL_4910;
+    auto ADD_4924 = ADD_4921 + MUL_4916;
+    auto ADD_4927 = ADD_1784 + ADD_4924;
+    auto MUL_4918 = MUL_4761 * 0.003164;
+    auto MUL_4912 = SUB_4752 * 0.0037448;
+    auto MUL_4906 = MUL_4739 * 0.0008108;
+    auto ADD_4922 = MUL_4906 + MUL_4912;
+    auto ADD_4925 = ADD_4922 + MUL_4918;
+    auto ADD_4928 = ADD_1785 + ADD_4925;
+    auto MUL_4920 = SUB_4768 * 0.003164;
+    auto MUL_4914 = MUL_4755 * 0.0037448;
+    auto MUL_4908 = MUL_4742 * 0.0008108;
+    auto ADD_4923 = MUL_4908 + MUL_4914;
+    auto ADD_4926 = ADD_4923 + MUL_4920;
+    auto ADD_4929 = ADD_1786 + ADD_4926;
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1763, 1781)
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    if (/*right_finger*/ sphere_environment_in_collision(environment, ADD_4927, ADD_4928, ADD_4929, 0.013657))
+    {
+        return false;
+    } // (1781, 1781)
+    auto MUL_4945 = MUL_4758 * 0.031179;
+    auto MUL_4939 = MUL_4745 * 0.0197458;
+    auto MUL_4933 = SUB_4736 * 0.0078218;
+    auto ADD_4950 = MUL_4933 + MUL_4939;
+    auto ADD_4953 = ADD_4950 + MUL_4945;
+    auto ADD_4956 = ADD_1784 + ADD_4953;
+    auto MUL_4947 = MUL_4761 * 0.031179;
+    auto MUL_4941 = SUB_4752 * 0.0197458;
+    auto MUL_4935 = MUL_4739 * 0.0078218;
+    auto ADD_4951 = MUL_4935 + MUL_4941;
+    auto ADD_4954 = ADD_4951 + MUL_4947;
+    auto ADD_4957 = ADD_1785 + ADD_4954;
+    auto MUL_4949 = SUB_4768 * 0.031179;
+    auto MUL_4943 = MUL_4755 * 0.0197458;
+    auto MUL_4937 = MUL_4742 * 0.0078218;
+    auto ADD_4952 = MUL_4937 + MUL_4943;
+    auto ADD_4955 = ADD_4952 + MUL_4949;
+    auto ADD_4958 = ADD_1786 + ADD_4955;
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1781, 1799)
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    if (/*right_finger*/ sphere_environment_in_collision(environment, ADD_4956, ADD_4957, ADD_4958, 0.013423))
+    {
+        return false;
+    } // (1799, 1799)
+    auto MUL_4974 = MUL_4758 * 0.051601;
+    auto MUL_4968 = MUL_4745 * 0.0207798;
+    auto MUL_4962 = SUB_4736 * 0.0099248;
+    auto ADD_4979 = MUL_4962 + MUL_4968;
+    auto ADD_4982 = ADD_4979 + MUL_4974;
+    auto ADD_4985 = ADD_1784 + ADD_4982;
+    auto MUL_4976 = MUL_4761 * 0.051601;
+    auto MUL_4970 = SUB_4752 * 0.0207798;
+    auto MUL_4964 = MUL_4739 * 0.0099248;
+    auto ADD_4980 = MUL_4964 + MUL_4970;
+    auto ADD_4983 = ADD_4980 + MUL_4976;
+    auto ADD_4986 = ADD_1785 + ADD_4983;
+    auto MUL_4978 = SUB_4768 * 0.051601;
+    auto MUL_4972 = MUL_4755 * 0.0207798;
+    auto MUL_4966 = MUL_4742 * 0.0099248;
+    auto ADD_4981 = MUL_4966 + MUL_4972;
+    auto ADD_4984 = ADD_4981 + MUL_4978;
+    auto ADD_4987 = ADD_1786 + ADD_4984;
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1799, 1817)
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    if (/*right_finger*/ sphere_environment_in_collision(environment, ADD_4985, ADD_4986, ADD_4987, 0.012465))
+    {
+        return false;
+    } // (1817, 1817)
+    auto MUL_5009 = MUL_4758 * 0.032719;
+    auto MUL_5003 = MUL_4745 * 0.0174038;
+    auto MUL_4992 = SUB_4736 * 0.0003942;
+    auto SUB_5014 = MUL_5003 - MUL_4992;
+    auto ADD_5017 = SUB_5014 + MUL_5009;
+    auto ADD_5020 = ADD_1784 + ADD_5017;
+    auto MUL_5011 = MUL_4761 * 0.032719;
+    auto MUL_5005 = SUB_4752 * 0.0174038;
+    auto MUL_4996 = MUL_4739 * 0.0003942;
+    auto SUB_5015 = MUL_5005 - MUL_4996;
+    auto ADD_5018 = SUB_5015 + MUL_5011;
+    auto ADD_5021 = ADD_1785 + ADD_5018;
+    auto MUL_5013 = SUB_4768 * 0.032719;
+    auto MUL_5007 = MUL_4755 * 0.0174038;
+    auto MUL_5000 = MUL_4742 * 0.0003942;
+    auto SUB_5016 = MUL_5007 - MUL_5000;
+    auto ADD_5019 = SUB_5016 + MUL_5013;
+    auto ADD_5022 = ADD_1786 + ADD_5019;
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1817, 1835)
+    if (/*link1 vs. right_finger*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link2 vs. right_finger*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2533, ADD_2534, ADD_2535, 0.084492, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link3 vs. right_finger*/ sphere_sphere_self_collision(ADD_2568, ADD_2569, ADD_2570, 0.078054, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link4 vs. right_finger*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*link_base vs. right_finger*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    if (/*right_finger*/ sphere_environment_in_collision(environment, ADD_5020, ADD_5021, ADD_5022, 0.012769))
+    {
+        return false;
+    } // (1835, 1835)
+    auto ADD_1882 = MUL_1449 + MUL_1451;
+    auto MUL_1893 = SUB_878 * ADD_1882;
+    auto SUB_1896 = MUL_1893 - MUL_1462;
+    auto ADD_1898 = SUB_1896 + MUL_1464;
+    auto MUL_1900 = ADD_1898 * 2.0;
+    auto ADD_1928 = ADD_846 + MUL_1900;
+    auto INPUT_12 = q[12];
+    auto DIV_1932 = INPUT_12 * 0.5;
+    auto SIN_1933 = sin(DIV_1932);
+    auto COS_1942 = cos(DIV_1932);
+    auto MUL_1936 = SIN_1933 * 1.0;
+    auto MUL_1943 = SUB_878 * MUL_1936;
+    auto MUL_1961 = SUB_878 * COS_1942;
+    auto MUL_1952 = ADD_873 * MUL_1936;
+    auto MUL_1959 = ADD_873 * COS_1942;
+    auto MUL_1957 = SUB_867 * MUL_1936;
+    auto ADD_1960 = MUL_1957 + MUL_1959;
+    auto MUL_5026 = ADD_1960 * ADD_1960;
+    auto MUL_1951 = SUB_867 * COS_1942;
+    auto SUB_1954 = MUL_1951 - MUL_1952;
+    auto MUL_5025 = SUB_1954 * SUB_1954;
+    auto ADD_5034 = MUL_5025 + MUL_5026;
+    auto MUL_5037 = ADD_5034 * 2.0;
+    auto SUB_5040 = 1.0 - MUL_5037;
+    auto MUL_5074 = SUB_5040 * 0.0117767;
+    auto MUL_1962 = ADD_861 * MUL_1936;
+    auto ADD_1964 = MUL_1961 + MUL_1962;
+    auto MUL_5028 = ADD_1964 * SUB_1954;
+    auto MUL_5027 = ADD_1964 * ADD_1960;
+    auto MUL_1945 = ADD_861 * COS_1942;
+    auto SUB_1946 = MUL_1945 - MUL_1943;
+    auto MUL_5031 = SUB_1946 * SUB_1954;
+    auto SUB_5047 = MUL_5031 - MUL_5027;
+    auto MUL_5049 = SUB_5047 * 2.0;
+    auto MUL_5081 = MUL_5049 * 0.0017536;
+    auto SUB_5097 = MUL_5074 - MUL_5081;
+    auto MUL_5032 = SUB_1946 * ADD_1960;
+    auto ADD_5060 = MUL_5032 + MUL_5028;
+    auto MUL_5062 = ADD_5060 * 2.0;
+    auto MUL_5092 = MUL_5062 * 0.0024649;
+    auto ADD_5100 = SUB_5097 + MUL_5092;
+    auto ADD_5103 = ADD_1928 + ADD_5100;
+    auto SUB_1907 = MUL_1472 - MUL_1470;
+    auto ADD_5041 = MUL_5031 + MUL_5027;
+    auto MUL_5043 = ADD_5041 * 2.0;
+    auto MUL_5076 = MUL_5043 * 0.0117767;
+    auto MUL_5030 = ADD_1964 * SUB_1946;
+    auto MUL_5033 = SUB_1954 * ADD_1960;
+    auto SUB_5063 = MUL_5033 - MUL_5030;
+    auto MUL_5065 = SUB_5063 * 2.0;
+    auto MUL_5094 = MUL_5065 * 0.0024649;
+    auto MUL_5029 = SUB_1946 * SUB_1946;
+    auto ADD_5050 = MUL_5026 + MUL_5029;
+    auto MUL_5053 = ADD_5050 * 2.0;
+    auto SUB_5056 = 1.0 - MUL_5053;
+    auto MUL_5085 = SUB_5056 * 0.0017536;
+    auto SUB_5098 = MUL_5076 - MUL_5085;
+    auto ADD_5101 = SUB_5098 + MUL_5094;
+    auto MUL_1908 = ADD_873 * ADD_1882;
+    auto ADD_1909 = SUB_1907 + MUL_1908;
+    auto MUL_1911 = ADD_1909 * 2.0;
+    auto SUB_1914 = MUL_1911 - 0.02;
+    auto ADD_1929 = ADD_847 + SUB_1914;
+    auto ADD_5104 = ADD_1929 + ADD_5101;
+    auto SUB_5044 = MUL_5032 - MUL_5028;
+    auto ADD_5057 = MUL_5033 + MUL_5030;
+    auto ADD_5066 = MUL_5025 + MUL_5029;
+    auto ADD_1918 = MUL_1481 + MUL_1482;
+    auto MUL_5069 = ADD_5066 * 2.0;
+    auto SUB_5072 = 1.0 - MUL_5069;
+    auto MUL_5096 = SUB_5072 * 0.0024649;
+    auto MUL_5059 = ADD_5057 * 2.0;
+    auto MUL_5089 = MUL_5059 * 0.0017536;
+    auto MUL_5046 = SUB_5044 * 2.0;
+    auto MUL_5078 = MUL_5046 * 0.0117767;
+    auto SUB_5099 = MUL_5078 - MUL_5089;
+    auto ADD_5102 = SUB_5099 + MUL_5096;
+    auto MUL_1920 = SUB_867 * ADD_1882;
+    auto ADD_1921 = ADD_1918 + MUL_1920;
+    auto MUL_1924 = ADD_1921 * 2.0;
+    auto SUB_1927 = 0.074098 - MUL_1924;
+    auto ADD_1930 = ADD_848 + SUB_1927;
+    auto ADD_5105 = ADD_1930 + ADD_5102;
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1835, 1918)
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    if (/*right_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_5103, ADD_5104, ADD_5105, 0.010165))
+    {
+        return false;
+    } // (1918, 1918)
+    auto MUL_5127 = MUL_5062 * 0.0144009;
+    auto MUL_5116 = MUL_5049 * 0.0137056;
+    auto MUL_5109 = SUB_5040 * 0.0088587;
+    auto SUB_5132 = MUL_5109 - MUL_5116;
+    auto ADD_5135 = SUB_5132 + MUL_5127;
+    auto ADD_5138 = ADD_1928 + ADD_5135;
+    auto MUL_5129 = MUL_5065 * 0.0144009;
+    auto MUL_5120 = SUB_5056 * 0.0137056;
+    auto MUL_5111 = MUL_5043 * 0.0088587;
+    auto SUB_5133 = MUL_5111 - MUL_5120;
+    auto ADD_5136 = SUB_5133 + MUL_5129;
+    auto ADD_5139 = ADD_1929 + ADD_5136;
+    auto MUL_5131 = SUB_5072 * 0.0144009;
+    auto MUL_5124 = MUL_5059 * 0.0137056;
+    auto MUL_5113 = MUL_5046 * 0.0088587;
+    auto SUB_5134 = MUL_5113 - MUL_5124;
+    auto ADD_5137 = SUB_5134 + MUL_5131;
+    auto ADD_5140 = ADD_1930 + ADD_5137;
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1918, 1936)
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    if (/*right_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_5138, ADD_5139, ADD_5140, 0.013258))
+    {
+        return false;
+    } // (1936, 1936)
+    auto MUL_5162 = MUL_5062 * 0.0247259;
+    auto MUL_5151 = MUL_5049 * 0.0219646;
+    auto MUL_5144 = SUB_5040 * 0.0087617;
+    auto SUB_5167 = MUL_5144 - MUL_5151;
+    auto ADD_5170 = SUB_5167 + MUL_5162;
+    auto ADD_5173 = ADD_1928 + ADD_5170;
+    auto MUL_5164 = MUL_5065 * 0.0247259;
+    auto MUL_5155 = SUB_5056 * 0.0219646;
+    auto MUL_5146 = MUL_5043 * 0.0087617;
+    auto SUB_5168 = MUL_5146 - MUL_5155;
+    auto ADD_5171 = SUB_5168 + MUL_5164;
+    auto ADD_5174 = ADD_1929 + ADD_5171;
+    auto MUL_5166 = SUB_5072 * 0.0247259;
+    auto MUL_5159 = MUL_5059 * 0.0219646;
+    auto MUL_5148 = MUL_5046 * 0.0087617;
+    auto SUB_5169 = MUL_5148 - MUL_5159;
+    auto ADD_5172 = SUB_5169 + MUL_5166;
+    auto ADD_5175 = ADD_1930 + ADD_5172;
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1936, 1954)
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    if (/*right_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_5173, ADD_5174, ADD_5175, 0.0116))
+    {
+        return false;
+    } // (1954, 1954)
+    auto MUL_5197 = MUL_5062 * 0.0384999;
+    auto MUL_5186 = MUL_5049 * 0.0326596;
+    auto MUL_5179 = SUB_5040 * 0.0087487;
+    auto SUB_5202 = MUL_5179 - MUL_5186;
+    auto ADD_5205 = SUB_5202 + MUL_5197;
+    auto ADD_5208 = ADD_1928 + ADD_5205;
+    auto MUL_5199 = MUL_5065 * 0.0384999;
+    auto MUL_5190 = SUB_5056 * 0.0326596;
+    auto MUL_5181 = MUL_5043 * 0.0087487;
+    auto SUB_5203 = MUL_5181 - MUL_5190;
+    auto ADD_5206 = SUB_5203 + MUL_5199;
+    auto ADD_5209 = ADD_1929 + ADD_5206;
+    auto MUL_5201 = SUB_5072 * 0.0384999;
+    auto MUL_5194 = MUL_5059 * 0.0326596;
+    auto MUL_5183 = MUL_5046 * 0.0087487;
+    auto SUB_5204 = MUL_5183 - MUL_5194;
+    auto ADD_5207 = SUB_5204 + MUL_5201;
+    auto ADD_5210 = ADD_1930 + ADD_5207;
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1954, 1972)
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    if (/*right_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_5208, ADD_5209, ADD_5210, 0.012869))
+    {
+        return false;
+    } // (1972, 1972)
+    auto MUL_5238 = MUL_5062 * 0.0383379;
+    auto MUL_5227 = MUL_5049 * 0.0323966;
+    auto MUL_5215 = SUB_5040 * 0.0087463;
+    auto ADD_5243 = MUL_5215 + MUL_5227;
+    auto SUB_5249 = MUL_5238 - ADD_5243;
+    auto ADD_5252 = ADD_1928 + SUB_5249;
+    auto MUL_5240 = MUL_5065 * 0.0383379;
+    auto MUL_5231 = SUB_5056 * 0.0323966;
+    auto MUL_5219 = MUL_5043 * 0.0087463;
+    auto ADD_5245 = MUL_5219 + MUL_5231;
+    auto SUB_5250 = MUL_5240 - ADD_5245;
+    auto ADD_5253 = ADD_1929 + SUB_5250;
+    auto MUL_5242 = SUB_5072 * 0.0383379;
+    auto MUL_5235 = MUL_5059 * 0.0323966;
+    auto MUL_5223 = MUL_5046 * 0.0087463;
+    auto ADD_5247 = MUL_5223 + MUL_5235;
+    auto SUB_5251 = MUL_5242 - ADD_5247;
+    auto ADD_5254 = ADD_1930 + SUB_5251;
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1972, 1990)
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    if (/*right_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_5252, ADD_5253, ADD_5254, 0.012313))
+    {
+        return false;
+    } // (1990, 1990)
+    auto MUL_5282 = MUL_5062 * 0.0238409;
+    auto MUL_5271 = MUL_5049 * 0.0205886;
+    auto MUL_5259 = SUB_5040 * 0.0085013;
+    auto ADD_5287 = MUL_5259 + MUL_5271;
+    auto SUB_5293 = MUL_5282 - ADD_5287;
+    auto ADD_5296 = ADD_1928 + SUB_5293;
+    auto MUL_5284 = MUL_5065 * 0.0238409;
+    auto MUL_5275 = SUB_5056 * 0.0205886;
+    auto MUL_5263 = MUL_5043 * 0.0085013;
+    auto ADD_5289 = MUL_5263 + MUL_5275;
+    auto SUB_5294 = MUL_5284 - ADD_5289;
+    auto ADD_5297 = ADD_1929 + SUB_5294;
+    auto MUL_5286 = SUB_5072 * 0.0238409;
+    auto MUL_5279 = MUL_5059 * 0.0205886;
+    auto MUL_5267 = MUL_5046 * 0.0085013;
+    auto ADD_5291 = MUL_5267 + MUL_5279;
+    auto SUB_5295 = MUL_5286 - ADD_5291;
+    auto ADD_5298 = ADD_1930 + SUB_5295;
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (1990, 2008)
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    if (/*right_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_5296, ADD_5297, ADD_5298, 0.013204))
+    {
+        return false;
+    } // (2008, 2008)
+    auto MUL_5303 = SUB_5040 * 0.0096833;
+    auto MUL_5326 = MUL_5062 * 0.0083559;
+    auto MUL_5315 = MUL_5049 * 0.0071256;
+    auto ADD_5331 = MUL_5303 + MUL_5315;
+    auto SUB_5337 = MUL_5326 - ADD_5331;
+    auto ADD_5340 = ADD_1928 + SUB_5337;
+    auto MUL_5328 = MUL_5065 * 0.0083559;
+    auto MUL_5319 = SUB_5056 * 0.0071256;
+    auto MUL_5307 = MUL_5043 * 0.0096833;
+    auto ADD_5333 = MUL_5307 + MUL_5319;
+    auto SUB_5338 = MUL_5328 - ADD_5333;
+    auto ADD_5341 = ADD_1929 + SUB_5338;
+    auto MUL_5330 = SUB_5072 * 0.0083559;
+    auto MUL_5323 = MUL_5059 * 0.0071256;
+    auto MUL_5311 = MUL_5046 * 0.0096833;
+    auto ADD_5335 = MUL_5311 + MUL_5323;
+    auto SUB_5339 = MUL_5330 - ADD_5335;
+    auto ADD_5342 = ADD_1930 + SUB_5339;
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2008, 2026)
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    if (/*right_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_5340, ADD_5341, ADD_5342, 0.013371))
+    {
+        return false;
+    } // (2026, 2026)
+    auto MUL_5347 = SUB_5040 * 0.0119893;
+    auto MUL_5364 = MUL_5062 * 0.0012849;
+    auto MUL_5358 = MUL_5049 * 0.0012384;
+    auto SUB_5369 = MUL_5358 - MUL_5347;
+    auto ADD_5372 = SUB_5369 + MUL_5364;
+    auto ADD_5375 = ADD_1928 + ADD_5372;
+    auto MUL_5366 = MUL_5065 * 0.0012849;
+    auto MUL_5360 = SUB_5056 * 0.0012384;
+    auto MUL_5351 = MUL_5043 * 0.0119893;
+    auto SUB_5370 = MUL_5360 - MUL_5351;
+    auto ADD_5373 = SUB_5370 + MUL_5366;
+    auto ADD_5376 = ADD_1929 + ADD_5373;
+    auto MUL_5368 = SUB_5072 * 0.0012849;
+    auto MUL_5362 = MUL_5059 * 0.0012384;
+    auto MUL_5355 = MUL_5046 * 0.0119893;
+    auto SUB_5371 = MUL_5362 - MUL_5355;
+    auto ADD_5374 = SUB_5371 + MUL_5368;
+    auto ADD_5377 = ADD_1930 + ADD_5374;
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(NEGATE_2206, SUB_2207, 0.2667156, 0.081731, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2026, 2044)
+    if (/*link1 vs. right_inner_knuckle*/ sphere_sphere_self_collision(SUB_2243, NEGATE_2245, 0.2000116, 0.073218, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2339, SUB_2340, ADD_2342, 0.076167, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2377, SUB_2378, ADD_2380, 0.08042, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2415, SUB_2416, ADD_2418, 0.059766, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link2 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2449, ADD_2450, ADD_2452, 0.06067, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2651, ADD_2652, ADD_2653, 0.078117, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2686, ADD_2687, ADD_2688, 0.073968, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2721, ADD_2722, ADD_2723, 0.051268, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2756, ADD_2757, ADD_2758, 0.054297, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link4 vs. right_inner_knuckle*/ sphere_sphere_self_collision(ADD_2791, ADD_2792, ADD_2793, 0.057218, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0004967, 0.0003452, 0.1138143, 0.069025, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*link_base vs. right_inner_knuckle*/ sphere_sphere_self_collision(-0.0092227, -0.0006288, 0.0462493, 0.090185, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+    if (/*right_inner_knuckle*/ sphere_environment_in_collision(environment, ADD_5375, ADD_5376, ADD_5377, 0.009105))
+    {
+        return false;
+    } // (2044, 2044)
+}
+    
 }

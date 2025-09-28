@@ -187,6 +187,43 @@ namespace ppln::robots {
         }
     };
 
+    struct Xarm7
+    {
+        static constexpr auto name = "xarm7";
+        static constexpr auto dimension = 7;
+        using Configuration = std::array<float, dimension>;
+
+        __device__ static constexpr float get_s_m(int i) {
+            constexpr float values[] = {5.6, 3.4, 5.6, 3.0, 5.6, 3.1, 5.6, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85};
+            return values[i];
+        }
+
+        __device__ static constexpr float get_s_a(int i) {
+            constexpr float values[] = {-2.8, -1.7, -2.8, 0.0, -2.8, 0.0, -2.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+            return values[i];
+        }
+        inline static void print_robot_config(Configuration &cfg) {
+            for (int i = 0; i < dimension; i++) {
+                std::cout << cfg[i] << ' ';
+            }
+            std::cout << '\n';
+        };
+
+        template<size_t I = 0>
+        __device__ __forceinline__ static void scale_cfg_impl(float *q)
+        {
+            if constexpr (I < dimension) {
+                q[I] = q[I] * get_s_m(I) + get_s_a(I);
+                scale_cfg_impl<I + 1>(q);
+            }
+        }
+
+        __device__ __forceinline__ static void scale_cfg(float *q)
+        {
+            scale_cfg_impl(q);
+        }
+    };
+
     struct Sphere
     {
         static constexpr auto name = "sphere";
