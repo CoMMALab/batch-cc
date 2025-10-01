@@ -10,6 +10,8 @@
 #include <iostream>
 #include <cassert>
 
+#define PRINT(var) printf(#var "=%a (%e)\n", (double)(var), (double)(var));
+
 /* All device utils and collision functions */
 
 namespace ppln::device_utils {
@@ -210,6 +212,7 @@ namespace ppln::device_utils {
 
     __device__ __forceinline__ bool sphere_environment_in_collision(ppln::collision::Environment<float> *env, float sx_, float sy_, float sz_, float sr_)
     {
+        sr_ += 0.005;
         const float rsq = sr_ * sr_;
         bool in_collision = false;
 
@@ -326,6 +329,9 @@ namespace ppln::collision {
     template <typename Robot>
     __device__ __forceinline__ bool fkcc(volatile float *config, ppln::collision::Environment<float> *env, int tid);
 
+    template <typename Robot>
+    __device__ __forceinline__ bool fkcc(volatile float *config, ppln::collision::Environment<float> *env, int tid, int env_idx, int edge_idx);
+
 
     template <>
     __device__ __forceinline__ bool fkcc<ppln::robots::Sphere>(volatile float *config, ppln::collision::Environment<float> *env, int tid)
@@ -334,7 +340,7 @@ namespace ppln::collision {
     }
 
     template <>
-__device__  __forceinline__ bool fkcc<ppln::robots::Panda>(volatile float *x, ppln::collision::Environment<float> *environment, int tid)
+__device__  __forceinline__ bool fkcc<ppln::robots::Panda>(volatile float *x, ppln::collision::Environment<float> *environment, int tid, int env_idx, int edge_idx)
         {
             // std::array<FloatVector<rake, 1>, 57> v;
             // std::array<FloatVector<rake, 1>, 280> y;
@@ -733,6 +739,72 @@ __device__  __forceinline__ bool fkcc<ppln::robots::Panda>(volatile float *x, pp
             float y271 = 0.103986009955406;
             float y275 = 0.0235433969646692;
             float y279 = 0.0235433969646692;
+
+            // if (tid == 0 && env_idx == 102 && edge_idx == 0) {
+            //     printf("x: %f, %f, %f, %f, %f, %f, %f\n", x[0], x[1], x[2], x[3], x[4], x[5], x[6]);
+            //     printf("sphere 15 collision with environment: %d\n", sphere_environment_in_collision(environment, y60, y61, y62, y63 + 0.1f));
+            //     printf("[");
+            //     printf("[%f, %f, %f, %f],", y0, y1, y2, y3);
+            //     printf("[%f, %f, %f, %f],", y4, y5, y6, y7);
+            //     printf("[%f, %f, %f, %f],", y8, y9, y10, y11);
+            //     printf("[%f, %f, %f, %f],", y12, y13, y14, y15);
+            //     printf("[%f, %f, %f, %f],", y16, y17, y18, y19);
+            //     printf("[%f, %f, %f, %f],", y20, y21, y22, y23);
+            //     printf("[%f, %f, %f, %f],", y24, y25, y26, y27);
+            //     printf("[%f, %f, %f, %f],", y28, y29, y30, y31);
+            //     printf("[%f, %f, %f, %f],", y32, y33, y34, y35);
+            //     printf("[%f, %f, %f, %f],", y36, y37, y38, y39);
+            //     printf("[%f, %f, %f, %f],", y40, y41, y42, y43);
+            //     printf("[%f, %f, %f, %f],", y44, y45, y46, y47);
+            //     printf("[%f, %f, %f, %f],", y48, y49, y50, y51);
+            //     printf("[%f, %f, %f, %f],", y52, y53, y54, y55);
+            //     printf("[%f, %f, %f, %f],", y56, y57, y58, y59);
+            //     printf("[%f, %f, %f, %f],", y60, y61, y62, y63);
+            //     printf("[%f, %f, %f, %f],", y64, y65, y66, y67);
+            //     printf("[%f, %f, %f, %f],", y68, y69, y70, y71);
+            //     printf("[%f, %f, %f, %f],", y72, y73, y74, y75);
+            //     printf("[%f, %f, %f, %f],", y76, y77, y78, y79);
+            //     printf("[%f, %f, %f, %f],", y80, y81, y82, y83);
+            //     printf("[%f, %f, %f, %f],", y84, y85, y86, y87);
+            //     printf("[%f, %f, %f, %f],", y88, y89, y90, y91);
+            //     printf("[%f, %f, %f, %f],", y92, y93, y94, y95);
+            //     printf("[%f, %f, %f, %f],", y96, y97, y98, y99);
+            //     printf("[%f, %f, %f, %f],", y100, y101, y102, y103);
+            //     printf("[%f, %f, %f, %f],", y104, y105, y106, y107);
+            //     printf("[%f, %f, %f, %f],", y108, y109, y110, y111);
+            //     printf("[%f, %f, %f, %f],", y112, y113, y114, y115);
+            //     printf("[%f, %f, %f, %f],", y116, y117, y118, y119);
+            //     printf("[%f, %f, %f, %f],", y120, y121, y122, y123);
+            //     printf("[%f, %f, %f, %f],", y124, y125, y126, y127);
+            //     printf("[%f, %f, %f, %f],", y128, y129, y130, y131);
+            //     printf("[%f, %f, %f, %f],", y132, y133, y134, y135);
+            //     printf("[%f, %f, %f, %f],", y136, y137, y138, y139);
+            //     printf("[%f, %f, %f, %f],", y140, y141, y142, y143);
+            //     printf("[%f, %f, %f, %f],", y144, y145, y146, y147);
+            //     printf("[%f, %f, %f, %f],", y148, y149, y150, y151);
+            //     printf("[%f, %f, %f, %f],", y152, y153, y154, y155);
+            //     printf("[%f, %f, %f, %f],", y156, y157, y158, y159);
+            //     printf("[%f, %f, %f, %f],", y160, y161, y162, y163);
+            //     printf("[%f, %f, %f, %f],", y164, y165, y166, y167);
+            //     printf("[%f, %f, %f, %f],", y168, y169, y170, y171);
+            //     printf("[%f, %f, %f, %f],", y172, y173, y174, y175);
+            //     printf("[%f, %f, %f, %f],", y176, y177, y178, y179);
+            //     printf("[%f, %f, %f, %f],", y180, y181, y182, y183);
+            //     printf("[%f, %f, %f, %f],", y184, y185, y186, y187);
+            //     printf("[%f, %f, %f, %f],", y188, y189, y190, y191);
+            //     printf("[%f, %f, %f, %f],", y192, y193, y194, y195);
+            //     printf("[%f, %f, %f, %f],", y196, y197, y198, y199);
+            //     printf("[%f, %f, %f, %f],", y200, y201, y202, y203);
+            //     printf("[%f, %f, %f, %f],", y204, y205, y206, y207);
+            //     printf("[%f, %f, %f, %f],", y208, y209, y210, y211);
+            //     printf("[%f, %f, %f, %f],", y212, y213, y214, y215);
+            //     printf("[%f, %f, %f, %f],", y216, y217, y218, y219);
+            //     printf("[%f, %f, %f, %f],", y220, y221, y222, y223);
+            //     printf("[%f, %f, %f, %f],", y224, y225, y226, y227);
+            //     printf("[%f, %f, %f, %f],", y228, y229, y230, y231);
+            //     printf("[%f, %f, %f, %f],", y232, y233, y234, y235);
+            //     printf("]");
+            // }
 
             //
             // environment vs. robot collisions

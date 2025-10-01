@@ -134,6 +134,12 @@ std::vector<Environment<float>> setup_gpu_environments(std::string filename) {
 
         iss >> category >> obj_type;
 
+        if((category == "TARGET") ||
+           ((category.find("OBSTACLE") != std::string::npos) && (category.back() != '_'))) {
+            /* skip the mean of target and obstacles */
+            continue;
+        }
+        
         std::string obs_name;
         if (category.find("OBSTACLE") != std::string::npos) {
             obs_name = category;
@@ -408,12 +414,12 @@ std::pair<std::vector<EnvironmentInput>, std::vector<EnvironmentVector>> setup_v
             if (category.find("OBJECT") != std::string::npos) {
                 object_cylinders.push_back(cylinder);
                 for (auto& env : environments) {
-                    env.cylinders.emplace_back(vamp::collision::factory::cylinder::center::array(cylinder.center, cylinder.euler_angles, cylinder.radius, cylinder.length));
+                    env.capsules.emplace_back(vamp::collision::factory::cylinder::center::array(cylinder.center, cylinder.euler_angles, cylinder.radius, cylinder.length));
                 }
                 for (auto& env : environments_obs) {
-                    env.cylinders.emplace_back(vamp::collision::factory::cylinder::center::array(cylinder.center, cylinder.euler_angles, cylinder.radius, cylinder.length));
+                    env.capsules.emplace_back(vamp::collision::factory::cylinder::center::array(cylinder.center, cylinder.euler_angles, cylinder.radius, cylinder.length));
                 }
-                env_static.cylinders.emplace_back(vamp::collision::factory::cylinder::center::array(cylinder.center, cylinder.euler_angles, cylinder.radius, cylinder.length));
+                env_static.capsules.emplace_back(vamp::collision::factory::cylinder::center::array(cylinder.center, cylinder.euler_angles, cylinder.radius, cylinder.length));
             } else if (category.find("OBSTACLE") != std::string::npos) {
                 obstacle_cylinders_map[obs_name].push_back(cylinder);
             } else if (category.find("TARGET") != std::string::npos) {
@@ -474,10 +480,10 @@ std::pair<std::vector<EnvironmentInput>, std::vector<EnvironmentVector>> setup_v
             exit(-1);
         }
         for (size_t i = 0; i < MAX_WORLD_SAMPLES_EVAL; ++i) {
-            environments[i].cylinders.emplace_back(vamp::collision::factory::cylinder::center::array(cylinders[i].center,
+            environments[i].capsules.emplace_back(vamp::collision::factory::cylinder::center::array(cylinders[i].center,
                             cylinders[i].euler_angles, cylinders[i].radius, cylinders[i].length));
             environments[i].sort();
-            environments_obs[i].cylinders.emplace_back(vamp::collision::factory::cylinder::center::array(cylinders[i].center,
+            environments_obs[i].capsules.emplace_back(vamp::collision::factory::cylinder::center::array(cylinders[i].center,
                             cylinders[i].euler_angles, cylinders[i].radius, cylinders[i].length));
             environments_obs[i].sort();
         }
@@ -527,10 +533,10 @@ std::pair<std::vector<EnvironmentInput>, std::vector<EnvironmentVector>> setup_v
     for (size_t i = 0; i < target_cylinders.size(); ++i) {
         if(i >= environments.size())
             break;
-        environments[i].cylinders.emplace_back(vamp::collision::factory::cylinder::center::array(target_cylinders[i].center,
+        environments[i].capsules.emplace_back(vamp::collision::factory::cylinder::center::array(target_cylinders[i].center,
                             target_cylinders[i].euler_angles, target_cylinders[i].radius, target_cylinders[i].length));
         environments[i].sort();
-        environments_tgt[i].cylinders.emplace_back(vamp::collision::factory::cylinder::center::array(target_cylinders[i].center,
+        environments_tgt[i].capsules.emplace_back(vamp::collision::factory::cylinder::center::array(target_cylinders[i].center,
                             target_cylinders[i].euler_angles, target_cylinders[i].radius, target_cylinders[i].length));
         environments_tgt[i].sort();
     }
@@ -626,12 +632,14 @@ void vamp_batch_cc(std::vector<EnvironmentVector>& vamp_envs, std::vector<std::a
     for (int i = 0; i < num_edges; i++) {
         auto& edge = vamp_edges_vec[i];
         for (int j = 0; j < num_envs; j++) {
+            // if (i != 0 || j != 102) continue;
             // printf("Environment %d, num_spheres: %d, num_cuboids: %d, num_cylinders: %d\n", j, vamp_envs[j].spheres.size(), vamp_envs[j].cuboids.size(), vamp_envs[j].cylinders.size());
             // if (j == 20) break;
             auto& env = vamp_envs[j];
             auto& start = edge[0];
             auto& end = edge[1];
-            results[i * num_envs + j] = not vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, end, env);
+            bool good = (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, end, env)) && (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, start, env)) &&  (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(end, end, env));
+            results[i * num_envs + j] = not good;
         }
         // if (i == 20) break;
     }
@@ -747,6 +755,252 @@ void print_environment_as_python_dict(const EnvironmentInput& env, int env_index
     std::cout << "\n";
 }
 
+// Helper function to convert GPU Environment<float> to Python dict format
+void print_environment_as_python_dict(const Environment<float>& env, int env_index = 0) {
+    std::cout << "# Environment " << env_index << " as Python dict format:\n";
+    std::cout << "problem = {\n";
+    std::cout << "    'problem': 'general',\n";
+    
+    // Print spheres
+    std::cout << "    'sphere': [\n";
+    for (unsigned int i = 0; i < env.num_spheres; ++i) {
+        const auto& sphere = env.spheres[i];
+        std::cout << "        {\n";
+        std::cout << "            'position': [" << sphere.x << ", " << sphere.y << ", " << sphere.z << "],\n";
+        std::cout << "            'radius': " << sphere.r << ",\n";
+        std::cout << "            'name': '" << sphere.name << "'\n";
+        std::cout << "        }";
+        if (i < env.num_spheres - 1) std::cout << ",";
+        std::cout << "\n";
+    }
+    std::cout << "    ],\n";
+    
+    // Print cylinders
+    std::cout << "    'cylinder': [\n";
+    for (unsigned int i = 0; i < env.num_cylinders; ++i) {
+        const auto& cylinder = env.cylinders[i];
+        
+        // Calculate position (midpoint of cylinder)
+        float x_center = cylinder.x1 + cylinder.xv * 0.5f;
+        float y_center = cylinder.y1 + cylinder.yv * 0.5f;
+        float z_center = cylinder.z1 + cylinder.zv * 0.5f;
+        
+        // Calculate orientation quaternion from cylinder vector
+        // The cylinder vector represents the direction from x1,y1,z1 to x2,y2,z2
+        float length = std::sqrt(cylinder.xv * cylinder.xv + cylinder.yv * cylinder.yv + cylinder.zv * cylinder.zv);
+        Eigen::Vector3f direction(cylinder.xv / length, cylinder.yv / length, cylinder.zv / length);
+        
+        // Create rotation from default z-axis (0,0,1) to the cylinder direction
+        Eigen::Vector3f default_axis(0, 0, 1);
+        Eigen::Vector3f axis = default_axis.cross(direction);
+        
+        // Handle case where direction is parallel to default axis
+        if (axis.norm() < 1e-6) {
+            if (direction.dot(default_axis) > 0) {
+                // Same direction - no rotation needed
+                axis = Eigen::Vector3f(0, 0, 1);
+            } else {
+                // Opposite direction - 180 degree rotation around any perpendicular axis
+                axis = Eigen::Vector3f(1, 0, 0);
+            }
+        } else {
+            axis.normalize();
+        }
+        
+        float angle = std::acos(std::clamp(default_axis.dot(direction), -1.0f, 1.0f));
+        Eigen::AngleAxisf rotation(angle, axis);
+        Eigen::Quaternionf quat(rotation);
+        
+        // Convert quaternion to Euler angles
+        auto euler_angles = quaternion_to_euler(quat.x(), quat.y(), quat.z(), quat.w());
+        
+        std::cout << "        {\n";
+        std::cout << "            'position': [" << x_center << ", " << y_center << ", " << z_center << "],\n";
+        std::cout << "            'orientation_quat_xyzw': [" << quat.x() << ", " << quat.y() << ", " << quat.z() << ", " << quat.w() << "],\n";
+        std::cout << "            'orientation_euler_xyz': [" << euler_angles[0] << ", " << euler_angles[1] << ", " << euler_angles[2] << "],\n";
+        std::cout << "            'radius': " << cylinder.r << ",\n";
+        std::cout << "            'length': " << length << ",\n";
+        std::cout << "            'name': '" << cylinder.name << "'\n";
+        std::cout << "        }";
+        if (i < env.num_cylinders - 1) std::cout << ",";
+        std::cout << "\n";
+    }
+    std::cout << "    ],\n";
+    
+    // Print capsules
+    std::cout << "    'capsule': [\n";
+    for (unsigned int i = 0; i < env.num_capsules; ++i) {
+        const auto& capsule = env.capsules[i];
+        
+        // Calculate position (midpoint of capsule)
+        float x_center = capsule.x1 + capsule.xv * 0.5f;
+        float y_center = capsule.y1 + capsule.yv * 0.5f;
+        float z_center = capsule.z1 + capsule.zv * 0.5f;
+        
+        // Calculate orientation quaternion from capsule vector
+        float length = std::sqrt(capsule.xv * capsule.xv + capsule.yv * capsule.yv + capsule.zv * capsule.zv);
+        Eigen::Vector3f direction(capsule.xv / length, capsule.yv / length, capsule.zv / length);
+        
+        // Create rotation from default z-axis (0,0,1) to the capsule direction
+        Eigen::Vector3f default_axis(0, 0, 1);
+        Eigen::Vector3f axis = default_axis.cross(direction);
+        
+        // Handle case where direction is parallel to default axis
+        if (axis.norm() < 1e-6) {
+            if (direction.dot(default_axis) > 0) {
+                // Same direction - no rotation needed
+                axis = Eigen::Vector3f(0, 0, 1);
+            } else {
+                // Opposite direction - 180 degree rotation around any perpendicular axis
+                axis = Eigen::Vector3f(1, 0, 0);
+            }
+        } else {
+            axis.normalize();
+        }
+        
+        float angle = std::acos(std::clamp(default_axis.dot(direction), -1.0f, 1.0f));
+        Eigen::AngleAxisf rotation(angle, axis);
+        Eigen::Quaternionf quat(rotation);
+        
+        // Convert quaternion to Euler angles
+        auto euler_angles = quaternion_to_euler(quat.x(), quat.y(), quat.z(), quat.w());
+        
+        std::cout << "        {\n";
+        std::cout << "            'position': [" << x_center << ", " << y_center << ", " << z_center << "],\n";
+        std::cout << "            'orientation_quat_xyzw': [" << quat.x() << ", " << quat.y() << ", " << quat.z() << ", " << quat.w() << "],\n";
+        std::cout << "            'orientation_euler_xyz': [" << euler_angles[0] << ", " << euler_angles[1] << ", " << euler_angles[2] << "],\n";
+        std::cout << "            'radius': " << capsule.r << ",\n";
+        std::cout << "            'length': " << length << ",\n";
+        std::cout << "            'name': '" << capsule.name << "'\n";
+        std::cout << "        }";
+        if (i < env.num_capsules - 1) std::cout << ",";
+        std::cout << "\n";
+    }
+    std::cout << "    ],\n";
+    
+    // Print cuboids
+    std::cout << "    'box': [\n";
+    for (unsigned int i = 0; i < env.num_cuboids; ++i) {
+        const auto& cuboid = env.cuboids[i];
+        
+        // Calculate half extents
+        float half_x = cuboid.axis_1_r;
+        float half_y = cuboid.axis_2_r;
+        float half_z = cuboid.axis_3_r;
+        
+        // Convert axis representation to quaternion
+        // The three axes define the orientation of the cuboid
+        Eigen::Matrix3f rotation_matrix;
+        rotation_matrix.col(0) = Eigen::Vector3f(cuboid.axis_1_x, cuboid.axis_1_y, cuboid.axis_1_z);
+        rotation_matrix.col(1) = Eigen::Vector3f(cuboid.axis_2_x, cuboid.axis_2_y, cuboid.axis_2_z);
+        rotation_matrix.col(2) = Eigen::Vector3f(cuboid.axis_3_x, cuboid.axis_3_y, cuboid.axis_3_z);
+        
+        Eigen::Quaternionf quat(rotation_matrix);
+        
+        // Convert quaternion to Euler angles
+        auto euler_angles = quaternion_to_euler(quat.x(), quat.y(), quat.z(), quat.w());
+        
+        std::cout << "        {\n";
+        std::cout << "            'position': [" << cuboid.x << ", " << cuboid.y << ", " << cuboid.z << "],\n";
+        std::cout << "            'orientation_quat_xyzw': [" << quat.x() << ", " << quat.y() << ", " << quat.z() << ", " << quat.w() << "],\n";
+        std::cout << "            'orientation_euler_xyz': [" << euler_angles[0] << ", " << euler_angles[1] << ", " << euler_angles[2] << "],\n";
+        std::cout << "            'half_extents': [" << half_x << ", " << half_y << ", " << half_z << "],\n";
+        std::cout << "            'name': '" << cuboid.name << "'\n";
+        std::cout << "        }";
+        if (i < env.num_cuboids - 1) std::cout << ",";
+        std::cout << "\n";
+    }
+    std::cout << "    ],\n";
+    
+    // Print z_aligned_capsules
+    std::cout << "    'z_aligned_capsule': [\n";
+    for (unsigned int i = 0; i < env.num_z_aligned_capsules; ++i) {
+        const auto& capsule = env.z_aligned_capsules[i];
+        
+        // Calculate position (midpoint of capsule)
+        float x_center = capsule.x1 + capsule.xv * 0.5f;
+        float y_center = capsule.y1 + capsule.yv * 0.5f;
+        float z_center = capsule.z1 + capsule.zv * 0.5f;
+        
+        // Calculate orientation quaternion from capsule vector
+        float length = std::sqrt(capsule.xv * capsule.xv + capsule.yv * capsule.yv + capsule.zv * capsule.zv);
+        Eigen::Vector3f direction(capsule.xv / length, capsule.yv / length, capsule.zv / length);
+        
+        // Create rotation from default z-axis (0,0,1) to the capsule direction
+        Eigen::Vector3f default_axis(0, 0, 1);
+        Eigen::Vector3f axis = default_axis.cross(direction);
+        
+        // Handle case where direction is parallel to default axis
+        if (axis.norm() < 1e-6) {
+            if (direction.dot(default_axis) > 0) {
+                // Same direction - no rotation needed
+                axis = Eigen::Vector3f(0, 0, 1);
+            } else {
+                // Opposite direction - 180 degree rotation around any perpendicular axis
+                axis = Eigen::Vector3f(1, 0, 0);
+            }
+        } else {
+            axis.normalize();
+        }
+        
+        float angle = std::acos(std::clamp(default_axis.dot(direction), -1.0f, 1.0f));
+        Eigen::AngleAxisf rotation(angle, axis);
+        Eigen::Quaternionf quat(rotation);
+        
+        // Convert quaternion to Euler angles
+        auto euler_angles = quaternion_to_euler(quat.x(), quat.y(), quat.z(), quat.w());
+        
+        std::cout << "        {\n";
+        std::cout << "            'position': [" << x_center << ", " << y_center << ", " << z_center << "],\n";
+        std::cout << "            'orientation_quat_xyzw': [" << quat.x() << ", " << quat.y() << ", " << quat.z() << ", " << quat.w() << "],\n";
+        std::cout << "            'orientation_euler_xyz': [" << euler_angles[0] << ", " << euler_angles[1] << ", " << euler_angles[2] << "],\n";
+        std::cout << "            'radius': " << capsule.r << ",\n";
+        std::cout << "            'length': " << length << ",\n";
+        std::cout << "            'name': '" << capsule.name << "'\n";
+        std::cout << "        }";
+        if (i < env.num_z_aligned_capsules - 1) std::cout << ",";
+        std::cout << "\n";
+    }
+    std::cout << "    ],\n";
+    
+    // Print z_aligned_cuboids
+    std::cout << "    'z_aligned_box': [\n";
+    for (unsigned int i = 0; i < env.num_z_aligned_cuboids; ++i) {
+        const auto& cuboid = env.z_aligned_cuboids[i];
+        
+        // Calculate half extents
+        float half_x = cuboid.axis_1_r;
+        float half_y = cuboid.axis_2_r;
+        float half_z = cuboid.axis_3_r;
+        
+        // Convert axis representation to quaternion
+        // The three axes define the orientation of the cuboid
+        Eigen::Matrix3f rotation_matrix;
+        rotation_matrix.col(0) = Eigen::Vector3f(cuboid.axis_1_x, cuboid.axis_1_y, cuboid.axis_1_z);
+        rotation_matrix.col(1) = Eigen::Vector3f(cuboid.axis_2_x, cuboid.axis_2_y, cuboid.axis_2_z);
+        rotation_matrix.col(2) = Eigen::Vector3f(cuboid.axis_3_x, cuboid.axis_3_y, cuboid.axis_3_z);
+        
+        Eigen::Quaternionf quat(rotation_matrix);
+        
+        // Convert quaternion to Euler angles
+        auto euler_angles = quaternion_to_euler(quat.x(), quat.y(), quat.z(), quat.w());
+        
+        std::cout << "        {\n";
+        std::cout << "            'position': [" << cuboid.x << ", " << cuboid.y << ", " << cuboid.z << "],\n";
+        std::cout << "            'orientation_quat_xyzw': [" << quat.x() << ", " << quat.y() << ", " << quat.z() << ", " << quat.w() << "],\n";
+        std::cout << "            'orientation_euler_xyz': [" << euler_angles[0] << ", " << euler_angles[1] << ", " << euler_angles[2] << "],\n";
+        std::cout << "            'half_extents': [" << half_x << ", " << half_y << ", " << half_z << "],\n";
+        std::cout << "            'name': '" << cuboid.name << "'\n";
+        std::cout << "        }";
+        if (i < env.num_z_aligned_cuboids - 1) std::cout << ",";
+        std::cout << "\n";
+    }
+    std::cout << "    ]\n";
+    
+    std::cout << "}\n";
+    std::cout << "\n";
+}
+
 template<typename Robot, typename VampRobot>
 void run_test(std::string graph_file_path, std::string scene_file_path, int resolution, std::string robot_name) {
     // std::cout << "Running test for robot: " << robot_name << "\n";
@@ -811,32 +1065,43 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
     auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed);
-    std::cout << "Batch collision checking took: " << ns.count() / 1'000'000'000.0 << " s\n";
+    std::cout << "end to end time: " << ns.count() / 1'000'000'000.0 << " s\n";
 
     vamp_batch_cc<VampRobot>(vamp_envs, vamp_edges_vec, resolution, vamp_results);
 
+    // print_environment_as_python_dict(vamp_envs_input[0], 0);
+    // print_environment_as_python_dict(h_envs[0], 0);
+    int fp = 0;
+    int fn = 0;
     for (int i = 0; i < num_edges; i++) {
         for (int j = 0; j < num_envs; j++) {
+            // if (i != 0 || j != 102) continue;
             bool gpu_result = results[i * num_envs + j];
             bool vamp_result = vamp_results[i * num_envs + j];
-            if (gpu_result != vamp_result) {
+            if (!gpu_result && vamp_result) {
                 printf("Discrepancy at env %d, edge %d: gpu-{%d} vamp-{%d}\n", j, i, gpu_result, vamp_result);
                 for (int k = 0; k < Robot::dimension; k++) {
                     std::cout << edges_vec[i][0][k] << " ";
                 }
-                std::cout << " -> ";
+                std::cout << std::endl;
                 for (int k = 0; k < Robot::dimension; k++) {
                     std::cout << edges_vec[i][1][k] << " ";
                 }
                 std::cout << "\n";
                 print_environment_as_python_dict(vamp_envs_input[j], j);
+                printf("\n");
+                print_environment_as_python_dict(h_envs[j], j);
                 return;
+                if (gpu_result && !vamp_result) fp++;
+                if (!gpu_result && vamp_result) fn++;
             }
             // printf("%d", gpu_result);
         }
         // printf("\n");
     }
-    std::cout << "All correct!\n";
+    // std::cout << "All correct!\n";
+    printf("Errors, fp, fn: %d, %d, %d\n", fp + fn, fp, fn);
+
     
 }
 
@@ -859,9 +1124,9 @@ int main(int argc, char* argv[]) {
     if (robot_name == "panda") {
         run_test<robots::Panda, vamp::robots::Panda>(graph_file_path, scene_file_path, resolution, robot_name);
     }
-    else if (robot_name == "fetch") {
-        run_test<robots::Fetch, vamp::robots::Fetch>(graph_file_path, scene_file_path, resolution, robot_name);
-    }
+    // else if (robot_name == "fetch") {
+    //     run_test<robots::Fetch, vamp::robots::Fetch>(graph_file_path, scene_file_path, resolution, robot_name);
+    // }
     else {
         std::cout << "Unknown robot name: " << robot_name << "\n";
         return -1;

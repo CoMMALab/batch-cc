@@ -79,6 +79,7 @@ namespace batch_cc {
         constexpr auto dim = Robot::dimension;
         const int tid = threadIdx.x;
         const int bid = blockIdx.x;
+        const int bdim = blockDim.x - 1;
         // each block handles one (edge, environment) pair
         const int env_idx = bid % num_envs;
         const int edge_idx = bid / num_envs;
@@ -101,12 +102,12 @@ namespace batch_cc {
         __syncthreads();
         if (tid == 0) {
             float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
-            n = max(ceil((dist / (float) blockDim.x) * resolution), 1.0f);
+            n = max(ceil((dist / (float) bdim) * resolution), 1.0f);
             local_cc_result = 0;
         }
         __syncthreads();
         if (tid < dim) {
-            delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (blockDim.x * n);
+            delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (bdim * n);
         }
         __syncthreads();
         # pragma unroll
@@ -115,8 +116,8 @@ namespace batch_cc {
         }
         __syncthreads();
         for (int i = 0; i < n; i++) {
-            bool config_in_collision = not ppln::collision::fkcc<Robot>(config, env, tid);
-            // if (env_idx == 20 && edge_idx == 0) {
+            bool config_in_collision = not ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx);
+            // if (env_idx == 163 && edge_idx == 78) {
             //     printf("Checking config: %f %f %f %f %f %f %f\nin_collision=%d\n", config[0], config[1], config[2], config[3], config[4], config[5], config[6], config_in_collision?1:0);
             // }
             local_cc_result = __any_sync(0xffffffff, config_in_collision);
@@ -242,11 +243,7 @@ namespace batch_cc {
 
     template <typename Robot>
     void batch_cc(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename Robot::Configuration, 2>>& edges, int resolution, std::vector<bool>& results) {
-        // std::cout << "Number of environments: " << h_envs.size() << std::endl;
         auto setup_start_time = std::chrono::steady_clock::now();
-        
-        std::cout << "Number of edges: " << edges.size() << "\n";
-        std::cout << "Number of environments: " << h_envs.size() << "\n";
 
         std::vector<EnvF*> d_envs;
         d_envs.resize(h_envs.size(), nullptr);
@@ -254,18 +251,8 @@ namespace batch_cc {
         std::vector<void*> d_blobs;
         d_blobs.reserve(h_envs.size());
 
-        try {
-            for (size_t i = 0; i < h_envs.size(); ++i) {
-                setup_environment_on_device(d_envs[i], h_envs[i], d_blobs);
-            }
-        } catch (const std::exception& e) {
-            std::cerr << "batch_cc setup failed: " << e.what() << std::endl;
-            // Best-effort cleanup of anything created so far
-            for (size_t j = 0; j < d_envs.size(); ++j) {
-                void* blob = (j < d_blobs.size() ? d_blobs[j] : nullptr);
-                cleanup_environment_on_device(d_envs[j], blob);
-            }
-            throw; // rethrow to surface the error
+        for (size_t i = 0; i < h_envs.size(); ++i) {
+            setup_environment_on_device(d_envs[i], h_envs[i], d_blobs);
         }
 
 
@@ -273,7 +260,6 @@ namespace batch_cc {
         int num_edges = edges.size();
         int num_blocks = num_envs * num_edges;
         int num_threads = 32;
-        std::cout << "here1" << std::endl;
         ppln::collision::Environment<float>** d_envs_ptr;
         cudaMalloc(&d_envs_ptr, sizeof(ppln::collision::Environment<float>*) * num_envs);
         cudaMemcpy(d_envs_ptr, d_envs.data(), sizeof(ppln::collision::Environment<float>*) * num_envs, cudaMemcpyHostToDevice);
@@ -352,6 +338,6 @@ namespace batch_cc {
     }
 
     template void batch_cc<typename ppln::robots::Panda>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Panda::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
-    template void batch_cc<typename ppln::robots::Fetch>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Fetch::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
-    template void batch_cc<typename ppln::robots::Baxter>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Baxter::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
+    // template void batch_cc<typename ppln::robots::Fetch>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Fetch::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
+    // template void batch_cc<typename ppln::robots::Baxter>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Baxter::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
 } // namespace batch_cc
