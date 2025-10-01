@@ -79,8 +79,7 @@ inline std::array<float, 3> quaternion_to_euler(float x, float y, float z, float
     return angles;
 }
 
-std::vector<Environment<float>> setup_environments(std::string filename) {
-
+std::vector<Environment<float>> setup_gpu_environments(std::string filename) {
     std::vector<Environment<float>> environments(MAX_WORLD_SAMPLES_EVAL);
     std::vector<Sphere<float>> object_spheres; // spheres for each environment
     std::vector<Cuboid<float>> object_cuboids; // cuboids for each environment
@@ -109,6 +108,12 @@ std::vector<Environment<float>> setup_environments(std::string filename) {
 
         iss >> category >> obj_type;
 
+        if((category == "TARGET") ||
+           ((category.find("OBSTACLE") != std::string::npos) && (category.back() != '_'))) {
+            /* skip the mean of target and obstacles */
+            continue;
+        }
+        
         std::string obs_name;
         if (category.find("OBSTACLE") != std::string::npos) {
             obs_name = category;
@@ -329,7 +334,7 @@ template<typename Robot>
 void run_test(std::string graph_file_path, std::string scene_file_path, int resolution, std::string robot_name) {
     // std::cout << "Running test for robot: " << robot_name << "\n";
     // std::cout << "Creating environments from scene file: " << scene_file_path << "\n";
-    std::vector<Environment<float>> h_envs = setup_environments(scene_file_path);
+    std::vector<Environment<float>> h_envs = setup_gpu_environments(scene_file_path);
     // std::cout << "Number of environments: " << h_envs.size() << "\n";
     // std::cout << "Creating graph from file: " << graph_file_path << "\n";
     Graph g = read_graph_from_file(graph_file_path);
