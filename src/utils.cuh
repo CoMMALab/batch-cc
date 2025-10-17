@@ -387,6 +387,7 @@ namespace ppln::device_utils {
 
     __device__ __forceinline__ bool sphere_environment_in_collision(ppln::collision::Environment<float> *env, float sx_, float sy_, float sz_, float sr_)
     {
+        // sr_ += 0.005f;
         const float rsq = sr_ * sr_;
         bool in_collision = false;
 

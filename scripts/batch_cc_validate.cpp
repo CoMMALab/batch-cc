@@ -1073,27 +1073,27 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
     // print_environment_as_python_dict(h_envs[0], 0);
     int fp = 0;
     int fn = 0;
+    bool printed_discrepancy = false;
     for (int i = 0; i < num_edges; i++) {
         for (int j = 0; j < num_envs; j++) {
             // if (i != 0 || j != 102) continue;
             bool gpu_result = results[i * num_envs + j];
             bool vamp_result = vamp_results[i * num_envs + j];
-            // if (!gpu_result && vamp_result) {
-            //     printf("Discrepancy at env %d, edge %d: gpu-{%d} vamp-{%d}\n", j, i, gpu_result, vamp_result);
-            //     for (int k = 0; k < Robot::dimension; k++) {
-            //         std::cout << edges_vec[i][0][k] << " ";
-            //     }
-            //     std::cout << std::endl;
-            //     for (int k = 0; k < Robot::dimension; k++) {
-            //         std::cout << edges_vec[i][1][k] << " ";
-            //     }
-            //     std::cout << "\n";
-            //     print_environment_as_python_dict(vamp_envs_input[j], j);
-            //     printf("\n");
-            //     print_environment_as_python_dict(h_envs[j], j);
-            //     return;
-                
-            // }
+            if (!gpu_result && vamp_result & !printed_discrepancy) {
+                printf("Discrepancy at env %d, edge %d: gpu-{%d} vamp-{%d}\n", j, i, gpu_result, vamp_result);
+                for (int k = 0; k < Robot::dimension; k++) {
+                    std::cout << edges_vec[i][0][k] << " ";
+                }
+                std::cout << std::endl;
+                for (int k = 0; k < Robot::dimension; k++) {
+                    std::cout << edges_vec[i][1][k] << " ";
+                }
+                std::cout << "\n";
+                print_environment_as_python_dict(vamp_envs_input[j], j);
+                printf("\n");
+                print_environment_as_python_dict(h_envs[j], j);
+                printed_discrepancy = true;
+            }
             if (gpu_result && !vamp_result) fp++;
             if (!gpu_result && vamp_result) fn++;
             // printf("%d", gpu_result);
@@ -1112,7 +1112,7 @@ int main(int argc, char* argv[]) {
     std::string robot_name = "panda";
     std::string graph_file_path = "graph.dot";
     std::string scene_file_path = "scene.txt";
-    int resolution = 31;
+    int resolution = 32;
     if (argc == 4) {
         robot_name = argv[1];
         graph_file_path = argv[2];

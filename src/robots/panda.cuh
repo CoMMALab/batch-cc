@@ -275,7 +275,7 @@ namespace ppln::collision {
             while (panda_sphere_to_joint[transformed_sphere_ind]==i) {
                 if (col_ind < 3) {
                     // sphere transformed_sphere_ind, robot batch_ind (16 robots), coord col_ind
-                    sphere_pos[transformed_sphere_ind * 16 * 3 + batch_ind * 3 + col_ind] = 
+                    sphere_pos[transformed_sphere_ind * BATCH_SIZE * 3 + batch_ind * 3 + col_ind] = 
                         T_base[col_ind] * panda_spheres_array[transformed_sphere_ind].x +
                         T_base[col_ind + M] * panda_spheres_array[transformed_sphere_ind].y +
                         T_base[col_ind + M*2] * panda_spheres_array[transformed_sphere_ind].z +
@@ -527,7 +527,7 @@ __device__ void fk_approx<ppln::robots::Panda>(
         while (panda_approx_sphere_to_joint[transformed_sphere_ind] == i) {
             if (col_ind < 3) {
                 // sphere transformed_sphere_ind, robot batch_ind (16 robots), coord col_ind
-                sphere_pos_approx[transformed_sphere_ind * 16 * 3 + batch_ind * 3 + col_ind] = 
+                sphere_pos_approx[transformed_sphere_ind * BATCH_SIZE * 3 + batch_ind * 3 + col_ind] = 
                     T_base[col_ind] * panda_approx_spheres_array[transformed_sphere_ind].x +
                     T_base[col_ind + M] * panda_approx_spheres_array[transformed_sphere_ind].y +
                     T_base[col_ind + M*2] * panda_approx_spheres_array[transformed_sphere_ind].z +
@@ -547,15 +547,15 @@ __device__ bool self_collision_check_approx<ppln::robots::Panda>(volatile float*
     for (int i = thread_ind; i < PANDA_APPROX_SELF_CC_RANGE_COUNT; i+=4) {
         int sphere_1_ind = panda_approx_self_cc_ranges[i][0];
         float sphere_1[3] = {
-            sphere_pos_approx[sphere_1_ind * 16 * 3 + batch_ind * 3 + 0],
-            sphere_pos_approx[sphere_1_ind * 16 * 3 + batch_ind * 3 + 1],
-            sphere_pos_approx[sphere_1_ind * 16 * 3 + batch_ind * 3 + 2]
+            sphere_pos_approx[sphere_1_ind * BATCH_SIZE * 3 + batch_ind * 3 + 0],
+            sphere_pos_approx[sphere_1_ind * BATCH_SIZE * 3 + batch_ind * 3 + 1],
+            sphere_pos_approx[sphere_1_ind * BATCH_SIZE * 3 + batch_ind * 3 + 2]
         };
         for (int j = panda_approx_self_cc_ranges[i][1]; j <= panda_approx_self_cc_ranges[i][2]; j++) {
             float sphere_2[3] = {
-                sphere_pos_approx[j * 16 * 3 + batch_ind * 3 + 0],
-                sphere_pos_approx[j * 16 * 3 + batch_ind * 3 + 1],
-                sphere_pos_approx[j * 16 * 3 + batch_ind * 3 + 2]
+                sphere_pos_approx[j * BATCH_SIZE * 3 + batch_ind * 3 + 0],
+                sphere_pos_approx[j * BATCH_SIZE * 3 + batch_ind * 3 + 1],
+                sphere_pos_approx[j * BATCH_SIZE * 3 + batch_ind * 3 + 2]
             };
             if (sphere_sphere_self_collision(
                 sphere_1[0], sphere_1[1], sphere_1[2], panda_approx_spheres_array[sphere_1_ind].w,
@@ -581,9 +581,9 @@ __device__ bool env_collision_check_approx<ppln::robots::Panda>(volatile float* 
         // sphere i, robot batch_ind (16 robots), ensure sphere 0 never collides with environment
         if (i != 0 && sphere_environment_in_collision(
             env,
-            sphere_pos_approx[i * 16 * 3 + batch_ind * 3 + 0],
-            sphere_pos_approx[i * 16 * 3 + batch_ind * 3 + 1],
-            sphere_pos_approx[i * 16 * 3 + batch_ind * 3 + 2],
+            sphere_pos_approx[i * BATCH_SIZE * 3 + batch_ind * 3 + 0],
+            sphere_pos_approx[i * BATCH_SIZE * 3 + batch_ind * 3 + 1],
+            sphere_pos_approx[i * BATCH_SIZE * 3 + batch_ind * 3 + 2],
             panda_approx_spheres_array[i].w
         )) {
             atomicAdd((int*)&joint_in_collision[20*batch_ind + panda_approx_sphere_to_joint[i]],1);
@@ -594,9 +594,9 @@ __device__ bool env_collision_check_approx<ppln::robots::Panda>(volatile float* 
     int i = PANDA_APPROX_SPHERE_COUNT-1-thread_ind;
     if (i != 0 && sphere_environment_in_collision(
         env,
-        sphere_pos_approx[i * 16 * 3 + batch_ind * 3 + 0],
-        sphere_pos_approx[i * 16 * 3 + batch_ind * 3 + 1],
-        sphere_pos_approx[i * 16 * 3 + batch_ind * 3 + 2],
+        sphere_pos_approx[i * BATCH_SIZE * 3 + batch_ind * 3 + 0],
+        sphere_pos_approx[i * BATCH_SIZE * 3 + batch_ind * 3 + 1],
+        sphere_pos_approx[i * BATCH_SIZE * 3 + batch_ind * 3 + 2],
         panda_approx_spheres_array[i].w
     )) {
         atomicAdd((int*)&joint_in_collision[20*batch_ind + panda_approx_sphere_to_joint[i]],1);
