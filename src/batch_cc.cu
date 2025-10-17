@@ -18,6 +18,7 @@ Multi environment batch collision checker.
 #include "src/pRRTC_settings.hh"
 #include "src/utils.cuh"
 #include "batch_cc.hh"
+#include "robots/panda.cuh"
 
 
 #include <float.h>
@@ -75,6 +76,7 @@ namespace batch_cc {
     __global__ void
     batch_cc_kernel(ppln::collision::Environment<float>** envs, float* edges, int num_envs, int num_edges, bool *cc_result, int resolution)
     {
+       
         constexpr auto dim = Robot::dimension;
         const int tid = threadIdx.x;
         const int bid = blockIdx.x;
@@ -82,6 +84,12 @@ namespace batch_cc {
         // each block handles one (edge, environment) pair
         const int env_idx = bid % num_envs;
         const int edge_idx = bid / num_envs;
+
+        __align__(16) __shared__ volatile float sphere_pos[6000]; // ~assuming max 60 spheres with granularity 32, each has x y z coordinates
+        __align__(16) __shared__ volatile float sphere_pos_approx[1000]; // ~assuming 10 spheres with granularity 32, each has x y z coordinates
+        __align__(16) __shared__ volatile int link_CC[640]; //assuming max granularity 32, max number of links 20
+        __align__(16) __shared__ float T[32 * 1 * 16]; // 32 robots x 1x4x4 transform matrix
+
         if (env_idx >= num_envs || edge_idx >= num_edges) {
             return;
         }
@@ -115,11 +123,12 @@ namespace batch_cc {
         }
         __syncthreads();
         for (int i = 0; i < n; i++) {
-            bool config_in_collision = not ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx);
+            // bool config_in_collision = not ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx);
             // if (env_idx == 163 && edge_idx == 78) {
             //     printf("Checking config: %f %f %f %f %f %f %f\nin_collision=%d\n", config[0], config[1], config[2], config[3], config[4], config[5], config[6], config_in_collision?1:0);
             // }
-            local_cc_result = __any_sync(0xffffffff, config_in_collision);
+            // cc_result = __any_sync(0xffffffff, config_in_collision);
+            ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T, &local_cc_result);
             if (local_cc_result) break;
             # pragma unroll
             for (int j = 0; j < dim; j++) {
@@ -258,7 +267,7 @@ namespace batch_cc {
         int num_envs = h_envs.size();
         int num_edges = edges.size();
         int num_blocks = num_envs * num_edges;
-        int num_threads = 32;
+        int num_threads = resolution * 4;
         ppln::collision::Environment<float>** d_envs_ptr;
         cudaMalloc(&d_envs_ptr, sizeof(ppln::collision::Environment<float>*) * num_envs);
         cudaMemcpy(d_envs_ptr, d_envs.data(), sizeof(ppln::collision::Environment<float>*) * num_envs, cudaMemcpyHostToDevice);
