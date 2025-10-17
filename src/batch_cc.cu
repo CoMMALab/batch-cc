@@ -73,7 +73,6 @@ namespace batch_cc {
 
     template <typename Robot>
     __global__ void
-    __launch_bounds__(32, 4)
     batch_cc_kernel(ppln::collision::Environment<float>** envs, float* edges, int num_envs, int num_edges, bool *cc_result, int resolution)
     {
         constexpr auto dim = Robot::dimension;
@@ -269,26 +268,6 @@ namespace batch_cc {
         cudaMalloc(&d_cc_result, sizeof(bool) * num_envs * num_edges);
         // cudaMemset(d_cc_result, 0, sizeof(bool) * num_envs * num_edges);
 
-
-        // float* d_edges[2][Robot::dimension];        
-        // for (int i = 0; i < Robot::dimension; ++i) {
-        //     cudaMalloc(&d_edges[0][i], sizeof(float) * num_edges);
-        //     cudaMalloc(&d_edges[1][i], sizeof(float) * num_edges);
-        //     // Copy the edges to device memory
-        //     for (int j = 0; j < num_edges; ++j) {
-        //         float start = edges[j][0][i];
-        //         float end = edges[j][1][i];
-        //         cudaMemcpy(d_edges[0][i] + j, &start, sizeof(float), cudaMemcpyHostToDevice);
-        //         cudaMemcpy(d_edges[1][i] + j, &end, sizeof(float), cudaMemcpyHostToDevice);
-        //     }
-        // }
-        // // Allocate memory for the device array of pointers
-        // float* (*d_edges_ptr)[Robot::dimension];
-        // cudaMalloc(&d_edges_ptr, sizeof(float*) * 2 * Robot::dimension);
-
-        // // Copy the host array of pointers to the device
-        // cudaMemcpy(d_edges_ptr, d_edges, sizeof(float*) * 2 * Robot::dimension, cudaMemcpyHostToDevice);
-
         float *d_edges;
         size_t edges_size = edges.size() * Robot::dimension * 2 * sizeof(float);
         cudaMalloc(&d_edges, edges_size);
@@ -296,9 +275,7 @@ namespace batch_cc {
 
         auto setup_ns = get_elapsed_nanoseconds(setup_start_time);
         std::cout << "Setup time: " << setup_ns / 1'000'000'000.0 << " s" << std::endl;
-        // std::cout << "here3" << std::endl;
         cudaCheckError(cudaGetLastError());
-        // std::cout << "num_envs: " << num_envs << ", num_edges: " << num_edges << "resolution: " << resolution << std::endl;
         auto kernel_start_time = std::chrono::steady_clock::now();
         batch_cc_kernel<Robot><<<num_blocks, num_threads>>>(d_envs_ptr, d_edges, num_envs, num_edges, d_cc_result, resolution);
         cudaDeviceSynchronize();

@@ -628,7 +628,7 @@ template<typename VampRobot>
 void vamp_batch_cc(std::vector<EnvironmentVector>& vamp_envs, std::vector<std::array<typename VampRobot::Configuration, 2>>& vamp_edges_vec, int resolution, std::vector<bool>& results) {
     std::size_t num_edges = vamp_edges_vec.size();
     std::size_t num_envs = vamp_envs.size();
-    std::cout << "resolution: " << VampRobot::resolution << "\n";
+    std::cout << "vamp resolution: " << VampRobot::resolution << "\n";
     for (int i = 0; i < num_edges; i++) {
         auto& edge = vamp_edges_vec[i];
         for (int j = 0; j < num_envs; j++) {
@@ -1112,7 +1112,7 @@ int main(int argc, char* argv[]) {
     std::string robot_name = "panda";
     std::string graph_file_path = "graph.dot";
     std::string scene_file_path = "scene.txt";
-    int resolution = 32;
+    int resolution = 31;
     if (argc == 4) {
         robot_name = argv[1];
         graph_file_path = argv[2];
