@@ -1,0 +1,17 @@
+name: batch-cc
+channels:
+  - conda-forge
+  - nvidia
+dependencies:
+  - boost
+  - boost-cpp
+  - clang
+  - clangxx
+  - cuda-cudart-dev
+  - cuda-nvcc
+  - cuda-toolkit
+  - eigen
+  - libstdcxx-ng
+  - lld
+  - llvm-tools
+  - python

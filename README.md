@@ -1,5 +1,7 @@
 To build:
 ```
+micromamba create -f environment.yaml
+micromamba activate batch-cc
 cmake -B build
 cmake --build build
 ```

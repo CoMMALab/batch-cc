@@ -3,7 +3,7 @@
 #include <array>
 #include <iostream>
 #include <cuda_runtime.h>
-#include <curand_kernel.h>
+// #include <curand_kernel.h>
 
 
 namespace ppln::robots {

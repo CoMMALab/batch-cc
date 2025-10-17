@@ -257,67 +257,6 @@ inline void cudaAssert(cudaError_t code, const char *file, int line) {
     }
 }
 
-inline void printCUDADeviceInfo() {
-    int deviceCount;
-    cudaError_t error = cudaGetDeviceCount(&deviceCount);
-    
-    if (error != cudaSuccess) {
-        std::cerr << "Error getting device count: " << cudaGetErrorString(error) << std::endl;
-        return;
-    }
-    
-    std::cout << "Found " << deviceCount << " CUDA device(s)\n\n";
-    
-    for (int device = 0; device < deviceCount; ++device) {
-        cudaDeviceProp prop;
-        error = cudaGetDeviceProperties(&prop, device);
-        
-        if (error != cudaSuccess) {
-            std::cerr << "Error getting device properties: " << cudaGetErrorString(error) << std::endl;
-            continue;
-        }
-        
-        std::cout << "Device " << device << ": " << prop.name << "\n";
-        std::cout << "============================================\n";
-        std::cout << "Compute Capability: " << prop.major << "." << prop.minor << "\n";
-        
-        // Memory Information
-        std::cout << "Total Global Memory: " << prop.totalGlobalMem / (1024.0 * 1024.0) << " MB\n";
-        std::cout << "Total Constant Memory: " << prop.totalConstMem / 1024.0 << " KB\n";
-        std::cout << "Shared Memory Per Block: " << prop.sharedMemPerBlock / 1024.0 << " KB\n";
-        std::cout << "L2 Cache Size: " << prop.l2CacheSize / 1024.0 << " KB\n";
-        
-        // Thread Information
-        std::cout << "Max Threads Per Block: " << prop.maxThreadsPerBlock << "\n";
-        std::cout << "Max Threads Per Multiprocessor: " << prop.maxThreadsPerMultiProcessor << "\n";
-        std::cout << "Number of Multiprocessors: " << prop.multiProcessorCount << "\n";
-        std::cout << "Warp Size: " << prop.warpSize << "\n";
-        
-        // Block Dimensions
-        std::cout << "Max Block Dimensions: " 
-                << prop.maxThreadsDim[0] << " x "
-                << prop.maxThreadsDim[1] << " x "
-                << prop.maxThreadsDim[2] << "\n";
-        
-        // Grid Dimensions
-        std::cout << "Max Grid Dimensions: "
-                << prop.maxGridSize[0] << " x "
-                << prop.maxGridSize[1] << " x "
-                << prop.maxGridSize[2] << "\n";
-        
-        // Memory Clock and Bus Width
-        std::cout << "Memory Clock Rate: " << prop.memoryClockRate / 1000.0 << " MHz\n";
-        std::cout << "Memory Bus Width: " << prop.memoryBusWidth << " bits\n";
-        
-        // Additional Features
-        std::cout << "Unified Addressing: " << (prop.unifiedAddressing ? "Yes" : "No") << "\n";
-        std::cout << "Concurrent Kernels: " << (prop.concurrentKernels ? "Yes" : "No") << "\n";
-        std::cout << "ECC Enabled: " << (prop.ECCEnabled ? "Yes" : "No") << "\n";
-        
-        std::cout << "\n";
-    }
-}
-
 
 /* Collision checking backend implementations for different robots */
 namespace ppln::collision {

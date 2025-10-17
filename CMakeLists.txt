@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.16...3.22)
 
-find_program(CLANGPP "clang++")
-set(CMAKE_CXX_COMPILER ${CLANGPP} CACHE STRING "C++ compiler" FORCE)
+# find_program(CLANGPP "clang++")
+# set(CMAKE_CXX_COMPILER ${CLANGPP} CACHE STRING "C++ compiler" FORCE)
+# find_program(CLANG "clang")
+# set(CMAKE_C_COMPILER ${CLANG} CACHE STRING "C compiler" FORCE)
 
 include(CMakeFindDependencyMacro)
 
@@ -15,11 +17,11 @@ project (
     LANGUAGES CXX CUDA
 )
 
-set(CMAKE_CUDA_SEPARABLE_COMPILATION OFF)
+set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CUDA_ARCHITECTURES 86)
+set(CMAKE_CUDA_ARCHITECTURES 89)
 
 # Enable CUDA debugging
 # set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -G -g")
@@ -82,6 +84,8 @@ target_link_libraries(batch_cc
 )
 
 ### batch validate cc
+# Set the language property for the C++ file to be compiled with CUDA support
+# set_source_files_properties(scripts/batch_cc_validate.cpp PROPERTIES LANGUAGE CUDA)
 add_executable(batch_cc_validate
     scripts/batch_cc_validate.cpp
     src/batch_cc.cu
