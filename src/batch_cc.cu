@@ -80,7 +80,9 @@ namespace batch_cc {
         constexpr auto dim = Robot::dimension;
         const int tid = threadIdx.x;
         const int bid = blockIdx.x;
-        const int bdim = blockDim.x - 1;
+        const int bdim = (blockDim.x / 4) - 1;
+        const int batch_idx = tid / 4;
+        const int col_idx = tid % 4;
         // each block handles one (edge, environment) pair
         const int env_idx = bid % num_envs;
         const int edge_idx = bid / num_envs;
@@ -119,7 +121,7 @@ namespace batch_cc {
         __syncthreads();
         # pragma unroll
         for (int j = 0; j < dim; j++) {
-            config[j] = edge_start[j] + delta[j] * (tid * n);
+            config[j] = edge_start[j] + delta[j] * (batch_idx * n);
         }
         __syncthreads();
         for (int i = 0; i < n; i++) {
@@ -127,13 +129,13 @@ namespace batch_cc {
             
             // cc_result = __any_sync(0xffffffff, config_in_collision);
             ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T, &local_cc_result);
-            if (env_idx == 15 && edge_idx == 1 && tid == 0) {
-                printf("Checking config: %f %f %f %f %f %f %f\nin_collision=%d\n", config[0], config[1], config[2], config[3], config[4], config[5], config[6], local_cc_result?1:0);
-                // print sphere_pos
-                // for (int sphere_idx = 0; sphere_idx < PANDA_SPHERE_COUNT; sphere_idx++) {
-                //     index = sphere_idx * B
-                // }
-            }
+            // if (env_idx == 15 && edge_idx == 1 && tid == 0) {
+            //     printf("Checking config: %f %f %f %f %f %f %f\nin_collision=%d\n", config[0], config[1], config[2], config[3], config[4], config[5], config[6], local_cc_result?1:0);
+            //     // print sphere_pos
+            //     // for (int sphere_idx = 0; sphere_idx < PANDA_SPHERE_COUNT; sphere_idx++) {
+            //     //     index = sphere_idx * B
+            //     // }
+            // }
             if (local_cc_result) break;
             # pragma unroll
             for (int j = 0; j < dim; j++) {

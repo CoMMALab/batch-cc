@@ -5,3 +5,4 @@ graph.dot*
 *.png
 *.zip
 temp*
+*.ncu-rep
