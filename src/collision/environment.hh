@@ -11,23 +11,23 @@ namespace ppln::collision
     template <typename DataT>
     struct Environment
     {
-        Sphere<DataT> *spheres;
-        unsigned int num_spheres;
+        Sphere<DataT> *spheres = nullptr;
+        unsigned int num_spheres = 0;
 
-        Capsule<DataT> *capsules;
-        unsigned int num_capsules;
+        Capsule<DataT> *capsules = nullptr;
+        unsigned int num_capsules = 0;
 
-        Capsule<DataT> *z_aligned_capsules;
-        unsigned int num_z_aligned_capsules;
+        Capsule<DataT> *z_aligned_capsules = nullptr;
+        unsigned int num_z_aligned_capsules = 0;
 
-        Cylinder<DataT> *cylinders;
-        unsigned int num_cylinders;
+        Cylinder<DataT> *cylinders = nullptr;
+        unsigned int num_cylinders = 0;
 
-        Cuboid<DataT> *cuboids;
-        unsigned int num_cuboids;
+        Cuboid<DataT> *cuboids = nullptr;
+        unsigned int num_cuboids = 0;
 
-        Cuboid<DataT> *z_aligned_cuboids;
-        unsigned int num_z_aligned_cuboids;
+        Cuboid<DataT> *z_aligned_cuboids = nullptr;
+        unsigned int num_z_aligned_cuboids = 0;
 
         // HeightField<DataT> *heightfields;
         // unsigned int num_heightfields;
