@@ -9,7 +9,7 @@ namespace ppln::collision {
     #define X_ROT 3
     #define Y_ROT 4
     #define Z_ROT 5
-    #define BATCH_SIZE 32
+    #define BATCH_SIZE 16
 
     __device__ __constant__ float4 panda_spheres_array[59] = {
         { 0.0f, 0.0f, 0.05f, 0.08f },

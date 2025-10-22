@@ -32,7 +32,7 @@ Multi environment batch collision checker.
     }                                                                 \
 } while (0)
 
-
+#define G_BATCH_SIZE 16
 namespace batch_cc {
 
     
@@ -87,10 +87,10 @@ namespace batch_cc {
         const int env_idx = bid % num_envs;
         const int edge_idx = bid / num_envs;
 
-        __align__(16) __shared__ volatile float sphere_pos[6000]; // ~assuming max 60 spheres with granularity 32, each has x y z coordinates
-        __align__(16) __shared__ volatile float sphere_pos_approx[1000]; // ~assuming 10 spheres with granularity 32, each has x y z coordinates
-        __align__(16) __shared__ volatile int link_CC[640]; //assuming max granularity 32, max number of links 20
-        __align__(16) __shared__ float T[32 * 1 * 16]; // 32 robots x 1x4x4 transform matrix
+        __align__(16) __shared__ volatile float sphere_pos[60 * G_BATCH_SIZE * 3]; // ~assuming max 60 spheres with granularity 32, each has x y z coordinates
+        __align__(16) __shared__ volatile float sphere_pos_approx[10 * G_BATCH_SIZE * 3]; // ~assuming 10 spheres with granularity 32, each has x y z coordinates
+        __align__(16) __shared__ volatile int link_CC[G_BATCH_SIZE * 20]; //assuming max granularity 32, max number of links 20
+        __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16]; // 32 robots x 1x4x4 transform matrix
 
         if (env_idx >= num_envs || edge_idx >= num_edges) {
             return;
@@ -116,6 +116,9 @@ namespace batch_cc {
         }
         __syncthreads();
         if (tid < dim) {
+            // float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
+            // n = max(ceil((dist / (float) bdim) * resolution), 1.0f);
+            // local_cc_result = 0;
             delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (bdim * n);
         }
         __syncthreads();
@@ -123,14 +126,8 @@ namespace batch_cc {
         for (int j = 0; j < dim; j++) {
             config[j] = edge_start[j] + delta[j] * (batch_idx * n);
         }
-        __syncthreads();
-        for (int i = 0; i < n; i++) {
-            // bool config_in_collision = not ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx);
-            
-            // cc_result = __any_sync(0xffffffff, config_in_collision);
+        for (int i = 0; i < n; i++) {            
             ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T, &local_cc_result);
-            // ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T, &local_cc_result);
-            
             if (local_cc_result) break;
             # pragma unroll
             for (int j = 0; j < dim; j++) {
@@ -269,7 +266,7 @@ namespace batch_cc {
         int num_envs = h_envs.size();
         int num_edges = edges.size();
         int num_blocks = num_envs * num_edges;
-        int num_threads = 32 * 4;
+        int num_threads = G_BATCH_SIZE * 4;
         ppln::collision::Environment<float>** d_envs_ptr;
         cudaMalloc(&d_envs_ptr, sizeof(ppln::collision::Environment<float>*) * num_envs);
         cudaMemcpy(d_envs_ptr, d_envs.data(), sizeof(ppln::collision::Environment<float>*) * num_envs, cudaMemcpyHostToDevice);

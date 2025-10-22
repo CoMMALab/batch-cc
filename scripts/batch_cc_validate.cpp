@@ -1002,7 +1002,7 @@ void print_environment_as_python_dict(const Environment<float>& env, int env_ind
 }
 
 template<typename Robot, typename VampRobot>
-void run_test(std::string graph_file_path, std::string scene_file_path, int resolution, std::string robot_name) {
+void run_test(std::string graph_file_path, std::string scene_file_path, int resolution, std::string robot_name, bool run_vamp) {
     // std::cout << "Running test for robot: " << robot_name << "\n";
     // std::cout << "Creating environments from scene file: " << scene_file_path << "\n";
     std::vector<Environment<float>> h_envs = setup_gpu_environments(scene_file_path);
@@ -1067,43 +1067,43 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
     auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed);
     std::cout << "end to end time: " << ns.count() / 1'000'000'000.0 << " s\n";
 
-    vamp_batch_cc<VampRobot>(vamp_envs, vamp_edges_vec, resolution, vamp_results);
+    if (run_vamp) {
+        vamp_batch_cc<VampRobot>(vamp_envs, vamp_edges_vec, resolution, vamp_results);
 
-    // print_environment_as_python_dict(vamp_envs_input[0], 0);
-    // print_environment_as_python_dict(h_envs[0], 0);
-    int fp = 0;
-    int fn = 0;
-    bool printed_discrepancy = false;
-    for (int i = 0; i < num_edges; i++) {
-        for (int j = 0; j < num_envs; j++) {
-            // if (i != 0 || j != 102) continue;
-            bool gpu_result = results[i * num_envs + j];
-            bool vamp_result = vamp_results[i * num_envs + j];
-            if (!gpu_result && vamp_result & !printed_discrepancy) {
-                printf("Discrepancy at env %d, edge %d: gpu-{%d} vamp-{%d}\n", j, i, gpu_result, vamp_result);
-                for (int k = 0; k < Robot::dimension; k++) {
-                    std::cout << edges_vec[i][0][k] << " ";
+        // print_environment_as_python_dict(vamp_envs_input[0], 0);
+        // print_environment_as_python_dict(h_envs[0], 0);
+        int fp = 0;
+        int fn = 0;
+        bool printed_discrepancy = false;
+        for (int i = 0; i < num_edges; i++) {
+            for (int j = 0; j < num_envs; j++) {
+                // if (i != 0 || j != 102) continue;
+                bool gpu_result = results[i * num_envs + j];
+                bool vamp_result = vamp_results[i * num_envs + j];
+                if (!gpu_result && vamp_result & !printed_discrepancy) {
+                    printf("Discrepancy at env %d, edge %d: gpu-{%d} vamp-{%d}\n", j, i, gpu_result, vamp_result);
+                    for (int k = 0; k < Robot::dimension; k++) {
+                        std::cout << edges_vec[i][0][k] << " ";
+                    }
+                    std::cout << std::endl;
+                    for (int k = 0; k < Robot::dimension; k++) {
+                        std::cout << edges_vec[i][1][k] << " ";
+                    }
+                    std::cout << "\n";
+                    print_environment_as_python_dict(vamp_envs_input[j], j);
+                    printf("\n");
+                    print_environment_as_python_dict(h_envs[j], j);
+                    printed_discrepancy = true;
                 }
-                std::cout << std::endl;
-                for (int k = 0; k < Robot::dimension; k++) {
-                    std::cout << edges_vec[i][1][k] << " ";
-                }
-                std::cout << "\n";
-                print_environment_as_python_dict(vamp_envs_input[j], j);
-                printf("\n");
-                print_environment_as_python_dict(h_envs[j], j);
-                printed_discrepancy = true;
+                if (gpu_result && !vamp_result) fp++;
+                if (!gpu_result && vamp_result) fn++;
+                // printf("%d", gpu_result);
             }
-            if (gpu_result && !vamp_result) fp++;
-            if (!gpu_result && vamp_result) fn++;
-            // printf("%d", gpu_result);
+            // printf("\n");
         }
-        // printf("\n");
+        // std::cout << "All correct!\n";
+        printf("Errors, fp, fn: %d, %d, %d\n", fp + fn, fp, fn);
     }
-    // std::cout << "All correct!\n";
-    printf("Errors, fp, fn: %d, %d, %d\n", fp + fn, fp, fn);
-
-    
 }
 
 
@@ -1112,18 +1112,25 @@ int main(int argc, char* argv[]) {
     std::string robot_name = "panda";
     std::string graph_file_path = "graph.dot";
     std::string scene_file_path = "scene.txt";
+    bool run_vamp = true;
     int resolution = 32;
     if (argc == 4) {
         robot_name = argv[1];
         graph_file_path = argv[2];
         scene_file_path = argv[3];
     }
+    else if (argc == 5) {
+        robot_name = argv[1];
+        graph_file_path = argv[2];
+        scene_file_path = argv[3];
+        run_vamp = std::string(argv[4]) == "true";
+    }
     else {
-        std::cout << "Usage: ./batch_cc <robot_name> <graph.dot> <scene.txt>\n";
+        std::cout << "Usage: ./batch_cc <robot_name> <graph.dot> <scene.txt> <run_vamp=true/false>\n";
         return 1;
     }
     if (robot_name == "panda") {
-        run_test<robots::Panda, vamp::robots::Panda>(graph_file_path, scene_file_path, resolution, robot_name);
+        run_test<robots::Panda, vamp::robots::Panda>(graph_file_path, scene_file_path, resolution, robot_name, run_vamp);
     }
     // else if (robot_name == "fetch") {
     //     run_test<robots::Fetch, vamp::robots::Fetch>(graph_file_path, scene_file_path, resolution, robot_name);
