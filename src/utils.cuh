@@ -644,7 +644,7 @@ namespace ppln::collision {
         unsigned int *cc_result
     ) {
         // reset link_CC
-        for (int i = tid; i < 640; i += blockDim.x)
+        for (int i = tid; i < 32 * 20; i += blockDim.x)
         {
             link_CC[i] = 0;
         }
@@ -700,5 +700,39 @@ namespace ppln::collision {
                 __syncthreads();
             }
         }
-    }    
+    }
+
+    template <typename Robot>
+    __device__ __forceinline__ void fkcc_detailed_only(
+        const float *config,
+        ppln::collision::Environment<float> *env,
+        const int tid,
+        const int env_idx,
+        const int edge_idx,
+        volatile float *sphere_pos,
+        volatile float *sphere_pos_approx,
+        volatile int *link_CC,
+        float *T,
+        unsigned int *cc_result
+    ) {
+        // reset link_CC
+        for (int i = tid; i < 32 * 20; i += blockDim.x)
+        {
+            link_CC[i] = 1;
+        }
+        __syncthreads();
+
+        ppln::collision::fk<Robot>(config, sphere_pos, T, tid);
+        __syncthreads();
+
+        bool detailed_env_collision =
+            not ppln::collision::env_collision_check<Robot>(sphere_pos, link_CC, env, tid);
+        atomicOr(cc_result, detailed_env_collision ? 1u : 0u);
+        __syncthreads();
+
+        bool detailed_self_collision =
+            not ppln::collision::self_collision_check<Robot>(sphere_pos, link_CC, tid);
+        atomicOr(cc_result, detailed_self_collision ? 1u : 0u);
+        __syncthreads();
+    }
 }

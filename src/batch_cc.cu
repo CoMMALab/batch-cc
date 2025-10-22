@@ -129,13 +129,8 @@ namespace batch_cc {
             
             // cc_result = __any_sync(0xffffffff, config_in_collision);
             ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T, &local_cc_result);
-            // if (env_idx == 15 && edge_idx == 1 && tid == 0) {
-            //     printf("Checking config: %f %f %f %f %f %f %f\nin_collision=%d\n", config[0], config[1], config[2], config[3], config[4], config[5], config[6], local_cc_result?1:0);
-            //     // print sphere_pos
-            //     // for (int sphere_idx = 0; sphere_idx < PANDA_SPHERE_COUNT; sphere_idx++) {
-            //     //     index = sphere_idx * B
-            //     // }
-            // }
+            // ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T, &local_cc_result);
+            
             if (local_cc_result) break;
             # pragma unroll
             for (int j = 0; j < dim; j++) {
@@ -274,7 +269,7 @@ namespace batch_cc {
         int num_envs = h_envs.size();
         int num_edges = edges.size();
         int num_blocks = num_envs * num_edges;
-        int num_threads = resolution * 4;
+        int num_threads = 32 * 4;
         ppln::collision::Environment<float>** d_envs_ptr;
         cudaMalloc(&d_envs_ptr, sizeof(ppln::collision::Environment<float>*) * num_envs);
         cudaMemcpy(d_envs_ptr, d_envs.data(), sizeof(ppln::collision::Environment<float>*) * num_envs, cudaMemcpyHostToDevice);

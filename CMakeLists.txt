@@ -25,6 +25,7 @@ set(CMAKE_CUDA_ARCHITECTURES 89)
 
 # Enable CUDA debugging
 # set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -G -g")
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -lineinfo")
 
 
 # set(vamp_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vamp/install/share/cmake/vamp)
