@@ -187,6 +187,9 @@ namespace ppln::collision {
         7
     };
 
+
+    __device__ __constant__ int panda_sphere_cnt_per_joint[] = {1, 4, 4, 4, 4, 12, 3, 27};
+
     __device__ __constant__ int panda_joint_types[] = {
         3,
         5,
@@ -272,17 +275,28 @@ namespace ppln::collision {
                 }
             }
 
-            while (panda_sphere_to_joint[transformed_sphere_ind]==i) {
-                if (col_ind < 3) {
-                    // sphere transformed_sphere_ind, robot batch_ind (16 robots), coord col_ind
-                    sphere_pos[transformed_sphere_ind * BATCH_SIZE * 3 + batch_ind * 3 + col_ind] = 
-                        T_base[col_ind] * panda_spheres_array[transformed_sphere_ind].x +
-                        T_base[col_ind + M] * panda_spheres_array[transformed_sphere_ind].y +
-                        T_base[col_ind + M*2] * panda_spheres_array[transformed_sphere_ind].z +
-                        T_base[col_ind + M*3];
+
+            // while (panda_sphere_to_joint[transformed_sphere_ind]==i) {
+            //     if (col_ind < 3) {
+            //         // sphere transformed_sphere_ind, robot batch_ind (16 robots), coord col_ind
+            //         sphere_pos[transformed_sphere_ind * BATCH_SIZE * 3 + batch_ind * 3 + col_ind] = 
+            //             T_base[col_ind] * panda_spheres_array[transformed_sphere_ind].x +
+            //             T_base[col_ind + M] * panda_spheres_array[transformed_sphere_ind].y +
+            //             T_base[col_ind + M*2] * panda_spheres_array[transformed_sphere_ind].z +
+            //             T_base[col_ind + M*3];
+            //     }
+            //     transformed_sphere_ind++;
+            // }
+            for (int j = transformed_sphere_ind + col_ind; j < transformed_sphere_ind + panda_sphere_cnt_per_joint[i]; j += 4) {
+                for (int c = 0; c < 3; c++) {
+                    sphere_pos[j * BATCH_SIZE * 3 + batch_ind * 3 + c] = 
+                        T_base[c] * panda_spheres_array[j].x +
+                        T_base[c + M] * panda_spheres_array[j].y +
+                        T_base[c + M*2] * panda_spheres_array[j].z +
+                        T_base[c + M*3];
                 }
-                transformed_sphere_ind++;
             }
+            transformed_sphere_ind += panda_sphere_cnt_per_joint[i];
         }
     }
 
@@ -458,6 +472,8 @@ __device__ __constant__ int panda_approx_sphere_to_joint[] = {
     7
 };
 
+__device__ __constant__ int panda_approx_sphere_cnt_per_joint[] = {1, 1, 1, 1, 1, 1, 1, 4};
+
 __device__ __constant__ int panda_approx_joint_types[] = {
     3,
     5,
@@ -524,17 +540,28 @@ __device__ void fk_approx<ppln::robots::Panda>(
             }
         }
 
-        while (panda_approx_sphere_to_joint[transformed_sphere_ind] == i) {
-            if (col_ind < 3) {
-                // sphere transformed_sphere_ind, robot batch_ind (16 robots), coord col_ind
-                sphere_pos_approx[transformed_sphere_ind * BATCH_SIZE * 3 + batch_ind * 3 + col_ind] = 
-                    T_base[col_ind] * panda_approx_spheres_array[transformed_sphere_ind].x +
-                    T_base[col_ind + M] * panda_approx_spheres_array[transformed_sphere_ind].y +
-                    T_base[col_ind + M*2] * panda_approx_spheres_array[transformed_sphere_ind].z +
-                    T_base[col_ind + M*3];
+        // while (panda_approx_sphere_to_joint[transformed_sphere_ind] == i) {
+        //     if (col_ind < 3) {
+        //         // sphere transformed_sphere_ind, robot batch_ind (16 robots), coord col_ind
+        //         sphere_pos_approx[transformed_sphere_ind * BATCH_SIZE * 3 + batch_ind * 3 + col_ind] = 
+        //             T_base[col_ind] * panda_approx_spheres_array[transformed_sphere_ind].x +
+        //             T_base[col_ind + M] * panda_approx_spheres_array[transformed_sphere_ind].y +
+        //             T_base[col_ind + M*2] * panda_approx_spheres_array[transformed_sphere_ind].z +
+        //             T_base[col_ind + M*3];
+        //     }
+        //     transformed_sphere_ind++;
+        // }
+
+        for (int j = transformed_sphere_ind + col_ind; j < transformed_sphere_ind + panda_approx_sphere_cnt_per_joint[i]; j += 4) {
+            for (int c = 0; c < 3; c++) {
+                sphere_pos_approx[j * BATCH_SIZE * 3 + batch_ind * 3 + c] = 
+                    T_base[c] * panda_approx_spheres_array[j].x +
+                    T_base[c + M] * panda_approx_spheres_array[j].y +
+                    T_base[c + M*2] * panda_approx_spheres_array[j].z +
+                    T_base[c + M*3];
             }
-            transformed_sphere_ind++;
         }
+        transformed_sphere_ind += panda_approx_sphere_cnt_per_joint[i];
     }
 }
 
