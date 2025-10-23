@@ -308,7 +308,7 @@ namespace ppln::collision {
         bool has_collision = false;
 
         for (int i = thread_ind; i < PANDA_SELF_CC_RANGE_COUNT; i += 4) {
-            if (warp_any_active_mask(has_collision)) return false;
+            // if (warp_any_active_mask(has_collision)) return false;
             int sphere_1_ind = panda_self_cc_ranges[i][0];
             if (joint_in_collision[20*batch_ind + panda_sphere_to_joint[sphere_1_ind]] == 0) continue;
             float sphere_1[3] = {
@@ -356,7 +356,7 @@ namespace ppln::collision {
                 has_collision=true;
                 //return false;
             } 
-            if (warp_any_full_mask(has_collision)) return false;
+            // if (warp_any_active_mask(has_collision)) return false;
         }
 
         int i=thread_ind;

@@ -128,6 +128,11 @@ namespace batch_cc {
         }
         for (int i = 0; i < n; i++) {            
             ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T, &local_cc_result);
+            // bool collision = ppln::collision::fkcc_tile<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T);
+            // if (col_idx == 0) {
+            //     atomicOr(&local_cc_result, collision ? 1u : 0u);
+            // }
+            // __syncthreads();
             if (local_cc_result) break;
             # pragma unroll
             for (int j = 0; j < dim; j++) {
