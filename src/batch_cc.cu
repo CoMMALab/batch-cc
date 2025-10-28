@@ -18,7 +18,7 @@ Multi environment batch collision checker.
 #include "src/pRRTC_settings.hh"
 #include "src/utils.cuh"
 #include "batch_cc.hh"
-#include "robots/panda.cuh"
+#include "robots/panda_latest.cuh"
 
 
 #include <float.h>

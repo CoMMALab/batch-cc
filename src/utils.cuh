@@ -720,7 +720,7 @@ namespace ppln::collision {
         // reset link_CC
         for (int i = tid; i < G_BATCH_SIZE * 20; i += blockDim.x)
         {
-            link_CC[i] = 0; // 0 = no approx collision, 1 = needs detailed env check, 2 or greater = needs detailed self check
+            link_CC[i] = 0; // 00 = no detailed check needed, 01 = detailed env check needed, 10 = detailed self check needed, 11 = detailed env and self check needed
         }
         __syncthreads();
     
