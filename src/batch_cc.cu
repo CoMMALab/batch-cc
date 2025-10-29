@@ -18,7 +18,7 @@ Multi environment batch collision checker.
 #include "src/pRRTC_settings.hh"
 #include "src/utils.cuh"
 #include "batch_cc.hh"
-#include "robots/panda_latest.cuh"
+#include "robots/panda.cuh"
 
 
 #include <float.h>
@@ -79,7 +79,7 @@ namespace batch_cc {
         constexpr auto dim = Robot::dimension;
         const int tid = threadIdx.x;
         const int bid = blockIdx.x;
-        const int bdim = (blockDim.x / 4) - 1;
+        const int bdim = (blockDim.x / 4);
         const int batch_idx = tid / 4;
         const int col_idx = tid % 4;
         // each block handles one (edge, environment) pair
@@ -112,6 +112,7 @@ namespace batch_cc {
             float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
             n = max(ceil((dist / (float) bdim) * resolution), 1.0f);
             local_cc_result = 0;
+            // printf("n: %d, dist: %f\n", n, dist);
         }
         __syncthreads();
         if (tid < dim) {
@@ -121,6 +122,7 @@ namespace batch_cc {
             delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (bdim * n);
         }
         __syncthreads();
+
         # pragma unroll
         for (int j = 0; j < dim; j++) {
             config[j] = edge_start[j] + delta[j] * (batch_idx * n);
@@ -133,6 +135,14 @@ namespace batch_cc {
             for (int j = 0; j < dim; j++) {
                 config[j] += delta[j];
             }
+        }
+        // check end point
+        if (!local_cc_result) {
+            # pragma unroll
+            for (int j = 0; j < dim; j++) {
+                config[j] = edge_end[j];
+            }
+            ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result);
         }
         if (tid == 0) {
             cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? true : false;

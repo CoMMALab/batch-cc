@@ -638,7 +638,7 @@ void vamp_batch_cc(std::vector<EnvironmentVector>& vamp_envs, std::vector<std::a
             auto& env = vamp_envs[j];
             auto& start = edge[0];
             auto& end = edge[1];
-            bool good = (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, end, env)) && (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, start, env)) &&  (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(end, end, env));
+            bool good = (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, end, env)) && (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, start, env));
             results[i * num_envs + j] = not good;
         }
         // if (i == 20) break;
