@@ -625,23 +625,19 @@ Graph read_graph_from_file(const std::string& file_path)
 
 
 template<typename VampRobot>
-void vamp_batch_cc(std::vector<EnvironmentVector>& vamp_envs, std::vector<std::array<typename VampRobot::Configuration, 2>>& vamp_edges_vec, int resolution, std::vector<bool>& results) {
+void vamp_batch_cc(std::vector<EnvironmentVector>& vamp_envs, std::vector<std::array<typename VampRobot::Configuration, 2>>& vamp_edges_vec, int resolution, std::vector<uint8_t>& results) {
     std::size_t num_edges = vamp_edges_vec.size();
     std::size_t num_envs = vamp_envs.size();
     std::cout << "vamp resolution: " << VampRobot::resolution << "\n";
     for (int i = 0; i < num_edges; i++) {
         auto& edge = vamp_edges_vec[i];
         for (int j = 0; j < num_envs; j++) {
-            // if (i != 0 || j != 102) continue;
-            // printf("Environment %d, num_spheres: %d, num_cuboids: %d, num_cylinders: %d\n", j, vamp_envs[j].spheres.size(), vamp_envs[j].cuboids.size(), vamp_envs[j].cylinders.size());
-            // if (j == 20) break;
             auto& env = vamp_envs[j];
             auto& start = edge[0];
             auto& end = edge[1];
             bool good = (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, end, env)) && (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, start, env));
-            results[i * num_envs + j] = not good;
+            results[i * num_envs + j] = not good ? 1 : 0;
         }
-        // if (i == 20) break;
     }
 }
 
@@ -1058,8 +1054,8 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
     std::cout << "Number of edges: " << num_edges << "\n";
     std::cout << "Number of environments: " << num_envs << "\n";
     
-    std::vector<bool> results(num_edges * num_envs, false);
-    std::vector<bool> vamp_results(num_edges * num_envs, false);
+    std::vector<uint8_t> results(num_edges * num_envs, 0);
+    std::vector<uint8_t> vamp_results(num_edges * num_envs, 0);
     auto start = std::chrono::high_resolution_clock::now();
     batch_cc::batch_cc<Robot>(h_envs, edges_vec, resolution, results);
     auto end = std::chrono::high_resolution_clock::now();

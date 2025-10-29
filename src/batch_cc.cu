@@ -73,7 +73,7 @@ namespace batch_cc {
 
     template <typename Robot>
     __global__ void
-    batch_cc_kernel(ppln::collision::Environment<float>** envs, float* edges, int num_envs, int num_edges, bool *cc_result, int resolution)
+    batch_cc_kernel(ppln::collision::Environment<float>* envs, float* edges, int num_envs, int num_edges, uint8_t *cc_result, int resolution)
     {
        
         constexpr auto dim = Robot::dimension;
@@ -94,7 +94,7 @@ namespace batch_cc {
         if (env_idx >= num_envs || edge_idx >= num_edges) {
             return;
         }
-        ppln::collision::Environment<float>* env = envs[env_idx];
+        ppln::collision::Environment<float>* env = &envs[env_idx];
         __shared__ float edge_start[dim];
         __shared__ float edge_end[dim];
         __shared__ float delta[dim];
@@ -145,146 +145,99 @@ namespace batch_cc {
             ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result);
         }
         if (tid == 0) {
-            cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? true : false;
+            cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? 1 : 0;
         }
     }
 
-    inline void setup_environment_on_device(EnvF *&d_env,
-        const EnvF &h_env,
-        std::vector<void*> &d_blobs)
-    {
-        // static_assert(std::is_trivially_copyable_v<EnvF>,
-        // "Environment<T> must be POD/trivially copyable for raw cudaMemcpy.");
-
-
-        ensure_ptr_count_consistent(h_env);
-
-        // Allocate device struct
-        CUDA_CHECK(cudaMalloc(&d_env, sizeof(EnvF)));
-
-        const size_t n_s   = h_env.num_spheres;
-        const size_t n_c   = h_env.num_capsules;
-        const size_t n_cz  = h_env.num_z_aligned_capsules;
-        const size_t n_cyl = h_env.num_cylinders;
-        const size_t n_cb  = h_env.num_cuboids;
-        const size_t n_cbz = h_env.num_z_aligned_cuboids;
-
-        const size_t sz_s   = n_s   * sizeof(Sphere<float>);
-        const size_t sz_c   = n_c   * sizeof(Capsule<float>);
-        const size_t sz_cz  = n_cz  * sizeof(Capsule<float>);
-        const size_t sz_cyl = n_cyl * sizeof(Cylinder<float>);
-        const size_t sz_cb  = n_cb  * sizeof(Cuboid<float>);
-        const size_t sz_cbz = n_cbz * sizeof(Cuboid<float>);
-
-        // Compute offsets
-        size_t off_s    = 0;
-        size_t off_c    = off_s    + sz_s;
-        size_t off_cz   = off_c    + sz_c;
-        size_t off_cyl  = off_cz   + sz_cz;
-        size_t off_cb   = off_cyl  + sz_cyl;
-        size_t off_cbz  = off_cb   + sz_cb;
-        const size_t blob_size = off_cbz + sz_cbz;
-
-
-        // Allocate device blob
-        void* d_blob = nullptr;
-        if (blob_size > 0) {
-        CUDA_CHECK(cudaMalloc(&d_blob, blob_size));
+    void setup_environments_on_device_bulk(std::vector<ppln::collision::Environment<float>>& h_envs, EnvF*& d_envs, void*& d_blob) {
+        // create one blob that holds all the environments
+        // find blob size by iterating over all environments and adding up the sizes of the blobs
+        size_t blob_size = 0;
+        std::vector<size_t> env_blob_offsets(h_envs.size());
+        std::vector<EnvF> h_shadow_envs(h_envs.size());
+        for (size_t i = 0; i < h_envs.size(); ++i) {
+            env_blob_offsets[i] = blob_size;
+            blob_size += h_envs[i].num_spheres * sizeof(Sphere<float>) +
+                         h_envs[i].num_capsules * sizeof(Capsule<float>) +
+                         h_envs[i].num_z_aligned_capsules * sizeof(Capsule<float>) +
+                         h_envs[i].num_cylinders * sizeof(Cylinder<float>) +
+                         h_envs[i].num_cuboids * sizeof(Cuboid<float>) +
+                         h_envs[i].num_z_aligned_cuboids * sizeof(Cuboid<float>);
+            h_shadow_envs[i].owns_memory = false;
         }
 
-        // Prepare host shadow with device pointers
-        EnvF h_shadow{};
-        h_shadow.num_spheres            = n_s;
-        h_shadow.num_capsules           = n_c;
-        h_shadow.num_z_aligned_capsules = n_cz;
-        h_shadow.num_cylinders          = n_cyl;
-        h_shadow.num_cuboids            = n_cb;
-        h_shadow.num_z_aligned_cuboids  = n_cbz;
-        h_shadow.owns_memory            = false; // This object doesn't own the device memory
 
-        char* base = static_cast<char*>(d_blob);
-        h_shadow.spheres            = (n_s   ? reinterpret_cast<Sphere<float>*>( base + off_s   ) : nullptr);
-        h_shadow.capsules           = (n_c   ? reinterpret_cast<Capsule<float>*>(base + off_c   ) : nullptr);
-        h_shadow.z_aligned_capsules = (n_cz  ? reinterpret_cast<Capsule<float>*>(base + off_cz  ) : nullptr);
-        h_shadow.cylinders          = (n_cyl ? reinterpret_cast<Cylinder<float>*>(base + off_cyl) : nullptr);
-        h_shadow.cuboids            = (n_cb  ? reinterpret_cast<Cuboid<float>*>( base + off_cb  ) : nullptr);
-        h_shadow.z_aligned_cuboids  = (n_cbz ? reinterpret_cast<Cuboid<float>*>( base + off_cbz ) : nullptr);
-
-
-        // Pack host primitives into a host blob
-        if (blob_size > 0) {
-        void* h_blob = nullptr;
-        cudaError_t pe = cudaMallocHost(&h_blob, blob_size);  // pinned
-        if (pe != cudaSuccess) {
-        // fallback to pageable to avoid segfault on memcpy to nullptr
-        h_blob = std::malloc(blob_size);
-        if (!h_blob) {
-        CUDA_CHECK(pe); // will throw with the original pinned error
-        }
-        }
-
-        char* p = static_cast<char*>(h_blob);
-
-        // NOTE: these memcpy read from host pointers in h_env; ensure they are valid
-        if (n_s)   { std::memcpy(p + off_s,   h_env.spheres,            sz_s); }
-        if (n_c)   { std::memcpy(p + off_c,   h_env.capsules,           sz_c); }
-        if (n_cz)  { std::memcpy(p + off_cz,  h_env.z_aligned_capsules, sz_cz); }
-        if (n_cyl) { std::memcpy(p + off_cyl, h_env.cylinders,          sz_cyl); }
-        if (n_cb)  { std::memcpy(p + off_cb,  h_env.cuboids,            sz_cb); }
-        if (n_cbz) { std::memcpy(p + off_cbz, h_env.z_aligned_cuboids,  sz_cbz); }
-
-        // Single bulk copy H2D
-        CUDA_CHECK(cudaMemcpy(d_blob, h_blob, blob_size, cudaMemcpyHostToDevice));
-
-        // Free host blob
-        if (pe == cudaSuccess) {
-        CUDA_CHECK(cudaFreeHost(h_blob));
-        } else {
-        std::free(h_blob);
-        }
+        void *h_blob = nullptr;
+        cudaMallocHost(&h_blob, blob_size);
+        cudaMalloc(&d_blob, blob_size);
+        char *h_base = static_cast<char*>(h_blob);
+        char *d_base = static_cast<char*>(d_blob);
+        size_t off = 0;
+        for (size_t i = 0; i < h_envs.size(); ++i) {
+            if (h_envs[i].num_spheres > 0) {
+                std::memcpy(h_base + off, h_envs[i].spheres, h_envs[i].num_spheres * sizeof(Sphere<float>));
+                h_shadow_envs[i].spheres = reinterpret_cast<Sphere<float>*>(d_base + off);
+                h_shadow_envs[i].num_spheres = h_envs[i].num_spheres;
+                off += h_envs[i].num_spheres * sizeof(Sphere<float>);
+            }
+            if (h_envs[i].num_capsules > 0) {
+                std::memcpy(h_base + off, h_envs[i].capsules, h_envs[i].num_capsules * sizeof(Capsule<float>));
+                h_shadow_envs[i].capsules = reinterpret_cast<Capsule<float>*>(d_base + off);
+                h_shadow_envs[i].num_capsules = h_envs[i].num_capsules;
+                off += h_envs[i].num_capsules * sizeof(Capsule<float>);
+            }
+            if (h_envs[i].num_z_aligned_capsules > 0) {
+                std::memcpy(h_base + off, h_envs[i].z_aligned_capsules, h_envs[i].num_z_aligned_capsules * sizeof(Capsule<float>));
+                h_shadow_envs[i].z_aligned_capsules = reinterpret_cast<Capsule<float>*>(d_base + off);
+                h_shadow_envs[i].num_z_aligned_capsules = h_envs[i].num_z_aligned_capsules;
+                off += h_envs[i].num_z_aligned_capsules * sizeof(Capsule<float>);
+            }
+            if (h_envs[i].num_cylinders > 0) {
+                std::memcpy(h_base + off, h_envs[i].cylinders, h_envs[i].num_cylinders * sizeof(Cylinder<float>));
+                h_shadow_envs[i].cylinders = reinterpret_cast<Cylinder<float>*>(d_base + off);
+                h_shadow_envs[i].num_cylinders = h_envs[i].num_cylinders;
+                off += h_envs[i].num_cylinders * sizeof(Cylinder<float>);
+            }
+            if (h_envs[i].num_cuboids > 0) {
+                std::memcpy(h_base + off, h_envs[i].cuboids, h_envs[i].num_cuboids * sizeof(Cuboid<float>));
+                h_shadow_envs[i].cuboids = reinterpret_cast<Cuboid<float>*>(d_base + off);
+                h_shadow_envs[i].num_cuboids = h_envs[i].num_cuboids;
+                off += h_envs[i].num_cuboids * sizeof(Cuboid<float>);
+            }
+            if (h_envs[i].num_z_aligned_cuboids > 0) {
+                std::memcpy(h_base + off, h_envs[i].z_aligned_cuboids, h_envs[i].num_z_aligned_cuboids * sizeof(Cuboid<float>));
+                h_shadow_envs[i].z_aligned_cuboids = reinterpret_cast<Cuboid<float>*>(d_base + off);
+                h_shadow_envs[i].num_z_aligned_cuboids = h_envs[i].num_z_aligned_cuboids;
+                off += h_envs[i].num_z_aligned_cuboids * sizeof(Cuboid<float>);
+            }
         }
 
-        d_blobs.push_back(d_blob);
-
-
-        // Copy the struct itself
-        CUDA_CHECK(cudaMemcpy(d_env, &h_shadow, sizeof(h_shadow), cudaMemcpyHostToDevice));
+        EnvF* d_env = nullptr;
+        cudaMalloc(&d_env, sizeof(EnvF) * h_envs.size());
+        cudaMemcpy(d_env, h_shadow_envs.data(), sizeof(EnvF) * h_envs.size(), cudaMemcpyHostToDevice);
+        cudaMemcpy(d_blob, h_blob, blob_size, cudaMemcpyHostToDevice);
+        cudaFreeHost(h_blob);
+        d_envs = d_env;
+        d_blob = d_blob;
     }
-
-    inline void cleanup_environment_on_device(EnvF *d_env, void* d_blob) {
-        if (d_blob) cudaFree(d_blob);
-        if (d_env)  cudaFree(d_env);
-    }
-
 
 
     template <typename Robot>
-    void batch_cc(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename Robot::Configuration, 2>>& edges, int resolution, std::vector<bool>& results) {
+    void batch_cc(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename Robot::Configuration, 2>>& edges, int resolution, std::vector<uint8_t>& results) {
         auto setup_start_time = std::chrono::steady_clock::now();
 
-        std::vector<EnvF*> d_envs;
-        d_envs.resize(h_envs.size(), nullptr);
-
-        std::vector<void*> d_blobs;
-        d_blobs.reserve(h_envs.size());
-
-        for (size_t i = 0; i < h_envs.size(); ++i) {
-            setup_environment_on_device(d_envs[i], h_envs[i], d_blobs);
-        }
-
+        EnvF* d_envs = nullptr;
+        void* d_blob = nullptr;
+        setup_environments_on_device_bulk(h_envs, d_envs, d_blob);
 
         int num_envs = h_envs.size();
         int num_edges = edges.size();
         int num_blocks = num_envs * num_edges;
         int num_threads = G_BATCH_SIZE * 4;
-        ppln::collision::Environment<float>** d_envs_ptr;
-        cudaMalloc(&d_envs_ptr, sizeof(ppln::collision::Environment<float>*) * num_envs);
-        cudaMemcpy(d_envs_ptr, d_envs.data(), sizeof(ppln::collision::Environment<float>*) * num_envs, cudaMemcpyHostToDevice);
         auto env_setup_ns = get_elapsed_nanoseconds(setup_start_time);
         std::cout << "Environments Setup time: " << env_setup_ns / 1'000'000'000.0 << " s" << std::endl;
-        bool *d_cc_result;
-        cudaMalloc(&d_cc_result, sizeof(bool) * num_envs * num_edges);
-        // cudaMemset(d_cc_result, 0, sizeof(bool) * num_envs * num_edges);
+        uint8_t *d_cc_result;
+        cudaMalloc(&d_cc_result, sizeof(uint8_t) * num_envs * num_edges);
 
         float *d_edges;
         size_t edges_size = edges.size() * Robot::dimension * 2 * sizeof(float);
@@ -295,7 +248,7 @@ namespace batch_cc {
         std::cout << "Setup time: " << setup_ns / 1'000'000'000.0 << " s" << std::endl;
         cudaCheckError(cudaGetLastError());
         auto kernel_start_time = std::chrono::steady_clock::now();
-        batch_cc_kernel<Robot><<<num_blocks, num_threads>>>(d_envs_ptr, d_edges, num_envs, num_edges, d_cc_result, resolution);
+        batch_cc_kernel<Robot><<<num_blocks, num_threads>>>(d_envs, d_edges, num_envs, num_edges, d_cc_result, resolution);
         cudaDeviceSynchronize();
         auto kernel_ns = get_elapsed_nanoseconds(kernel_start_time);
 
@@ -307,32 +260,18 @@ namespace batch_cc {
 
         // Create a temporary buffer for the results
         auto cleanup_start_time = std::chrono::steady_clock::now();
-        bool* h_cc_result = new bool[num_envs * num_edges];
-        cudaMemcpy(h_cc_result, d_cc_result, sizeof(bool) * num_envs * num_edges, cudaMemcpyDeviceToHost);
+        cudaMemcpy(results.data(), d_cc_result, sizeof(uint8_t) * num_envs * num_edges, cudaMemcpyDeviceToHost);
         
-        // Copy from temporary buffer to vector<bool>
-        for (int i = 0; i < num_envs * num_edges; ++i) {
-            results[i] = h_cc_result[i];
-        }
-        delete[] h_cc_result;
-
         cudaCheckError(cudaGetLastError());
-        // std::cout << "here4" << std::endl;
-        for (size_t i = 0; i < h_envs.size(); ++i) {
-            cleanup_environment_on_device(d_envs[i], d_blobs[i]);
-        }
         cudaFree(d_cc_result);
-        // for (int i = 0; i < Robot::dimension; ++i) {
-        //     cudaFree(d_edges[0][i]);
-        //     cudaFree(d_edges[1][i]);
-        // }
         cudaFree(d_edges);
-        cudaFree(d_envs_ptr);
+        cudaFree(d_envs);
+        cudaFree(d_blob);
         auto cleanup_ns = get_elapsed_nanoseconds(cleanup_start_time);
         std::cout << "Cleanup time: " << cleanup_ns << " ns" << std::endl;
     }
 
-    template void batch_cc<typename ppln::robots::Panda>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Panda::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
+    template void batch_cc<typename ppln::robots::Panda>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Panda::Configuration, 2>>& edges, int resolution, std::vector<uint8_t>& results);
     // template void batch_cc<typename ppln::robots::Fetch>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Fetch::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
     // template void batch_cc<typename ppln::robots::Baxter>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Baxter::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
 } // namespace batch_cc
