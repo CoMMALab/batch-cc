@@ -2,3 +2,4 @@
 [submodule "vamp"]
 	path = vamp
 	url = https://github.com/pranavjad/vamp.git
+	branch = xarm-integration
