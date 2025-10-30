@@ -25,7 +25,7 @@ set(CMAKE_CUDA_ARCHITECTURES 89)
 
 # Enable CUDA debugging
 # set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -G -g")
-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -lineinfo")
+# set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -lineinfo")
 
 
 # set(vamp_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vamp/install/share/cmake/vamp)
@@ -61,28 +61,28 @@ FetchContent_MakeAvailable(vamp)
 # )
 
 ### batch cc with edges taken from graph.dot and scene taken from scene.txt
-add_executable(batch_cc
-    scripts/batch_cc.cpp
-    src/batch_cc.cu
-)
+# add_executable(batch_cc
+#     scripts/batch_cc.cpp
+#     src/batch_cc.cu
+# )
 
-target_compile_options(batch_cc
-    PRIVATE
-    -g
-)
+# target_compile_options(batch_cc
+#     PRIVATE
+#     -g
+# )
 
-target_include_directories(batch_cc
-    PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
-target_link_libraries(batch_cc
-    PRIVATE
-    Eigen3::Eigen
-    Boost::boost
-    Boost::graph
-    Boost::regex
-    vamp::vamp
-)
+# target_include_directories(batch_cc
+#     PRIVATE
+#     ${CMAKE_CURRENT_SOURCE_DIR}
+# )
+# target_link_libraries(batch_cc
+#     PRIVATE
+#     Eigen3::Eigen
+#     Boost::boost
+#     Boost::graph
+#     Boost::regex
+#     vamp::vamp
+# )
 
 ### batch validate cc
 # Set the language property for the C++ file to be compiled with CUDA support

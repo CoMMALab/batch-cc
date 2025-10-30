@@ -31,6 +31,7 @@
 #include <vamp/robots/baxter.hh>
 #include <vamp/robots/fetch.hh>
 #include <vamp/robots/panda.hh>
+#include <vamp/robots/xarm7.hh>
 
 // using json = nlohmann::json;
 
@@ -1127,6 +1128,9 @@ int main(int argc, char* argv[]) {
     }
     if (robot_name == "panda") {
         run_test<robots::Panda, vamp::robots::Panda>(graph_file_path, scene_file_path, resolution, robot_name, run_vamp);
+    }
+    else if (robot_name == "xarm7") {
+        run_test<robots::Xarm7, vamp::robots::xarm7>(graph_file_path, scene_file_path, resolution, robot_name, run_vamp);
     }
     // else if (robot_name == "fetch") {
     //     run_test<robots::Fetch, vamp::robots::Fetch>(graph_file_path, scene_file_path, resolution, robot_name);

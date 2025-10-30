@@ -19,6 +19,7 @@ Multi environment batch collision checker.
 #include "src/utils.cuh"
 #include "batch_cc.hh"
 #include "robots/panda.cuh"
+#include "robots/xarm7.cuh"
 
 
 #include <float.h>
@@ -86,7 +87,7 @@ namespace batch_cc {
         const int env_idx = bid % num_envs;
         const int edge_idx = bid / num_envs;
 
-        __align__(16) __shared__ volatile float sphere_pos[60 * G_BATCH_SIZE * 3]; // ~assuming max 60 spheres with granularity 32, each has x y z coordinates
+        __align__(16) __shared__ volatile float sphere_pos[80 * G_BATCH_SIZE * 3]; // ~assuming max 60 spheres with granularity 32, each has x y z coordinates
         // __align__(16) __shared__ volatile float sphere_pos_approx[10 * G_BATCH_SIZE * 3]; // ~assuming 10 spheres with granularity 32, each has x y z coordinates
         __align__(16) __shared__ volatile int link_CC[G_BATCH_SIZE * 20]; //assuming max granularity 32, max number of links 20
         __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16]; // 32 robots x 1x4x4 transform matrix
@@ -272,6 +273,7 @@ namespace batch_cc {
     }
 
     template void batch_cc<typename ppln::robots::Panda>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Panda::Configuration, 2>>& edges, int resolution, std::vector<uint8_t>& results);
+    template void batch_cc<typename ppln::robots::Xarm7>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Xarm7::Configuration, 2>>& edges, int resolution, std::vector<uint8_t>& results);
     // template void batch_cc<typename ppln::robots::Fetch>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Fetch::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
     // template void batch_cc<typename ppln::robots::Baxter>(std::vector<ppln::collision::Environment<float>>& h_envs, std::vector<std::array<typename ppln::robots::Baxter::Configuration, 2>>& edges, int resolution, std::vector<bool>& results);
 } // namespace batch_cc
