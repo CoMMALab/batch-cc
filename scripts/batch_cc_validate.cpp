@@ -318,6 +318,7 @@ static std::array<EnvironmentInput, MAX_WORLD_SAMPLES_EVAL> environments_obs;
 static std::array<EnvironmentVector, MAX_WORLD_SAMPLES_EVAL> env_obs_vectors;
 static std::array<EnvironmentInput, MAX_WORLD_SAMPLES_EVAL> environments_tgt;
 static std::array<EnvironmentVector, MAX_WORLD_SAMPLES_EVAL> env_tgt_vectors;
+static unsigned int g_vamp_thread_override = 0;
 
 
 template<typename VampRobot>
@@ -637,14 +638,14 @@ void vamp_batch_cc(std::vector<EnvironmentVector>& vamp_envs, std::vector<std::a
         return;
     }
 
-    unsigned int num_threads = std::thread::hardware_concurrency();
-    std::cout << "threads: " << num_threads << std::endl;
+    unsigned int num_threads = g_vamp_thread_override > 0 ? g_vamp_thread_override : std::thread::hardware_concurrency();
     if (num_threads == 0) {
         num_threads = 1;
     }
     if (num_threads > total_pairs) {
         num_threads = static_cast<unsigned int>(total_pairs);
     }
+    std::cout << "threads: " << num_threads << std::endl;
 
     std::atomic<std::size_t> next_index{0};
     constexpr std::size_t kChunkSize = 1024;
@@ -1158,7 +1159,21 @@ int main(int argc, char* argv[]) {
     std::string scene_file_path = "scene.txt";
     bool run_vamp = true;
     int resolution = 32;
-    if (argc == 4) {
+    if (argc == 3) {
+        int cpu_threads = std::stoi(argv[1]);
+        int gpu_blocks_pow2 = std::stoi(argv[2]);
+        robot_name = "xarm7";
+        graph_file_path = "scripts/graph.dot";
+        scene_file_path = "scripts/scene.txt";
+        run_vamp = true;
+        if (cpu_threads > 0) {
+            g_vamp_thread_override = static_cast<unsigned int>(cpu_threads);
+        }
+        if (gpu_blocks_pow2 >= 0) {
+            batch_cc::set_max_blocks(1 << gpu_blocks_pow2);
+        }
+    }
+    else if (argc == 4) {
         robot_name = argv[1];
         graph_file_path = argv[2];
         scene_file_path = argv[3];
@@ -1171,6 +1186,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         std::cout << "Usage: ./batch_cc <robot_name> <graph.dot> <scene.txt> <run_vamp=true/false>\n";
+        std::cout << "   or: ./batch_cc <cpu_threads> <gpu_blocks_pow2>\n";
         return 1;
     }
     if (robot_name == "panda") {

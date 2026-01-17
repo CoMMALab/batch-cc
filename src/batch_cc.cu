@@ -35,7 +35,11 @@ Multi environment batch collision checker.
 
 namespace batch_cc {
 
-    
+    static int g_max_blocks = 0;
+
+    void set_max_blocks(int max_blocks) {
+        g_max_blocks = max_blocks;
+    }
 
     using EnvF = ppln::collision::Environment<float>;
     using ppln::collision::Sphere;
@@ -237,8 +241,11 @@ namespace batch_cc {
         int num_envs = h_envs.size();
         int num_edges = edges.size();
         int total_pairs = num_envs * num_edges;
-        constexpr int kMaxBlocks = 1<<24;
-        int num_blocks = std::min(total_pairs, kMaxBlocks);
+        int max_blocks = g_max_blocks > 0 ? g_max_blocks : total_pairs;
+        int num_blocks = std::min(total_pairs, max_blocks);
+        if (num_blocks <= 0 && total_pairs > 0) {
+            num_blocks = 1;
+        }
         int num_threads = G_BATCH_SIZE * 4;
         auto env_setup_ns = get_elapsed_nanoseconds(setup_start_time);
         std::cout << "Environments Setup time: " << env_setup_ns / 1'000'000'000.0 << " s" << std::endl;
