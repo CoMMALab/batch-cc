@@ -23,6 +23,8 @@
 #include <Eigen/Geometry>
 #include <cmath>
 #include <algorithm>
+#include <atomic>
+#include <thread>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -630,15 +632,51 @@ void vamp_batch_cc(std::vector<EnvironmentVector>& vamp_envs, std::vector<std::a
     std::size_t num_edges = vamp_edges_vec.size();
     std::size_t num_envs = vamp_envs.size();
     std::cout << "vamp resolution: " << VampRobot::resolution << "\n";
-    for (int i = 0; i < num_edges; i++) {
-        auto& edge = vamp_edges_vec[i];
-        for (int j = 0; j < num_envs; j++) {
-            auto& env = vamp_envs[j];
-            auto& start = edge[0];
-            auto& end = edge[1];
-            bool good = (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, end, env)) && (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, start, env));
-            results[i * num_envs + j] = not good ? 1 : 0;
+    std::size_t total_pairs = num_edges * num_envs;
+    if (total_pairs == 0) {
+        return;
+    }
+
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    std::cout << "threads: " << num_threads << std::endl;
+    if (num_threads == 0) {
+        num_threads = 1;
+    }
+    if (num_threads > total_pairs) {
+        num_threads = static_cast<unsigned int>(total_pairs);
+    }
+
+    std::atomic<std::size_t> next_index{0};
+    constexpr std::size_t kChunkSize = 1024;
+
+    auto worker = [&]() {
+        while (true) {
+            std::size_t start_index = next_index.fetch_add(kChunkSize, std::memory_order_relaxed);
+            if (start_index >= total_pairs) {
+                break;
+            }
+            std::size_t end_index = std::min(start_index + kChunkSize, total_pairs);
+            for (std::size_t idx = start_index; idx < end_index; ++idx) {
+                std::size_t edge_idx = idx / num_envs;
+                std::size_t env_idx = idx % num_envs;
+                auto& edge = vamp_edges_vec[edge_idx];
+                auto& env = vamp_envs[env_idx];
+                auto& start = edge[0];
+                auto& end = edge[1];
+                bool good = (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, end, env)) &&
+                            (vamp::planning::validate_motion<VampRobot, rake, VampRobot::resolution>(start, start, env));
+                results[idx] = !good ? 1 : 0;
+            }
         }
+    };
+
+    std::vector<std::thread> threads;
+    threads.reserve(num_threads);
+    for (unsigned int i = 0; i < num_threads; ++i) {
+        threads.emplace_back(worker);
+    }
+    for (auto& t : threads) {
+        t.join();
     }
 }
 
@@ -1065,7 +1103,16 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
     std::cout << "end to end time: " << ns.count() / 1'000'000'000.0 << " s\n";
 
     if (run_vamp) {
+        auto vamp_start = std::chrono::high_resolution_clock::now();
         vamp_batch_cc<VampRobot>(vamp_envs, vamp_edges_vec, resolution, vamp_results);
+        auto vamp_end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> vamp_elapsed = vamp_end - vamp_start;
+        double vamp_seconds = vamp_elapsed.count();
+        int edges_checked = static_cast<int>(num_edges * num_envs);
+        double vamp_throughput = vamp_seconds > 0.0 ? edges_checked / vamp_seconds : 0.0;
+        std::cout << "VAMP time: " << vamp_seconds << " s\n";
+        std::cout << "VAMP edges checked: " << edges_checked << "\n";
+        std::cout << "VAMP throughput: " << vamp_throughput << " edges/s\n";
 
         // print_environment_as_python_dict(vamp_envs_input[0], 0);
         // print_environment_as_python_dict(h_envs[0], 0);
@@ -1141,4 +1188,3 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
-
