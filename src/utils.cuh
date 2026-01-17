@@ -393,7 +393,7 @@ namespace ppln::device_utils {
 
     __device__ __forceinline__ bool sphere_environment_in_collision(ppln::collision::Environment<float> *env, float sx_, float sy_, float sz_, float sr_)
     {
-        // sr_ += 0.005f;
+        // sr_ += 0.0025f;
         const float rsq = sr_ * sr_;
         bool in_collision = false;
 
@@ -715,10 +715,12 @@ namespace ppln::collision {
         volatile float *sphere_pos,
         volatile int *link_CC,
         float *T,
-        unsigned int *cc_result
+        unsigned int *cc_result,
+        unsigned int *any_approx_env_collision,
+        unsigned int *any_approx_self_collision
     ) {
         // reset link_CC
-        for (int i = tid; i < G_BATCH_SIZE * 20; i += blockDim.x)
+        for (int i = tid; i < 640; i += blockDim.x)
         {
             link_CC[i] = 0; // 00 = no detailed check needed, 01 = detailed env check needed, 10 = detailed self check needed, 11 = detailed env and self check needed
         }
@@ -726,7 +728,7 @@ namespace ppln::collision {
     
     
         ppln::collision::fk_approx<Robot>(config, sphere_pos, T, tid);
-        __syncwarp();
+        __syncthreads();
     
         bool approx_env_collision =
             not ppln::collision::env_collision_check_approx<Robot>(sphere_pos, link_CC, env, tid);
@@ -734,26 +736,23 @@ namespace ppln::collision {
         bool approx_self_collision =
             not ppln::collision::self_collision_check_approx<Robot>(sphere_pos, link_CC, tid);
         
-        bool any_approx_env_collision = warp_any_full_mask(approx_env_collision);
-        bool any_approx_self_collision = warp_any_full_mask(approx_self_collision);
-        bool approx_collision = any_approx_env_collision || any_approx_self_collision;
-        bool collision = false;
-        // if any approx collision found, proceed to detailed FK and CC
-        if (approx_collision) {
+        atomicOr((unsigned int *)any_approx_env_collision, approx_env_collision ? 1u : 0u);
+        atomicOr((unsigned int *)any_approx_self_collision, approx_self_collision ? 1u : 0u);
+        __syncthreads();
+        if (any_approx_env_collision[0] || any_approx_self_collision[0]) {
             ppln::collision::fk<Robot>(config, sphere_pos, T, tid);
-            __syncwarp();
-            if (any_approx_env_collision) {
+            __syncthreads();
+            if (any_approx_env_collision[0]) {
                 bool detailed_env_collision =
                     not ppln::collision::env_collision_check<Robot>(sphere_pos, link_CC, env, tid);
-                collision = warp_any_full_mask(detailed_env_collision);
+                atomicOr((unsigned int *)cc_result, detailed_env_collision ? 1u : 0u);
             }
-            if (!collision && any_approx_self_collision) {
+            if (!cc_result[0] && any_approx_self_collision[0]) {
                 bool detailed_self_collision =
                     not ppln::collision::self_collision_check<Robot>(sphere_pos, link_CC, tid);
-                collision = warp_any_full_mask(detailed_self_collision);
+                atomicOr((unsigned int *)cc_result, detailed_self_collision ? 1u : 0u);
             }
         }
-        atomicOr(cc_result, collision ? 1u : 0u);
         __syncthreads();
     }
 

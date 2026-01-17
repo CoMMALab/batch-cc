@@ -100,6 +100,8 @@ namespace batch_cc {
         __shared__ float edge_end[dim];
         __shared__ float delta[dim];
         __shared__ unsigned int local_cc_result;
+        __shared__ unsigned int any_approx_env_collision;
+        __shared__ unsigned int any_approx_self_collision;
         __shared__ int n;
         float config[dim];
         if (tid < dim) {
@@ -130,7 +132,7 @@ namespace batch_cc {
         }
         for (int i = 0; i < n; i++) {            
             // ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T, &local_cc_result);
-            ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result);
+            ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result, &any_approx_env_collision, &any_approx_self_collision);
             if (local_cc_result) break;
             # pragma unroll
             for (int j = 0; j < dim; j++) {
@@ -143,7 +145,7 @@ namespace batch_cc {
             for (int j = 0; j < dim; j++) {
                 config[j] = edge_end[j];
             }
-            ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result);
+            ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result, &any_approx_env_collision, &any_approx_self_collision);
         }
         if (tid == 0) {
             cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? 1 : 0;

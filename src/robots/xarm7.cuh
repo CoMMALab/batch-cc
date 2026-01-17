@@ -262,11 +262,12 @@ namespace ppln::collision {
             __syncwarp();
             int sphere_count = xarm7_approx_joint_to_sphere_count[i];
             for (int s = transformed_sphere_ind + col_ind; s < transformed_sphere_ind + sphere_count; s += 4) {
+                int sphere_ind = xarm7_approx_flattened_joint_to_spheres[s];
                 for (int c = 0; c < 3; c++) {
-                    sphere_pos_approx[s * BATCH_SIZE * 3 + batch_ind * 3 + c] = 
-                        T_base[T_memory_idx*16 + c] * xarm7_approx_spheres_array[s].x +
-                        T_base[T_memory_idx*16 + c + M] * xarm7_approx_spheres_array[s].y +
-                        T_base[T_memory_idx*16 + c + M*2] * xarm7_approx_spheres_array[s].z +
+                    sphere_pos_approx[sphere_ind * BATCH_SIZE * 3 + batch_ind * 3 + c] = 
+                        T_base[T_memory_idx*16 + c] * xarm7_approx_spheres_array[sphere_ind].x +
+                        T_base[T_memory_idx*16 + c + M] * xarm7_approx_spheres_array[sphere_ind].y +
+                        T_base[T_memory_idx*16 + c + M*2] * xarm7_approx_spheres_array[sphere_ind].z +
                         T_base[T_memory_idx*16 + c + M*3];
                 }
             }
@@ -790,11 +791,12 @@ namespace ppln::collision {
             __syncwarp();
             int sphere_count = xarm7_joint_to_sphere_count[i];
             for (int s = transformed_sphere_ind + col_ind; s < transformed_sphere_ind + sphere_count; s += 4) {
+                int sphere_ind = xarm7_flattened_joint_to_spheres[s];
                 for (int c = 0; c < 3; c++) {
-                    sphere_pos[s * BATCH_SIZE * 3 + batch_ind * 3 + c] = 
-                        T_base[T_memory_idx*16 + c] * xarm7_spheres_array[s].x +
-                        T_base[T_memory_idx*16 + c + M] * xarm7_spheres_array[s].y +
-                        T_base[T_memory_idx*16 + c + M*2] * xarm7_spheres_array[s].z +
+                    sphere_pos[sphere_ind * BATCH_SIZE * 3 + batch_ind * 3 + c] = 
+                        T_base[T_memory_idx*16 + c] * xarm7_spheres_array[sphere_ind].x +
+                        T_base[T_memory_idx*16 + c + M] * xarm7_spheres_array[sphere_ind].y +
+                        T_base[T_memory_idx*16 + c + M*2] * xarm7_spheres_array[sphere_ind].z +
                         T_base[T_memory_idx*16 + c + M*3];
                 }
             }
