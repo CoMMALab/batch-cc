@@ -79,76 +79,77 @@ namespace batch_cc {
        
         constexpr auto dim = Robot::dimension;
         const int tid = threadIdx.x;
-        const int bid = blockIdx.x;
         const int bdim = (blockDim.x / 4);
         const int batch_idx = tid / 4;
         const int col_idx = tid % 4;
-        // each block handles one (edge, environment) pair
-        const int env_idx = bid % num_envs;
-        const int edge_idx = bid / num_envs;
 
         __align__(16) __shared__ volatile float sphere_pos[80 * G_BATCH_SIZE * 3]; // ~assuming max 60 spheres with granularity 32, each has x y z coordinates
         // __align__(16) __shared__ volatile float sphere_pos_approx[10 * G_BATCH_SIZE * 3]; // ~assuming 10 spheres with granularity 32, each has x y z coordinates
         __align__(16) __shared__ volatile int link_CC[G_BATCH_SIZE * 20]; //assuming max granularity 32, max number of links 20
         __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16]; // 32 robots x 1x4x4 transform matrix
 
-        if (env_idx >= num_envs || edge_idx >= num_edges) {
-            return;
-        }
-        ppln::collision::Environment<float>* env = &envs[env_idx];
-        __shared__ float edge_start[dim];
-        __shared__ float edge_end[dim];
-        __shared__ float delta[dim];
-        __shared__ unsigned int local_cc_result;
-        __shared__ unsigned int any_approx_env_collision;
-        __shared__ unsigned int any_approx_self_collision;
-        __shared__ int n;
-        float config[dim];
-        if (tid < dim) {
-            // edge_start[tid] = edges[0][tid][edge_idx];
-            // edge_end[tid] = edges[1][tid][edge_idx];
-            edge_start[tid] = edges[edge_idx * (dim * 2) + 0 * dim + tid];
-            edge_end[tid] = edges[edge_idx * (dim * 2) + 1 * dim + tid];
-        }
-        __syncthreads();
-        if (tid == 0) {
-            float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
-            n = max(ceil((dist / (float) bdim) * resolution), 1.0f);
-            local_cc_result = 0;
-            // printf("n: %d, dist: %f\n", n, dist);
-        }
-        __syncthreads();
-        if (tid < dim) {
-            // float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
-            // n = max(ceil((dist / (float) bdim) * resolution), 1.0f);
-            // local_cc_result = 0;
-            delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (bdim * n);
-        }
-        __syncthreads();
+        const int total_pairs = num_envs * num_edges;
+        for (int pair_idx = blockIdx.x; pair_idx < total_pairs; pair_idx += gridDim.x) {
+            // each block handles one (edge, environment) pair per loop iteration
+            const int env_idx = pair_idx % num_envs;
+            const int edge_idx = pair_idx / num_envs;
 
-        # pragma unroll
-        for (int j = 0; j < dim; j++) {
-            config[j] = edge_start[j] + delta[j] * (batch_idx * n);
-        }
-        for (int i = 0; i < n; i++) {            
-            // ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T, &local_cc_result);
-            ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result, &any_approx_env_collision, &any_approx_self_collision);
-            if (local_cc_result) break;
+            ppln::collision::Environment<float>* env = &envs[env_idx];
+            __shared__ float edge_start[dim];
+            __shared__ float edge_end[dim];
+            __shared__ float delta[dim];
+            __shared__ unsigned int local_cc_result;
+            __shared__ unsigned int any_approx_env_collision;
+            __shared__ unsigned int any_approx_self_collision;
+            __shared__ int n;
+            float config[dim];
+            if (tid < dim) {
+                // edge_start[tid] = edges[0][tid][edge_idx];
+                // edge_end[tid] = edges[1][tid][edge_idx];
+                edge_start[tid] = edges[edge_idx * (dim * 2) + 0 * dim + tid];
+                edge_end[tid] = edges[edge_idx * (dim * 2) + 1 * dim + tid];
+            }
+            __syncthreads();
+            if (tid == 0) {
+                float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
+                n = max(ceil((dist / (float) bdim) * resolution), 1.0f);
+                local_cc_result = 0;
+                // printf("n: %d, dist: %f\n", n, dist);
+            }
+            __syncthreads();
+            if (tid < dim) {
+                // float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
+                // n = max(ceil((dist / (float) bdim) * resolution), 1.0f);
+                // local_cc_result = 0;
+                delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (bdim * n);
+            }
+            __syncthreads();
+
             # pragma unroll
             for (int j = 0; j < dim; j++) {
-                config[j] += delta[j];
+                config[j] = edge_start[j] + delta[j] * (batch_idx * n);
             }
-        }
-        // check end point
-        if (!local_cc_result) {
-            # pragma unroll
-            for (int j = 0; j < dim; j++) {
-                config[j] = edge_end[j];
+            for (int i = 0; i < n; i++) {            
+                // ppln::collision::fkcc<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos_approx, link_CC, T, &local_cc_result);
+                ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result, &any_approx_env_collision, &any_approx_self_collision);
+                if (local_cc_result) break;
+                # pragma unroll
+                for (int j = 0; j < dim; j++) {
+                    config[j] += delta[j];
+                }
             }
-            ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result, &any_approx_env_collision, &any_approx_self_collision);
-        }
-        if (tid == 0) {
-            cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? 1 : 0;
+            // check end point
+            if (!local_cc_result) {
+                # pragma unroll
+                for (int j = 0; j < dim; j++) {
+                    config[j] = edge_end[j];
+                }
+                ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result, &any_approx_env_collision, &any_approx_self_collision);
+            }
+            if (tid == 0) {
+                cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? 1 : 0;
+            }
+            __syncthreads();
         }
     }
 
@@ -235,7 +236,9 @@ namespace batch_cc {
 
         int num_envs = h_envs.size();
         int num_edges = edges.size();
-        int num_blocks = num_envs * num_edges;
+        int total_pairs = num_envs * num_edges;
+        constexpr int kMaxBlocks = 1<<24;
+        int num_blocks = std::min(total_pairs, kMaxBlocks);
         int num_threads = G_BATCH_SIZE * 4;
         auto env_setup_ns = get_elapsed_nanoseconds(setup_start_time);
         std::cout << "Environments Setup time: " << env_setup_ns / 1'000'000'000.0 << " s" << std::endl;
