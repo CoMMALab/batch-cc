@@ -1206,6 +1206,7 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
                 // if (i != 0 || j != 102) continue;
                 bool gpu_result = results[i * num_envs + j];
                 bool vamp_result = vamp_results[i * num_envs + j];
+                // std::cout << "GPU result: " << gpu_result << ", VAMP result: " << vamp_result << std::endl;
                 if (!gpu_result && vamp_result & !printed_discrepancy) {
                     printf("Discrepancy at env %d, edge %d: gpu-{%d} vamp-{%d}\n", j, i, gpu_result, vamp_result);
                     for (int k = 0; k < Robot::dimension; k++) {
