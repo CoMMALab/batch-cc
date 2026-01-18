@@ -475,6 +475,12 @@ namespace ppln::collision {
     __device__ __forceinline__ bool env_collision_check_full(float* sphere_pos, ppln::collision::Environment<float> *env, const int tid);
 
     template <typename Robot>
+    __device__ __forceinline__ bool self_collision_check_full_tile4(float* sphere_pos, const int tid);
+
+    template <typename Robot>
+    __device__ __forceinline__ bool env_collision_check_full_tile4(float* sphere_pos, ppln::collision::Environment<float> *env, const int tid);
+
+    template <typename Robot>
     __device__ __forceinline__ bool fkcc(float *config, ppln::collision::Environment<float> *env, int tid);
 
     /* adapted from https://github.com/NVlabs/curobo/blob/0a50de1ba72db304195d59d9d0b1ed269696047f/src/curobo/curobolib/cpp/kinematics_fused_kernel.cu */
@@ -891,5 +897,29 @@ namespace ppln::collision {
             }
         }
         batch_cc_sync();
+    }
+
+    template <typename Robot>
+    __device__ __forceinline__ bool fkcc_detailed_only_tile4(
+        const float *config,
+        ppln::collision::Environment<float> *env,
+        const int tid,
+        float *sphere_pos,
+        float *T
+    ) {
+        auto cta = cg::this_thread_block();
+        auto tile = cg::tiled_partition<4>(cta);
+
+        ppln::collision::fk<Robot>(config, sphere_pos, T, tid);
+        tile.sync();
+
+        bool env_ok = ppln::collision::env_collision_check_full_tile4<Robot>(sphere_pos, env, tid);
+        if (!env_ok) {
+            return true;
+        }
+        tile.sync();
+
+        bool self_ok = ppln::collision::self_collision_check_full_tile4<Robot>(sphere_pos, tid);
+        return !self_ok;
     }
 }

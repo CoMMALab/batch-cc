@@ -12,6 +12,8 @@ Multi environment batch collision checker.
 #include <algorithm>
 #include <numeric>
 #include <type_traits>
+#include <limits>
+#include <cooperative_groups.h>
 #include <thrust/device_ptr.h>
 #include <thrust/execution_policy.h>
 #include <thrust/reduce.h>
@@ -50,6 +52,8 @@ namespace batch_cc {
     using ppln::collision::Capsule;
     using ppln::collision::Cylinder;
     using ppln::collision::Cuboid;
+
+    namespace cg = cooperative_groups;
 
     static inline void ensure_ptr_count_consistent(const EnvF& e) {
         auto ok = true;
@@ -153,66 +157,71 @@ namespace batch_cc {
     template <typename Robot>
     __global__ void
     batch_cc_filter_kernel(ppln::collision::Environment<float>* envs, float* edges, int num_envs, int num_edges,
-                           uint8_t *cc_result, int *survivor_flags)
+                           int *collision_flags)
     {
         constexpr auto dim = Robot::dimension;
         const int tid = threadIdx.x;
+        const int batch_idx = tid / 4;
 
         __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3];
         __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16];
 
-        const int total_pairs = num_envs * num_edges;
-        for (int pair_idx = blockIdx.x; pair_idx < total_pairs; pair_idx += gridDim.x) {
+        const int64_t total_pairs = static_cast<int64_t>(num_envs) * num_edges;
+        const int64_t total_configs = total_pairs * 3;
+        for (int64_t config_idx = static_cast<int64_t>(blockIdx.x) * G_BATCH_SIZE + batch_idx;
+             config_idx < total_configs;
+             config_idx += static_cast<int64_t>(gridDim.x) * G_BATCH_SIZE) {
+            const int pair_idx = static_cast<int>(config_idx / 3);
+            const int config_kind = static_cast<int>(config_idx - static_cast<int64_t>(pair_idx) * 3);
             const int env_idx = pair_idx % num_envs;
             const int edge_idx = pair_idx / num_envs;
 
             ppln::collision::Environment<float>* env = &envs[env_idx];
-            __shared__ float edge_start[dim];
-            __shared__ float edge_end[dim];
-            __shared__ unsigned int local_cc_result;
+            float edge_start[dim];
+            float edge_end[dim];
             float config[dim];
-
-            if (tid < dim) {
-                edge_start[tid] = edges[edge_idx * (dim * 2) + 0 * dim + tid];
-                edge_end[tid] = edges[edge_idx * (dim * 2) + 1 * dim + tid];
-            }
-            __syncthreads();
-            if (tid == 0) {
-                local_cc_result = 0;
-            }
-            __syncthreads();
 
             # pragma unroll
             for (int j = 0; j < dim; j++) {
-                config[j] = edge_start[j];
+                edge_start[j] = edges[edge_idx * (dim * 2) + 0 * dim + j];
+                edge_end[j] = edges[edge_idx * (dim * 2) + 1 * dim + j];
             }
-            ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, T, &local_cc_result);
-            __syncthreads();
 
-            if (!local_cc_result) {
+            if (config_kind == 0) {
+                # pragma unroll
+                for (int j = 0; j < dim; j++) {
+                    config[j] = edge_start[j];
+                }
+            } else if (config_kind == 1) {
                 # pragma unroll
                 for (int j = 0; j < dim; j++) {
                     config[j] = 0.5f * (edge_start[j] + edge_end[j]);
                 }
-                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, T, &local_cc_result);
-                __syncthreads();
-            }
-
-            if (!local_cc_result) {
+            } else {
                 # pragma unroll
                 for (int j = 0; j < dim; j++) {
                     config[j] = edge_end[j];
                 }
-                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, T, &local_cc_result);
-                __syncthreads();
             }
 
-            if (tid == 0) {
-                cc_result[pair_idx] = local_cc_result ? 1 : 0;
-                survivor_flags[pair_idx] = local_cc_result ? 0 : 1;
+            bool collision = ppln::collision::fkcc_detailed_only_tile4<Robot>(config, env, tid, sphere_pos, T);
+            auto cta = cg::this_thread_block();
+            auto tile = cg::tiled_partition<4>(cta);
+            if (collision && tile.thread_rank() == 0) {
+                atomicOr(&collision_flags[pair_idx], 1);
             }
-            __syncthreads();
         }
+    }
+
+    __global__ void finalize_filter_flags(const int *collision_flags, int *survivor_flags, uint8_t *cc_result, int total_pairs)
+    {
+        int idx = blockIdx.x * blockDim.x + threadIdx.x;
+        if (idx >= total_pairs) {
+            return;
+        }
+        int collide = collision_flags[idx] != 0;
+        cc_result[idx] = collide ? 1 : 0;
+        survivor_flags[idx] = collide ? 0 : 1;
     }
 
     __global__ void build_survivor_indices(const int *flags, const int *scan, int *out_indices, int total_pairs)
@@ -462,9 +471,13 @@ namespace batch_cc {
 
         int num_envs = h_envs.size();
         int num_edges = edges.size();
-        int total_pairs = num_envs * num_edges;
-        int max_blocks = g_max_blocks > 0 ? g_max_blocks : total_pairs;
-        int num_blocks = std::min(total_pairs, max_blocks);
+        int64_t total_pairs = static_cast<int64_t>(num_envs) * num_edges;
+        if (total_pairs > static_cast<int64_t>(std::numeric_limits<int>::max())) {
+            throw std::runtime_error("Total pairs exceed supported limit for kernel indexing.");
+        }
+        int total_pairs_int = static_cast<int>(total_pairs);
+        int max_blocks = g_max_blocks > 0 ? g_max_blocks : total_pairs_int;
+        int num_blocks = std::min(total_pairs_int, max_blocks);
         if (num_blocks <= 0 && total_pairs > 0) {
             num_blocks = 1;
         }
@@ -472,7 +485,7 @@ namespace batch_cc {
         auto env_setup_ns = get_elapsed_nanoseconds(setup_start_time);
         std::cout << "Environments Setup time: " << env_setup_ns / 1'000'000'000.0 << " s" << std::endl;
         uint8_t *d_cc_result;
-        cudaMalloc(&d_cc_result, sizeof(uint8_t) * num_envs * num_edges);
+        cudaMalloc(&d_cc_result, sizeof(uint8_t) * static_cast<size_t>(total_pairs));
 
         float *d_edges;
         size_t edges_size = edges.size() * Robot::dimension * 2 * sizeof(float);
@@ -483,30 +496,36 @@ namespace batch_cc {
         std::cout << "Setup time: " << setup_ns / 1'000'000'000.0 << " s" << std::endl;
         cudaCheckError(cudaGetLastError());
         auto kernel_start_time = std::chrono::steady_clock::now();
-        if (total_pairs > 0) {
+        if (total_pairs_int > 0) {
             if constexpr (std::is_same<Robot, ppln::robots::Xarm7>::value) {
                 int *d_flags = nullptr;
                 int *d_scan = nullptr;
                 int *d_survivors = nullptr;
-                cudaMalloc(&d_flags, sizeof(int) * total_pairs);
-                cudaMalloc(&d_scan, sizeof(int) * total_pairs);
-                cudaMalloc(&d_survivors, sizeof(int) * total_pairs);
+                int *d_collision_flags = nullptr;
+                cudaMalloc(&d_collision_flags, sizeof(int) * static_cast<size_t>(total_pairs));
+                cudaMalloc(&d_flags, sizeof(int) * static_cast<size_t>(total_pairs));
+                cudaMalloc(&d_scan, sizeof(int) * static_cast<size_t>(total_pairs));
+                cudaMalloc(&d_survivors, sizeof(int) * static_cast<size_t>(total_pairs));
 
+                cudaMemset(d_collision_flags, 0, sizeof(int) * static_cast<size_t>(total_pairs));
+                cudaMemset(d_cc_result, 0, sizeof(uint8_t) * static_cast<size_t>(total_pairs));
                 batch_cc_filter_kernel<Robot><<<num_blocks, num_threads>>>(
-                    d_envs, d_edges, num_envs, num_edges, d_cc_result, d_flags);
+                    d_envs, d_edges, num_envs, num_edges, d_collision_flags);
+
+                int threads = 256;
+                int blocks = (total_pairs_int + threads - 1) / threads;
+                finalize_filter_flags<<<blocks, threads>>>(d_collision_flags, d_flags, d_cc_result, total_pairs_int);
 
                 auto flags_ptr = thrust::device_pointer_cast(d_flags);
                 auto scan_ptr = thrust::device_pointer_cast(d_scan);
-                int total_survivors = thrust::reduce(thrust::device, flags_ptr, flags_ptr + total_pairs, 0, thrust::plus<int>());
-                thrust::exclusive_scan(thrust::device, flags_ptr, flags_ptr + total_pairs, scan_ptr);
+                int total_survivors = thrust::reduce(thrust::device, flags_ptr, flags_ptr + total_pairs_int, 0, thrust::plus<int>());
+                thrust::exclusive_scan(thrust::device, flags_ptr, flags_ptr + total_pairs_int, scan_ptr);
                 std::cout << "Filter survivors: " << total_survivors << " / " << total_pairs
                           << " (" << (total_pairs > 0 ? (100.0 * total_survivors / total_pairs) : 0.0) << "%)"
                           << std::endl;
 
                 if (total_survivors > 0) {
-                    int threads = 256;
-                    int blocks = (total_pairs + threads - 1) / threads;
-                    build_survivor_indices<<<blocks, threads>>>(d_flags, d_scan, d_survivors, total_pairs);
+                    build_survivor_indices<<<blocks, threads>>>(d_flags, d_scan, d_survivors, total_pairs_int);
                     int filtered_blocks = std::min(total_survivors, max_blocks);
                     if (filtered_blocks <= 0) {
                         filtered_blocks = 1;
@@ -515,6 +534,7 @@ namespace batch_cc {
                         d_envs, d_edges, num_envs, d_survivors, total_survivors, d_cc_result, resolution);
                 }
 
+                cudaFree(d_collision_flags);
                 cudaFree(d_flags);
                 cudaFree(d_scan);
                 cudaFree(d_survivors);
@@ -526,14 +546,14 @@ namespace batch_cc {
         auto kernel_ns = get_elapsed_nanoseconds(kernel_start_time);
 
         std::cout << "Kernel time: " << kernel_ns << " ns" << std::endl;
-        int edges_checked = num_envs * num_edges;
+        int64_t edges_checked = total_pairs;
         std::cout << "Edges checked: " << edges_checked << std::endl;
         double throughput = edges_checked / (kernel_ns / 1e9);
         std::cout << "Throughput: " << throughput << " edges/s" << std::endl;
 
         // Create a temporary buffer for the results
         auto cleanup_start_time = std::chrono::steady_clock::now();
-        cudaMemcpy(results.data(), d_cc_result, sizeof(uint8_t) * num_envs * num_edges, cudaMemcpyDeviceToHost);
+        cudaMemcpy(results.data(), d_cc_result, sizeof(uint8_t) * static_cast<size_t>(total_pairs), cudaMemcpyDeviceToHost);
         
         cudaCheckError(cudaGetLastError());
         cudaFree(d_cc_result);
