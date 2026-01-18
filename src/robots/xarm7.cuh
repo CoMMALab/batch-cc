@@ -1,4 +1,8 @@
+#include <cooperative_groups.h>
+
 namespace ppln::collision {
+
+    namespace cg = cooperative_groups;
 
 
 
@@ -207,6 +211,8 @@ namespace ppln::collision {
         const int tid
     )
     {
+        auto cta = cg::this_thread_block();
+        auto tile = cg::tiled_partition<4>(cta);
         // every 4 threads are responsible for one column of the transform matrix T
         // make_transform will calculate the necessary column of T_step needed for the thread
         const int col_ind = tid % 4;
@@ -224,7 +230,7 @@ namespace ppln::collision {
             }
             T_col_i[col_ind] = 1.0f;
         }
-        __syncthreads();
+        tile.sync();
     
         int transformed_sphere_ind = 0;
     
@@ -259,7 +265,7 @@ namespace ppln::collision {
                     T_base[T_memory_idx*16 + col_ind*4 + r] = T_col_tmp[r];
                 }
             }
-            __syncwarp();
+            tile.sync();
             int sphere_count = xarm7_approx_joint_to_sphere_count[i];
             for (int s = transformed_sphere_ind + col_ind; s < transformed_sphere_ind + sphere_count; s += 4) {
                 int sphere_ind = xarm7_approx_flattened_joint_to_spheres[s];
@@ -272,7 +278,7 @@ namespace ppln::collision {
                 }
             }
             transformed_sphere_ind += sphere_count;
-            __syncthreads();
+            tile.sync();
         }
     }
     
@@ -736,6 +742,8 @@ namespace ppln::collision {
         const int tid
     )
     {
+        auto cta = cg::this_thread_block();
+        auto tile = cg::tiled_partition<4>(cta);
         // every 4 threads are responsible for one column of the transform matrix T
         // make_transform will calculate the necessary column of T_step needed for the thread
         const int col_ind = tid % 4;
@@ -753,7 +761,7 @@ namespace ppln::collision {
             }
             T_col_i[col_ind] = 1.0f;
         }
-        __syncthreads();
+        tile.sync();
     
         int transformed_sphere_ind = 0;
     
@@ -788,7 +796,7 @@ namespace ppln::collision {
                     T_base[T_memory_idx*16 + col_ind*4 + r] = T_col_tmp[r];
                 }
             }
-            __syncwarp();
+            tile.sync();
             int sphere_count = xarm7_joint_to_sphere_count[i];
             for (int s = transformed_sphere_ind + col_ind; s < transformed_sphere_ind + sphere_count; s += 4) {
                 int sphere_ind = xarm7_flattened_joint_to_spheres[s];
@@ -801,7 +809,7 @@ namespace ppln::collision {
                 }
             }
             transformed_sphere_ind += sphere_count;
-            __syncthreads();
+            tile.sync();
         }
     }
     
