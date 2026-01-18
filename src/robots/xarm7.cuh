@@ -206,7 +206,7 @@ namespace ppln::collision {
     template <>
     __device__ void fk_approx<ppln::robots::Xarm7>(
         const float* q,
-        float* sphere_pos_approx, // 15 spheres x 16 robots x 3 coordinates (each column is a robot)
+        float* sphere_pos_approx, // 15 spheres x BATCH_SIZE robots x 3 coordinates (each column is a robot)
         float *T, // 16 robots x 1 x 4x4 transform matrix , column major
         const int tid
     )
@@ -737,7 +737,7 @@ namespace ppln::collision {
     template <>
     __device__ void fk<ppln::robots::Xarm7>(
         const float* q,
-        float* sphere_pos, // 74 spheres x 16 robots x 3 coordinates (each column is a robot)
+        float* sphere_pos, // 74 spheres x BATCH_SIZE robots x 3 coordinates (each column is a robot)
         float *T, // 16 robots x 1 x 4x4 transform matrix , column major
         const int tid
     )

@@ -7,3 +7,5 @@ graph.dot*
 temp*
 *.ncu-rep
 SCRATCH.md
+*.csv
+*.log
