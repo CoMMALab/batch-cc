@@ -23,6 +23,7 @@
 #include <Eigen/Geometry>
 #include <cmath>
 #include <algorithm>
+#include <cctype>
 #include <atomic>
 #include <thread>
 
@@ -319,6 +320,76 @@ static std::array<EnvironmentVector, MAX_WORLD_SAMPLES_EVAL> env_obs_vectors;
 static std::array<EnvironmentInput, MAX_WORLD_SAMPLES_EVAL> environments_tgt;
 static std::array<EnvironmentVector, MAX_WORLD_SAMPLES_EVAL> env_tgt_vectors;
 static unsigned int g_vamp_thread_override = 0;
+static std::size_t g_target_data_points = 0;
+
+template<typename T>
+void resize_with_wrap(std::vector<T>& vec, std::size_t new_size) {
+    if (new_size == 0) {
+        vec.clear();
+        return;
+    }
+    if (vec.empty()) {
+        vec.resize(new_size);
+        return;
+    }
+    if (new_size <= vec.size()) {
+        vec.resize(new_size);
+        return;
+    }
+    std::size_t original_size = vec.size();
+    vec.reserve(new_size);
+    for (std::size_t i = original_size; i < new_size; ++i) {
+        vec.push_back(vec[i % original_size]);
+    }
+}
+
+void resize_envs_with_wrap(std::vector<Environment<float>>& envs, std::size_t new_size) {
+    if (new_size == 0) {
+        envs.clear();
+        return;
+    }
+    if (envs.empty()) {
+        envs.resize(new_size);
+        return;
+    }
+    if (new_size <= envs.size()) {
+        envs.resize(new_size);
+        return;
+    }
+    std::size_t original_size = envs.size();
+    envs.reserve(new_size);
+    for (std::size_t i = original_size; i < new_size; ++i) {
+        const Environment<float>& src = envs[i % original_size];
+        Environment<float> dup;
+        dup.spheres = src.spheres;
+        dup.num_spheres = src.num_spheres;
+        dup.capsules = src.capsules;
+        dup.num_capsules = src.num_capsules;
+        dup.z_aligned_capsules = src.z_aligned_capsules;
+        dup.num_z_aligned_capsules = src.num_z_aligned_capsules;
+        dup.cylinders = src.cylinders;
+        dup.num_cylinders = src.num_cylinders;
+        dup.cuboids = src.cuboids;
+        dup.num_cuboids = src.num_cuboids;
+        dup.z_aligned_cuboids = src.z_aligned_cuboids;
+        dup.num_z_aligned_cuboids = src.num_z_aligned_cuboids;
+        dup.owns_memory = false;
+        envs.push_back(std::move(dup));
+    }
+}
+
+std::size_t choose_env_count(std::size_t target_pairs, std::size_t max_envs) {
+    if (target_pairs == 0 || max_envs == 0) {
+        return 0;
+    }
+    std::size_t limit = std::min(target_pairs, max_envs);
+    for (std::size_t envs = limit; envs > 1; --envs) {
+        if (target_pairs % envs == 0) {
+            return envs;
+        }
+    }
+    return 1;
+}
 
 
 template<typename VampRobot>
@@ -1089,6 +1160,16 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
         vamp_edges_vec.push_back(vamp_edge);
     }
 
+    if (g_target_data_points > 0) {
+        std::size_t env_count = choose_env_count(g_target_data_points, h_envs.size());
+        std::size_t edge_count = env_count > 0 ? g_target_data_points / env_count : 0;
+        resize_envs_with_wrap(h_envs, env_count);
+        resize_with_wrap(vamp_envs, env_count);
+        resize_with_wrap(vamp_envs_input, env_count);
+        resize_with_wrap(edges_vec, edge_count);
+        resize_with_wrap(vamp_edges_vec, edge_count);
+    }
+
     std::size_t num_edges = edges_vec.size();
     std::size_t num_envs = h_envs.size();
     std::cout << "Number of edges: " << num_edges << "\n";
@@ -1103,6 +1184,7 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
     auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed);
     std::cout << "end to end time: " << ns.count() / 1'000'000'000.0 << " s\n";
 
+    run_vamp = false;
     if (run_vamp) {
         auto vamp_start = std::chrono::high_resolution_clock::now();
         vamp_batch_cc<VampRobot>(vamp_envs, vamp_edges_vec, resolution, vamp_results);
@@ -1159,7 +1241,16 @@ int main(int argc, char* argv[]) {
     std::string scene_file_path = "scene.txt";
     bool run_vamp = true;
     int resolution = 32;
+    auto is_number = [](const std::string& s) {
+        return !s.empty() && std::all_of(s.begin(), s.end(), [](unsigned char c) { return std::isdigit(c); });
+    };
+
     if (argc == 3) {
+        if (!is_number(argv[1]) || !is_number(argv[2])) {
+            std::cout << "Usage: ./batch_cc <robot_name> <graph.dot> <scene.txt> <run_vamp=true/false>\n";
+            std::cout << "   or: ./batch_cc <cpu_threads> <gpu_blocks_pow2> [data_points]\n";
+            return 1;
+        }
         int cpu_threads = std::stoi(argv[1]);
         int gpu_blocks_pow2 = std::stoi(argv[2]);
         robot_name = "xarm7";
@@ -1174,9 +1265,26 @@ int main(int argc, char* argv[]) {
         }
     }
     else if (argc == 4) {
-        robot_name = argv[1];
-        graph_file_path = argv[2];
-        scene_file_path = argv[3];
+        if (is_number(argv[1]) && is_number(argv[2]) && is_number(argv[3])) {
+            int cpu_threads = std::stoi(argv[1]);
+            int gpu_blocks_pow2 = std::stoi(argv[2]);
+            g_target_data_points = static_cast<std::size_t>(std::stoull(argv[3]));
+            robot_name = "xarm7";
+            graph_file_path = "scripts/graph.dot";
+            scene_file_path = "scripts/scene.txt";
+            run_vamp = true;
+            if (cpu_threads > 0) {
+                g_vamp_thread_override = static_cast<unsigned int>(cpu_threads);
+            }
+            if (gpu_blocks_pow2 >= 0) {
+                batch_cc::set_max_blocks(1 << gpu_blocks_pow2);
+            }
+        }
+        else {
+            robot_name = argv[1];
+            graph_file_path = argv[2];
+            scene_file_path = argv[3];
+        }
     }
     else if (argc == 5) {
         robot_name = argv[1];
@@ -1186,7 +1294,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         std::cout << "Usage: ./batch_cc <robot_name> <graph.dot> <scene.txt> <run_vamp=true/false>\n";
-        std::cout << "   or: ./batch_cc <cpu_threads> <gpu_blocks_pow2>\n";
+        std::cout << "   or: ./batch_cc <cpu_threads> <gpu_blocks_pow2> [data_points]\n";
         return 1;
     }
     if (robot_name == "panda") {
