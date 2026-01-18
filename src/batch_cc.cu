@@ -11,6 +11,11 @@ Multi environment batch collision checker.
 #include <cassert>
 #include <algorithm>
 #include <numeric>
+#include <type_traits>
+#include <thrust/device_ptr.h>
+#include <thrust/execution_policy.h>
+#include <thrust/reduce.h>
+#include <thrust/scan.h>
 
 #include "src/collision/environment.hh"
 #include "src/collision/factory.hh"
@@ -140,6 +145,152 @@ namespace batch_cc {
             }
             if (tid == 0) {
                 cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? 1 : 0;
+            }
+            __syncthreads();
+        }
+    }
+
+    template <typename Robot>
+    __global__ void
+    batch_cc_filter_kernel(ppln::collision::Environment<float>* envs, float* edges, int num_envs, int num_edges,
+                           uint8_t *cc_result, int *survivor_flags)
+    {
+        constexpr auto dim = Robot::dimension;
+        const int tid = threadIdx.x;
+
+        __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3];
+        __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16];
+
+        const int total_pairs = num_envs * num_edges;
+        for (int pair_idx = blockIdx.x; pair_idx < total_pairs; pair_idx += gridDim.x) {
+            const int env_idx = pair_idx % num_envs;
+            const int edge_idx = pair_idx / num_envs;
+
+            ppln::collision::Environment<float>* env = &envs[env_idx];
+            __shared__ float edge_start[dim];
+            __shared__ float edge_end[dim];
+            __shared__ unsigned int local_cc_result;
+            float config[dim];
+
+            if (tid < dim) {
+                edge_start[tid] = edges[edge_idx * (dim * 2) + 0 * dim + tid];
+                edge_end[tid] = edges[edge_idx * (dim * 2) + 1 * dim + tid];
+            }
+            __syncthreads();
+            if (tid == 0) {
+                local_cc_result = 0;
+            }
+            __syncthreads();
+
+            # pragma unroll
+            for (int j = 0; j < dim; j++) {
+                config[j] = edge_start[j];
+            }
+            ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, T, &local_cc_result);
+            __syncthreads();
+
+            if (!local_cc_result) {
+                # pragma unroll
+                for (int j = 0; j < dim; j++) {
+                    config[j] = 0.5f * (edge_start[j] + edge_end[j]);
+                }
+                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, T, &local_cc_result);
+                __syncthreads();
+            }
+
+            if (!local_cc_result) {
+                # pragma unroll
+                for (int j = 0; j < dim; j++) {
+                    config[j] = edge_end[j];
+                }
+                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, T, &local_cc_result);
+                __syncthreads();
+            }
+
+            if (tid == 0) {
+                cc_result[pair_idx] = local_cc_result ? 1 : 0;
+                survivor_flags[pair_idx] = local_cc_result ? 0 : 1;
+            }
+            __syncthreads();
+        }
+    }
+
+    __global__ void build_survivor_indices(const int *flags, const int *scan, int *out_indices, int total_pairs)
+    {
+        int idx = blockIdx.x * blockDim.x + threadIdx.x;
+        if (idx >= total_pairs) {
+            return;
+        }
+        if (flags[idx]) {
+            out_indices[scan[idx]] = idx;
+        }
+    }
+
+    template <typename Robot>
+    __global__ void
+    batch_cc_kernel_full_only_filtered(ppln::collision::Environment<float>* envs, float* edges, int num_envs,
+                                       const int *pair_indices, int num_pairs, uint8_t *cc_result, int resolution)
+    {
+        constexpr auto dim = Robot::dimension;
+        const int tid = threadIdx.x;
+        const int bdim = (blockDim.x / 4);
+        const int batch_idx = tid / 4;
+
+        __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3];
+        __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16];
+
+        for (int list_idx = blockIdx.x; list_idx < num_pairs; list_idx += gridDim.x) {
+            const int pair_idx = pair_indices[list_idx];
+            const int env_idx = pair_idx % num_envs;
+            const int edge_idx = pair_idx / num_envs;
+
+            ppln::collision::Environment<float>* env = &envs[env_idx];
+            __shared__ float edge_start[dim];
+            __shared__ float edge_end[dim];
+            __shared__ float delta[dim];
+            __shared__ unsigned int local_cc_result;
+            __shared__ int n;
+            float config[dim];
+
+            if (tid < dim) {
+                edge_start[tid] = edges[edge_idx * (dim * 2) + 0 * dim + tid];
+                edge_end[tid] = edges[edge_idx * (dim * 2) + 1 * dim + tid];
+            }
+            __syncthreads();
+            if (tid == 0) {
+                float dist = sqrtf(device_utils::sq_l2_dist(edge_start, edge_end, dim));
+                float steps = (dist * resolution) / (float) bdim;
+                int n_local = __float2int_ru(steps);
+                n = (n_local < 1) ? 1 : n_local;
+                local_cc_result = 0;
+            }
+            __syncthreads();
+            if (tid < dim) {
+                delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (bdim * n);
+            }
+            __syncthreads();
+
+            # pragma unroll
+            for (int j = 0; j < dim; j++) {
+                config[j] = edge_start[j] + delta[j] * (batch_idx * n);
+            }
+            for (int i = 0; i < n; i++) {
+                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, T, &local_cc_result);
+                if (local_cc_result) break;
+                # pragma unroll
+                for (int j = 0; j < dim; j++) {
+                    config[j] += delta[j];
+                }
+            }
+            if (!local_cc_result) {
+                # pragma unroll
+                for (int j = 0; j < dim; j++) {
+                    config[j] = edge_end[j];
+                }
+                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, T, &local_cc_result);
+            }
+            if (tid == 0) {
+                cc_result[pair_idx] = local_cc_result ? 1 : 0;
             }
             __syncthreads();
         }
@@ -333,7 +484,43 @@ namespace batch_cc {
         cudaCheckError(cudaGetLastError());
         auto kernel_start_time = std::chrono::steady_clock::now();
         if (total_pairs > 0) {
-            batch_cc_kernel_full_only<Robot><<<num_blocks, num_threads>>>(d_envs, d_edges, num_envs, num_edges, d_cc_result, resolution);
+            if constexpr (std::is_same<Robot, ppln::robots::Xarm7>::value) {
+                int *d_flags = nullptr;
+                int *d_scan = nullptr;
+                int *d_survivors = nullptr;
+                cudaMalloc(&d_flags, sizeof(int) * total_pairs);
+                cudaMalloc(&d_scan, sizeof(int) * total_pairs);
+                cudaMalloc(&d_survivors, sizeof(int) * total_pairs);
+
+                batch_cc_filter_kernel<Robot><<<num_blocks, num_threads>>>(
+                    d_envs, d_edges, num_envs, num_edges, d_cc_result, d_flags);
+
+                auto flags_ptr = thrust::device_pointer_cast(d_flags);
+                auto scan_ptr = thrust::device_pointer_cast(d_scan);
+                int total_survivors = thrust::reduce(thrust::device, flags_ptr, flags_ptr + total_pairs, 0, thrust::plus<int>());
+                thrust::exclusive_scan(thrust::device, flags_ptr, flags_ptr + total_pairs, scan_ptr);
+                std::cout << "Filter survivors: " << total_survivors << " / " << total_pairs
+                          << " (" << (total_pairs > 0 ? (100.0 * total_survivors / total_pairs) : 0.0) << "%)"
+                          << std::endl;
+
+                if (total_survivors > 0) {
+                    int threads = 256;
+                    int blocks = (total_pairs + threads - 1) / threads;
+                    build_survivor_indices<<<blocks, threads>>>(d_flags, d_scan, d_survivors, total_pairs);
+                    int filtered_blocks = std::min(total_survivors, max_blocks);
+                    if (filtered_blocks <= 0) {
+                        filtered_blocks = 1;
+                    }
+                    batch_cc_kernel_full_only_filtered<Robot><<<filtered_blocks, num_threads>>>(
+                        d_envs, d_edges, num_envs, d_survivors, total_survivors, d_cc_result, resolution);
+                }
+
+                cudaFree(d_flags);
+                cudaFree(d_scan);
+                cudaFree(d_survivors);
+            } else {
+                batch_cc_kernel_full_only<Robot><<<num_blocks, num_threads>>>(d_envs, d_edges, num_envs, num_edges, d_cc_result, resolution);
+            }
         }
         cudaDeviceSynchronize();
         auto kernel_ns = get_elapsed_nanoseconds(kernel_start_time);
