@@ -206,7 +206,7 @@ namespace ppln::collision {
     template <>
     __device__ void fk_approx<ppln::robots::Xarm7>(
         const float* q,
-        volatile float* sphere_pos_approx, // 15 spheres x 16 robots x 3 coordinates (each column is a robot)
+        float* sphere_pos_approx, // 15 spheres x 16 robots x 3 coordinates (each column is a robot)
         float *T, // 16 robots x 1 x 4x4 transform matrix , column major
         const int tid
     )
@@ -284,7 +284,7 @@ namespace ppln::collision {
     
     // 4 threads per discretized motion for self-collision check
     template <>
-    __device__ bool self_collision_check_approx<ppln::robots::Xarm7>(volatile float* sphere_pos_approx, volatile int* joint_in_collision, const int tid){
+    __device__ bool self_collision_check_approx<ppln::robots::Xarm7>(float* sphere_pos_approx, int* joint_in_collision, const int tid){
         const int thread_ind = tid % 4;
         const int batch_ind = tid / 4;
         bool out = true;
@@ -315,7 +315,7 @@ namespace ppln::collision {
     
     // 4 threads per discretized motion for env collision check
     template <>
-    __device__ bool env_collision_check_approx<ppln::robots::Xarm7>(volatile float* sphere_pos_approx, volatile int* joint_in_collision, ppln::collision::Environment<float> *env, const int tid){
+    __device__ bool env_collision_check_approx<ppln::robots::Xarm7>(float* sphere_pos_approx, int* joint_in_collision, ppln::collision::Environment<float> *env, const int tid){
         const int thread_ind = tid % 4;
         const int batch_ind = tid / 4;
         bool out = true;
@@ -737,7 +737,7 @@ namespace ppln::collision {
     template <>
     __device__ void fk<ppln::robots::Xarm7>(
         const float* q,
-        volatile float* sphere_pos, // 74 spheres x 16 robots x 3 coordinates (each column is a robot)
+        float* sphere_pos, // 74 spheres x 16 robots x 3 coordinates (each column is a robot)
         float *T, // 16 robots x 1 x 4x4 transform matrix , column major
         const int tid
     )
@@ -815,7 +815,7 @@ namespace ppln::collision {
     
     // 4 threads per discretized motion for self-collision check
     template <>
-    __device__ bool self_collision_check<ppln::robots::Xarm7>(volatile float* sphere_pos, volatile int* joint_in_collision, const int tid){
+    __device__ bool self_collision_check<ppln::robots::Xarm7>(float* sphere_pos, int* joint_in_collision, const int tid){
         const int thread_ind = tid % 4;
         const int batch_ind = tid / 4;
         bool has_collision = false;
@@ -850,7 +850,7 @@ namespace ppln::collision {
     
     // 4 threads per discretized motion for env collision check
     template <>
-    __device__ bool env_collision_check<ppln::robots::Xarm7>(volatile float* sphere_pos, volatile int* joint_in_collision, ppln::collision::Environment<float> *env, const int tid){
+    __device__ bool env_collision_check<ppln::robots::Xarm7>(float* sphere_pos, int* joint_in_collision, ppln::collision::Environment<float> *env, const int tid){
         const int thread_ind = tid % 4;
         const int batch_ind = tid / 4;
         bool has_collision=false;

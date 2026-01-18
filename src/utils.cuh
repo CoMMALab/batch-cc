@@ -14,6 +14,7 @@
 namespace cg = cooperative_groups;
 
 #define G_BATCH_SIZE 8
+#define MAX_SPHERE_COUNT 74
 
 
 /* All device utils and collision functions */
@@ -450,25 +451,25 @@ namespace ppln::collision {
     // cc returns false if the config does collide with an obstacle, returns true if the config does not collide
 
     template <typename Robot>
-    __device__ __forceinline__ void fk(const float *config, volatile float* sphere_pos, float *T, const int tid);
+    __device__ __forceinline__ void fk(const float *config, float* sphere_pos, float *T, const int tid);
 
     template <typename Robot>
-    __device__ __forceinline__ bool self_collision_check(volatile float* sphere_pos, volatile int* link_approx_CC, const int tid);
+    __device__ __forceinline__ bool self_collision_check(float* sphere_pos, int* link_approx_CC, const int tid);
 
     template <typename Robot>
-    __device__ __forceinline__ bool env_collision_check(volatile float* sphere_pos, volatile int* link_approx_CC, ppln::collision::Environment<float> *env, const int tid);
+    __device__ __forceinline__ bool env_collision_check(float* sphere_pos, int* link_approx_CC, ppln::collision::Environment<float> *env, const int tid);
 
     template <typename Robot>
-    __device__ __forceinline__ void fk_approx(const float *config, volatile float* sphere_pos_approx, float *T, const int tid);
+    __device__ __forceinline__ void fk_approx(const float *config, float* sphere_pos_approx, float *T, const int tid);
 
     template <typename Robot>
-    __device__ __forceinline__ bool self_collision_check_approx(volatile float* sphere_pos_approx, volatile int* link_approx_CC, const int tid);
+    __device__ __forceinline__ bool self_collision_check_approx(float* sphere_pos_approx, int* link_approx_CC, const int tid);
 
     template <typename Robot>
-    __device__ __forceinline__ bool env_collision_check_approx(volatile float* sphere_pos_approx, volatile int* link_approx_CC, ppln::collision::Environment<float> *env, const int tid);
+    __device__ __forceinline__ bool env_collision_check_approx(float* sphere_pos_approx, int* link_approx_CC, ppln::collision::Environment<float> *env, const int tid);
 
     template <typename Robot>
-    __device__ __forceinline__ bool fkcc(volatile float *config, ppln::collision::Environment<float> *env, int tid);
+    __device__ __forceinline__ bool fkcc(float *config, ppln::collision::Environment<float> *env, int tid);
 
     /* adapted from https://github.com/NVlabs/curobo/blob/0a50de1ba72db304195d59d9d0b1ed269696047f/src/curobo/curobolib/cpp/kinematics_fused_kernel.cu */
     __device__ __forceinline__ void fixed_joint_fn(
@@ -646,9 +647,9 @@ namespace ppln::collision {
         const int tid,
         const int env_idx,
         const int edge_idx,
-        volatile float *sphere_pos,
-        volatile float *sphere_pos_approx,
-        volatile int *link_CC,
+        float *sphere_pos,
+        float *sphere_pos_approx,
+        int *link_CC,
         float *T,
         unsigned int *cc_result
     ) {
@@ -715,8 +716,8 @@ namespace ppln::collision {
         const int tid,
         const int env_idx,
         const int edge_idx,
-        volatile float *sphere_pos,
-        volatile int *link_CC,
+        float *sphere_pos,
+        int *link_CC,
         float *T,
         unsigned int *cc_result,
         unsigned int *any_approx_env_collision,
@@ -787,9 +788,9 @@ namespace ppln::collision {
         const int tid,
         const int env_idx,
         const int edge_idx,
-        volatile float *sphere_pos,
-        volatile float *sphere_pos_approx,
-        volatile int *link_CC,
+        float *sphere_pos,
+        float *sphere_pos_approx,
+        int *link_CC,
         float *T
     ) {
         // reset link_CC
@@ -852,9 +853,9 @@ namespace ppln::collision {
         const int tid,
         const int env_idx,
         const int edge_idx,
-        volatile float *sphere_pos,
-        volatile float *sphere_pos_approx,
-        volatile int *link_CC,
+        float *sphere_pos,
+        float *sphere_pos_approx,
+        int *link_CC,
         float *T,
         unsigned int *cc_result
     ) {

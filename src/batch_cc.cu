@@ -87,9 +87,9 @@ namespace batch_cc {
         const int batch_idx = tid / 4;
         const int col_idx = tid % 4;
 
-        __align__(16) __shared__ volatile float sphere_pos[80 * G_BATCH_SIZE * 3]; // ~assuming max 60 spheres with granularity 32, each has x y z coordinates
+        __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3]; // max spheres per robot, each has x y z coordinates
         // __align__(16) __shared__ volatile float sphere_pos_approx[10 * G_BATCH_SIZE * 3]; // ~assuming 10 spheres with granularity 32, each has x y z coordinates
-        __align__(16) __shared__ volatile int link_CC[G_BATCH_SIZE * 20]; //assuming max granularity 32, max number of links 20
+        __align__(16) __shared__ int link_CC[G_BATCH_SIZE * 20]; // per-batch link flags
         __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16]; // 32 robots x 1x4x4 transform matrix
 
         const int total_pairs = num_envs * num_edges;
