@@ -491,8 +491,9 @@ namespace ppln::collision {
     {
       // we found no change in convergence between fast approximate and IEEE sin,
       // cos functions using fast approximate method saves 5 registers per thread.
-      float cos   = __cosf(angle);
-      float sin   = __sinf(angle);
+      float sin;
+      float cos;
+      __sincosf(angle, &sin, &cos);
       float n_sin = -1 * sin;
 
       int bit1         = col_idx & 0x1;
@@ -533,8 +534,9 @@ namespace ppln::collision {
         float *T_step_col
     )
     {
-      float cos   = __cosf(angle);
-      float sin   = __sinf(angle);
+      float sin;
+      float cos;
+      __sincosf(angle, &sin, &cos);
       float n_sin = -1 * sin;
 
       int col_idx_per_2 =
@@ -575,8 +577,9 @@ namespace ppln::collision {
         const int col_idx,
         float *T_step_col
     ) {
-        float cos = __cosf(angle);
-        float sin = __sinf(angle);
+        float sin;
+        float cos;
+        __sincosf(angle, &sin, &cos);
         float n_sin = -1 * sin;
 
         int col_idx_by_2 =
