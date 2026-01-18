@@ -469,6 +469,12 @@ namespace ppln::collision {
     __device__ __forceinline__ bool env_collision_check_approx(float* sphere_pos_approx, int* link_approx_CC, ppln::collision::Environment<float> *env, const int tid);
 
     template <typename Robot>
+    __device__ __forceinline__ bool self_collision_check_full(float* sphere_pos, int* link_approx_CC, const int tid);
+
+    template <typename Robot>
+    __device__ __forceinline__ bool env_collision_check_full(float* sphere_pos, int* link_approx_CC, ppln::collision::Environment<float> *env, const int tid);
+
+    template <typename Robot>
     __device__ __forceinline__ bool fkcc(float *config, ppln::collision::Environment<float> *env, int tid);
 
     /* adapted from https://github.com/NVlabs/curobo/blob/0a50de1ba72db304195d59d9d0b1ed269696047f/src/curobo/curobolib/cpp/kinematics_fused_kernel.cu */
@@ -846,6 +852,25 @@ namespace ppln::collision {
         return collision;
     }
 
+    template <typename Robot>
+    __device__ __forceinline__ bool self_collision_check_full(
+        float* sphere_pos,
+        int* link_approx_CC,
+        const int tid
+    ) {
+        return self_collision_check<Robot>(sphere_pos, link_approx_CC, tid);
+    }
+
+    template <typename Robot>
+    __device__ __forceinline__ bool env_collision_check_full(
+        float* sphere_pos,
+        int* link_approx_CC,
+        ppln::collision::Environment<float> *env,
+        const int tid
+    ) {
+        return env_collision_check<Robot>(sphere_pos, link_approx_CC, env, tid);
+    }
+
     __device__ __forceinline__ void batch_cc_sync() {
 #if (G_BATCH_SIZE * 4) == 32
         __syncwarp();
@@ -868,7 +893,7 @@ namespace ppln::collision {
         batch_cc_sync();
 
         bool detailed_env_collision =
-            not ppln::collision::env_collision_check<Robot>(sphere_pos, link_CC, env, tid);
+            not ppln::collision::env_collision_check_full<Robot>(sphere_pos, link_CC, env, tid);
         if (warp_any_active_mask(detailed_env_collision)) {
             if ((tid & 31) == 0) {
                 atomicOr(cc_result, 1u);
@@ -878,7 +903,7 @@ namespace ppln::collision {
 
         if (!cc_result[0]) {
             bool detailed_self_collision =
-                not ppln::collision::self_collision_check<Robot>(sphere_pos, link_CC, tid);
+                not ppln::collision::self_collision_check_full<Robot>(sphere_pos, link_CC, tid);
             if (warp_any_active_mask(detailed_self_collision)) {
                 if ((tid & 31) == 0) {
                     atomicOr(cc_result, 1u);

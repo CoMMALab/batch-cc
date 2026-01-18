@@ -11,6 +11,7 @@ Multi environment batch collision checker.
 #include <cassert>
 #include <algorithm>
 #include <numeric>
+#include <type_traits>
 
 #include "src/collision/environment.hh"
 #include "src/collision/factory.hh"
@@ -118,8 +119,10 @@ namespace batch_cc {
             if (tid < dim) {
                 delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (bdim * n);
             }
-            for (int i = tid; i < G_BATCH_SIZE * 20; i += blockDim.x) {
-                link_CC[i] = 3;
+            if constexpr (!std::is_same<Robot, ppln::robots::Xarm7>::value) {
+                for (int i = tid; i < G_BATCH_SIZE * 20; i += blockDim.x) {
+                    link_CC[i] = 3;
+                }
             }
             __syncthreads();
 
