@@ -12,9 +12,6 @@ Multi environment batch collision checker.
 #include <algorithm>
 #include <numeric>
 
-#include <cooperative_groups.h>
-#include <cub/cub.cuh>
-
 #include "src/collision/environment.hh"
 #include "src/collision/factory.hh"
 #include "src/Planners.hh"
@@ -26,8 +23,6 @@ Multi environment batch collision checker.
 
 
 #include <float.h>
-
-namespace cg = cooperative_groups;
 
 #define CUDA_CHECK(call) do {                                         \
     cudaError_t _e = (call);                                          \
@@ -41,14 +36,8 @@ namespace cg = cooperative_groups;
 namespace batch_cc {
 
     static int g_max_blocks = 0;
-    static TwoPhaseMode g_two_phase_mode = TwoPhaseMode::FullOnly;
-
     void set_max_blocks(int max_blocks) {
         g_max_blocks = max_blocks;
-    }
-
-    void set_two_phase_mode(TwoPhaseMode mode) {
-        g_two_phase_mode = mode;
     }
 
     using EnvF = ppln::collision::Environment<float>;
@@ -86,26 +75,15 @@ namespace batch_cc {
         }
     }
 
-    __global__ void init_indices(int *indices, int count) {
-        int idx = blockIdx.x * blockDim.x + threadIdx.x;
-        if (idx < count) {
-            indices[idx] = idx;
-        }
-    }
-
     template <typename Robot>
     __global__ void
-    batch_cc_kernel_approx(ppln::collision::Environment<float>* envs, float* edges, int num_envs, int num_edges,
-                           uint8_t *cc_result, uint8_t *candidate_flags, int resolution)
+    batch_cc_kernel_full_only(ppln::collision::Environment<float>* envs, float* edges, int num_envs, int num_edges,
+                              uint8_t *cc_result, int resolution)
     {
         constexpr auto dim = Robot::dimension;
         const int tid = threadIdx.x;
         const int bdim = (blockDim.x / 4);
         const int batch_idx = tid / 4;
-        const int thread_ind = tid % 4;
-
-        auto cta = cg::this_thread_block();
-        auto tile = cg::tiled_partition<4>(cta);
 
         __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3];
         __align__(16) __shared__ int link_CC[G_BATCH_SIZE * 20];
@@ -115,120 +93,12 @@ namespace batch_cc {
         for (int pair_idx = blockIdx.x; pair_idx < total_pairs; pair_idx += gridDim.x) {
             const int env_idx = pair_idx % num_envs;
             const int edge_idx = pair_idx / num_envs;
-            ppln::collision::Environment<float>* env = &envs[env_idx];
-
-            __shared__ float edge_start[dim];
-            __shared__ float edge_end[dim];
-            __shared__ float delta[dim];
-            __shared__ unsigned int local_has_candidate;
-            __shared__ int n;
-            float config[dim];
-
-            if (tid < dim) {
-                edge_start[tid] = edges[edge_idx * (dim * 2) + 0 * dim + tid];
-                edge_end[tid] = edges[edge_idx * (dim * 2) + 1 * dim + tid];
-            }
-            __syncthreads();
-            if (tid == 0) {
-                float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
-                n = max(ceil((dist / (float) bdim) * resolution), 1.0f);
-                local_has_candidate = 0;
-            }
-            __syncthreads();
-            if (tid < dim) {
-                delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (bdim * n);
-            }
-            __syncthreads();
-
-            # pragma unroll
-            for (int j = 0; j < dim; j++) {
-                config[j] = edge_start[j] + delta[j] * (batch_idx * n);
-            }
-            for (int i = 0; i < n; i++) {
-                for (int k = thread_ind; k < 20; k += 4) {
-                    link_CC[20 * batch_idx + k] = 0;
-                }
-                tile.sync();
-
-                ppln::collision::fk_approx<Robot>(config, sphere_pos, T, tid);
-                tile.sync();
-
-                bool approx_env_collision =
-                    not ppln::collision::env_collision_check_approx<Robot>(sphere_pos, link_CC, env, tid);
-                bool approx_self_collision =
-                    not ppln::collision::self_collision_check_approx<Robot>(sphere_pos, link_CC, tid);
-
-                bool any_collision = tile.any(approx_env_collision) || tile.any(approx_self_collision);
-                if (tile.thread_rank() == 0 && any_collision) {
-                    atomicOr(&local_has_candidate, 1u);
-                }
-                __syncthreads();
-                if (local_has_candidate) {
-                    break;
-                }
-                # pragma unroll
-                for (int j = 0; j < dim; j++) {
-                    config[j] += delta[j];
-                }
-            }
-            if (!local_has_candidate) {
-                # pragma unroll
-                for (int j = 0; j < dim; j++) {
-                    config[j] = edge_end[j];
-                }
-                for (int k = thread_ind; k < 20; k += 4) {
-                    link_CC[20 * batch_idx + k] = 0;
-                }
-                tile.sync();
-
-                ppln::collision::fk_approx<Robot>(config, sphere_pos, T, tid);
-                tile.sync();
-
-                bool approx_env_collision =
-                    not ppln::collision::env_collision_check_approx<Robot>(sphere_pos, link_CC, env, tid);
-                bool approx_self_collision =
-                    not ppln::collision::self_collision_check_approx<Robot>(sphere_pos, link_CC, tid);
-                bool any_collision = tile.any(approx_env_collision) || tile.any(approx_self_collision);
-                if (tile.thread_rank() == 0 && any_collision) {
-                    atomicOr(&local_has_candidate, 1u);
-                }
-                __syncthreads();
-            }
-
-            if (tid == 0) {
-                cc_result[edge_idx * num_envs + env_idx] = 0;
-                candidate_flags[pair_idx] = local_has_candidate ? 1 : 0;
-            }
-            __syncthreads();
-        }
-    }
-
-    template <typename Robot, bool ApproxGated>
-    __global__ void
-    batch_cc_kernel_full_candidates(ppln::collision::Environment<float>* envs, float* edges, int num_envs, int num_edges,
-                                    const int *candidate_indices, int num_candidates, uint8_t *cc_result, int resolution)
-    {
-        constexpr auto dim = Robot::dimension;
-        const int tid = threadIdx.x;
-        const int bdim = (blockDim.x / 4);
-        const int batch_idx = tid / 4;
-
-        __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3];
-        __align__(16) __shared__ int link_CC[G_BATCH_SIZE * 20];
-        __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16];
-
-        for (int candidate_idx = blockIdx.x; candidate_idx < num_candidates; candidate_idx += gridDim.x) {
-            int pair_idx = candidate_indices[candidate_idx];
-            const int env_idx = pair_idx % num_envs;
-            const int edge_idx = pair_idx / num_envs;
 
             ppln::collision::Environment<float>* env = &envs[env_idx];
             __shared__ float edge_start[dim];
             __shared__ float edge_end[dim];
             __shared__ float delta[dim];
             __shared__ unsigned int local_cc_result;
-            __shared__ unsigned int any_approx_env_collision;
-            __shared__ unsigned int any_approx_self_collision;
             __shared__ int n;
             float config[dim];
 
@@ -253,11 +123,7 @@ namespace batch_cc {
                 config[j] = edge_start[j] + delta[j] * (batch_idx * n);
             }
             for (int i = 0; i < n; i++) {
-                if constexpr (ApproxGated) {
-                    ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result, &any_approx_env_collision, &any_approx_self_collision);
-                } else {
-                    ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos, link_CC, T, &local_cc_result);
-                }
+                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos, link_CC, T, &local_cc_result);
                 if (local_cc_result) break;
                 # pragma unroll
                 for (int j = 0; j < dim; j++) {
@@ -269,11 +135,7 @@ namespace batch_cc {
                 for (int j = 0; j < dim; j++) {
                     config[j] = edge_end[j];
                 }
-                if constexpr (ApproxGated) {
-                    ppln::collision::fkcc_single_buffer<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, link_CC, T, &local_cc_result, &any_approx_env_collision, &any_approx_self_collision);
-                } else {
-                    ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos, link_CC, T, &local_cc_result);
-                }
+                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos, link_CC, T, &local_cc_result);
             }
             if (tid == 0) {
                 cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? 1 : 0;
@@ -467,42 +329,8 @@ namespace batch_cc {
         std::cout << "Setup time: " << setup_ns / 1'000'000'000.0 << " s" << std::endl;
         cudaCheckError(cudaGetLastError());
         auto kernel_start_time = std::chrono::steady_clock::now();
-        uint8_t *d_candidate_flags = nullptr;
-        int *d_indices = nullptr;
-        int *d_selected_indices = nullptr;
-        int *d_num_selected = nullptr;
-        void *d_temp_storage = nullptr;
-        size_t temp_storage_bytes = 0;
-
         if (total_pairs > 0) {
-            cudaMalloc(&d_candidate_flags, sizeof(uint8_t) * total_pairs);
-            cudaMalloc(&d_indices, sizeof(int) * total_pairs);
-            cudaMalloc(&d_selected_indices, sizeof(int) * total_pairs);
-            cudaMalloc(&d_num_selected, sizeof(int));
-
-            int init_threads = 256;
-            int init_blocks = (total_pairs + init_threads - 1) / init_threads;
-            init_indices<<<init_blocks, init_threads>>>(d_indices, total_pairs);
-
-            batch_cc_kernel_approx<Robot><<<num_blocks, num_threads>>>(d_envs, d_edges, num_envs, num_edges, d_cc_result, d_candidate_flags, resolution);
-
-            cub::DeviceSelect::Flagged(nullptr, temp_storage_bytes, d_indices, d_candidate_flags, d_selected_indices, d_num_selected, total_pairs);
-            cudaMalloc(&d_temp_storage, temp_storage_bytes);
-            cub::DeviceSelect::Flagged(d_temp_storage, temp_storage_bytes, d_indices, d_candidate_flags, d_selected_indices, d_num_selected, total_pairs);
-
-            int h_num_selected = 0;
-            cudaMemcpy(&h_num_selected, d_num_selected, sizeof(int), cudaMemcpyDeviceToHost);
-            if (h_num_selected > 0) {
-                int num_blocks_full = std::min(h_num_selected, max_blocks);
-                if (num_blocks_full <= 0) {
-                    num_blocks_full = 1;
-                }
-                if (g_two_phase_mode == TwoPhaseMode::ApproxGated) {
-                    batch_cc_kernel_full_candidates<Robot, true><<<num_blocks_full, num_threads>>>(d_envs, d_edges, num_envs, num_edges, d_selected_indices, h_num_selected, d_cc_result, resolution);
-                } else {
-                    batch_cc_kernel_full_candidates<Robot, false><<<num_blocks_full, num_threads>>>(d_envs, d_edges, num_envs, num_edges, d_selected_indices, h_num_selected, d_cc_result, resolution);
-                }
-            }
+            batch_cc_kernel_full_only<Robot><<<num_blocks, num_threads>>>(d_envs, d_edges, num_envs, num_edges, d_cc_result, resolution);
         }
         cudaDeviceSynchronize();
         auto kernel_ns = get_elapsed_nanoseconds(kernel_start_time);
@@ -520,11 +348,6 @@ namespace batch_cc {
         cudaCheckError(cudaGetLastError());
         cudaFree(d_cc_result);
         cudaFree(d_edges);
-        cudaFree(d_candidate_flags);
-        cudaFree(d_indices);
-        cudaFree(d_selected_indices);
-        cudaFree(d_num_selected);
-        cudaFree(d_temp_storage);
         cudaFree(d_envs);
         cudaFree(d_blob);
         auto cleanup_ns = get_elapsed_nanoseconds(cleanup_start_time);

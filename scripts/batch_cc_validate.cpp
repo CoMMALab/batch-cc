@@ -1236,7 +1236,7 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
 
 
 int main(int argc, char* argv[]) {
-    std::string robot_name = "panda";
+    std::string robot_name = "xarm7";
     std::string graph_file_path = "graph.dot";
     std::string scene_file_path = "scene.txt";
     bool run_vamp = true;
