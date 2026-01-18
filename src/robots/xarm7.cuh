@@ -14,7 +14,7 @@ namespace ppln::collision {
     #define X_ROT 3
     #define Y_ROT 4
     #define Z_ROT 5
-    #define BATCH_SIZE 16
+    #define BATCH_SIZE G_BATCH_SIZE
     
     __device__ __constant__ float4 xarm7_approx_spheres_array[15] = {
         { -0.005656f, 0.00253f, 0.074197f, 0.105153f },
@@ -345,7 +345,7 @@ namespace ppln::collision {
     #define X_ROT 3
     #define Y_ROT 4
     #define Z_ROT 5
-    #define BATCH_SIZE 16
+    #define BATCH_SIZE G_BATCH_SIZE
     
     __device__ __constant__ float4 xarm7_spheres_array[74] = {
         { -0.009247f, -0.000596f, 0.046198f, 0.090156f },

@@ -13,7 +13,7 @@
 
 namespace cg = cooperative_groups;
 
-#define G_BATCH_SIZE 16
+#define G_BATCH_SIZE 8
 
 
 /* All device utils and collision functions */

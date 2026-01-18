@@ -14,7 +14,7 @@ namespace ppln::collision {
 #define X_ROT 3
 #define Y_ROT 4
 #define Z_ROT 5
-#define BATCH_SIZE 16
+#define BATCH_SIZE G_BATCH_SIZE
 
 __device__ __constant__ float4 panda_approx_spheres_array[11] = {
     { 0.0f, 0.0f, 0.05f, 0.08f },
@@ -330,7 +330,7 @@ __device__ bool env_collision_check_approx<ppln::robots::Panda>(volatile float* 
 #define X_ROT 3
 #define Y_ROT 4
 #define Z_ROT 5
-#define BATCH_SIZE 16
+#define BATCH_SIZE G_BATCH_SIZE
 
 __device__ __constant__ float4 panda_spheres_array[59] = {
     { 0.0f, 0.0f, 0.05f, 0.08f },

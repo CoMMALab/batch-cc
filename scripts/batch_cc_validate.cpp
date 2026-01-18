@@ -1184,7 +1184,6 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
     auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed);
     std::cout << "end to end time: " << ns.count() / 1'000'000'000.0 << " s\n";
 
-    run_vamp = false;
     if (run_vamp) {
         auto vamp_start = std::chrono::high_resolution_clock::now();
         vamp_batch_cc<VampRobot>(vamp_envs, vamp_edges_vec, resolution, vamp_results);
@@ -1201,7 +1200,7 @@ void run_test(std::string graph_file_path, std::string scene_file_path, int reso
         // print_environment_as_python_dict(h_envs[0], 0);
         int fp = 0;
         int fn = 0;
-        bool printed_discrepancy = false;
+        bool printed_discrepancy = true;
         for (int i = 0; i < num_edges; i++) {
             for (int j = 0; j < num_envs; j++) {
                 // if (i != 0 || j != 102) continue;
