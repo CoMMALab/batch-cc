@@ -108,13 +108,18 @@ namespace batch_cc {
             }
             __syncthreads();
             if (tid == 0) {
-                float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
-                n = max(ceil((dist / (float) bdim) * resolution), 1.0f);
+                float dist = sqrtf(device_utils::sq_l2_dist(edge_start, edge_end, dim));
+                float steps = (dist * resolution) / (float) bdim;
+                int n_local = __float2int_ru(steps);
+                n = (n_local < 1) ? 1 : n_local;
                 local_cc_result = 0;
             }
             __syncthreads();
             if (tid < dim) {
                 delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (bdim * n);
+            }
+            for (int i = tid; i < G_BATCH_SIZE * 20; i += blockDim.x) {
+                link_CC[i] = 3;
             }
             __syncthreads();
 
@@ -123,7 +128,7 @@ namespace batch_cc {
                 config[j] = edge_start[j] + delta[j] * (batch_idx * n);
             }
             for (int i = 0; i < n; i++) {
-                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos, link_CC, T, &local_cc_result);
+                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, link_CC, T, &local_cc_result);
                 if (local_cc_result) break;
                 # pragma unroll
                 for (int j = 0; j < dim; j++) {
@@ -135,7 +140,7 @@ namespace batch_cc {
                 for (int j = 0; j < dim; j++) {
                     config[j] = edge_end[j];
                 }
-                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, env_idx, edge_idx, sphere_pos, sphere_pos, link_CC, T, &local_cc_result);
+                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, link_CC, T, &local_cc_result);
             }
             if (tid == 0) {
                 cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? 1 : 0;
@@ -183,8 +188,10 @@ namespace batch_cc {
             }
             __syncthreads();
             if (tid == 0) {
-                float dist = sqrt(device_utils::sq_l2_dist(edge_start, edge_end, dim));
-                n = max(ceil((dist / (float) bdim) * resolution), 1.0f);
+                float dist = sqrtf(device_utils::sq_l2_dist(edge_start, edge_end, dim));
+                float steps = (dist * resolution) / (float) bdim;
+                int n_local = __float2int_ru(steps);
+                n = (n_local < 1) ? 1 : n_local;
                 local_cc_result = 0;
                 // printf("n: %d, dist: %f\n", n, dist);
             }

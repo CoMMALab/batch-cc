@@ -846,37 +846,45 @@ namespace ppln::collision {
         return collision;
     }
 
+    __device__ __forceinline__ void batch_cc_sync() {
+#if (G_BATCH_SIZE * 4) == 32
+        __syncwarp();
+#else
+        __syncthreads();
+#endif
+    }
+
     template <typename Robot>
     __device__ __forceinline__ void fkcc_detailed_only(
         const float *config,
         ppln::collision::Environment<float> *env,
         const int tid,
-        const int env_idx,
-        const int edge_idx,
         float *sphere_pos,
-        float *sphere_pos_approx,
         int *link_CC,
         float *T,
         unsigned int *cc_result
     ) {
-        // reset link_CC
-        for (int i = tid; i < G_BATCH_SIZE * 20; i += blockDim.x)
-        {
-            link_CC[i] = 3;
-        }
-        __syncthreads();
-
         ppln::collision::fk<Robot>(config, sphere_pos, T, tid);
-        __syncthreads();
+        batch_cc_sync();
 
         bool detailed_env_collision =
             not ppln::collision::env_collision_check<Robot>(sphere_pos, link_CC, env, tid);
-        atomicOr(cc_result, detailed_env_collision ? 1u : 0u);
-        __syncthreads();
+        if (warp_any_active_mask(detailed_env_collision)) {
+            if ((tid & 31) == 0) {
+                atomicOr(cc_result, 1u);
+            }
+        }
+        batch_cc_sync();
 
-        bool detailed_self_collision =
-            not ppln::collision::self_collision_check<Robot>(sphere_pos, link_CC, tid);
-        atomicOr(cc_result, detailed_self_collision ? 1u : 0u);
-        __syncthreads();
+        if (!cc_result[0]) {
+            bool detailed_self_collision =
+                not ppln::collision::self_collision_check<Robot>(sphere_pos, link_CC, tid);
+            if (warp_any_active_mask(detailed_self_collision)) {
+                if ((tid & 31) == 0) {
+                    atomicOr(cc_result, 1u);
+                }
+            }
+        }
+        batch_cc_sync();
     }
 }
