@@ -812,4 +812,72 @@ __device__ bool env_collision_check<ppln::robots::Panda>(float* sphere_pos, int*
     } 
     return true;
 }
+
+template <>
+__device__ bool self_collision_check_full<ppln::robots::Panda>(float* sphere_pos, const int tid){
+    const int thread_ind = tid % 4;
+    const int batch_ind = tid / 4;
+    bool has_collision = false;
+
+    for (int i = thread_ind; i < PANDA_SELF_CC_RANGE_COUNT; i += 4) {
+        if (warp_any_active_mask(has_collision)) return false;
+        int sphere_1_ind = panda_self_cc_ranges[i][0];
+        float sphere_1[3] = {
+            sphere_pos[sphere_1_ind * BATCH_SIZE * 3 + batch_ind * 3 + 0],
+            sphere_pos[sphere_1_ind * BATCH_SIZE * 3 + batch_ind * 3 + 1],
+            sphere_pos[sphere_1_ind * BATCH_SIZE * 3 + batch_ind * 3 + 2]
+        };
+        for (int j = panda_self_cc_ranges[i][1]; j <= panda_self_cc_ranges[i][2]; j++) {
+            float sphere_2[3] = {
+                sphere_pos[j * BATCH_SIZE * 3 + batch_ind * 3 + 0],
+                sphere_pos[j * BATCH_SIZE * 3 + batch_ind * 3 + 1],
+                sphere_pos[j * BATCH_SIZE * 3 + batch_ind * 3 + 2]
+            };
+            if (sphere_sphere_self_collision(
+                sphere_1[0], sphere_1[1], sphere_1[2], panda_spheres_array[sphere_1_ind].w,
+                sphere_2[0], sphere_2[1], sphere_2[2], panda_spheres_array[j].w
+            )){
+                has_collision = true;
+            }
+        }
+    }
+    return !has_collision;
+
+}
+
+template <>
+__device__ bool env_collision_check_full<ppln::robots::Panda>(float* sphere_pos, ppln::collision::Environment<float> *env, const int tid){
+    const int thread_ind = tid % 4;
+    const int batch_ind = tid / 4;
+    bool has_collision=false;
+
+    for (int i = thread_ind; i < PANDA_SPHERE_COUNT-PANDA_SPHERE_COUNT%4; i += 4){
+        // sphere i, robot batch_ind (16 robots)
+        if (i > 0 &&
+            sphere_environment_in_collision(
+                env,
+                sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 0],
+                sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 1],
+                sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 2],
+                panda_spheres_array[i].w
+            )
+        ) {
+            has_collision=true;
+        } 
+        if (warp_any_full_mask(has_collision)) return false;
+    }
+    int i=PANDA_SPHERE_COUNT-1-thread_ind;
+    if (i > 0 &&
+        sphere_environment_in_collision(
+            env,
+            sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 0],
+            sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 1],
+            sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 2],
+            panda_spheres_array[i].w
+        )
+    ) {
+        return false;
+    } 
+    return true;
+}
 }

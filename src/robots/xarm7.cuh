@@ -886,8 +886,7 @@ namespace ppln::collision {
     }
 
     template <>
-    __device__ bool self_collision_check_full<ppln::robots::Xarm7>(float* sphere_pos, int* joint_in_collision, const int tid){
-        (void)joint_in_collision;
+    __device__ bool self_collision_check_full<ppln::robots::Xarm7>(float* sphere_pos, const int tid){
         const int thread_ind = tid % 4;
         const int batch_ind = tid / 4;
         bool has_collision = false;
@@ -919,8 +918,7 @@ namespace ppln::collision {
     }
 
     template <>
-    __device__ bool env_collision_check_full<ppln::robots::Xarm7>(float* sphere_pos, int* joint_in_collision, ppln::collision::Environment<float> *env, const int tid){
-        (void)joint_in_collision;
+    __device__ bool env_collision_check_full<ppln::robots::Xarm7>(float* sphere_pos, ppln::collision::Environment<float> *env, const int tid){
         const int thread_ind = tid % 4;
         const int batch_ind = tid / 4;
         bool has_collision=false;

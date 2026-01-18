@@ -11,7 +11,6 @@ Multi environment batch collision checker.
 #include <cassert>
 #include <algorithm>
 #include <numeric>
-#include <type_traits>
 
 #include "src/collision/environment.hh"
 #include "src/collision/factory.hh"
@@ -87,7 +86,6 @@ namespace batch_cc {
         const int batch_idx = tid / 4;
 
         __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3];
-        __align__(16) __shared__ int link_CC[G_BATCH_SIZE * 20];
         __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16];
 
         const int total_pairs = num_envs * num_edges;
@@ -119,11 +117,6 @@ namespace batch_cc {
             if (tid < dim) {
                 delta[tid] = (edge_end[tid] - edge_start[tid]) / (float) (bdim * n);
             }
-            if constexpr (!std::is_same<Robot, ppln::robots::Xarm7>::value) {
-                for (int i = tid; i < G_BATCH_SIZE * 20; i += blockDim.x) {
-                    link_CC[i] = 3;
-                }
-            }
             __syncthreads();
 
             # pragma unroll
@@ -131,7 +124,7 @@ namespace batch_cc {
                 config[j] = edge_start[j] + delta[j] * (batch_idx * n);
             }
             for (int i = 0; i < n; i++) {
-                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, link_CC, T, &local_cc_result);
+                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, T, &local_cc_result);
                 if (local_cc_result) break;
                 # pragma unroll
                 for (int j = 0; j < dim; j++) {
@@ -143,7 +136,7 @@ namespace batch_cc {
                 for (int j = 0; j < dim; j++) {
                     config[j] = edge_end[j];
                 }
-                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, link_CC, T, &local_cc_result);
+                ppln::collision::fkcc_detailed_only<Robot>(config, env, tid, sphere_pos, T, &local_cc_result);
             }
             if (tid == 0) {
                 cc_result[edge_idx * num_envs + env_idx] = local_cc_result ? 1 : 0;
