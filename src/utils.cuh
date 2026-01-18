@@ -654,7 +654,7 @@ namespace ppln::collision {
         unsigned int *cc_result
     ) {
         // reset link_CC
-        for (int i = tid; i < 32 * 20; i += blockDim.x)
+        for (int i = tid; i < G_BATCH_SIZE * 20; i += blockDim.x)
         {
             link_CC[i] = 0;
         }
@@ -860,9 +860,9 @@ namespace ppln::collision {
         unsigned int *cc_result
     ) {
         // reset link_CC
-        for (int i = tid; i < 32 * 20; i += blockDim.x)
+        for (int i = tid; i < G_BATCH_SIZE * 20; i += blockDim.x)
         {
-            link_CC[i] = 1;
+            link_CC[i] = 3;
         }
         __syncthreads();
 
