@@ -87,15 +87,16 @@ namespace batch_cc {
     template <typename Robot>
     __global__ void
     batch_cc_kernel_full_only(ppln::collision::Environment<float>* envs, float* edges, int num_envs, int num_edges,
-                              uint8_t *cc_result, int resolution)
+                              uint8_t *cc_result, int resolution, float *sphere_pos_global)
     {
         constexpr auto dim = Robot::dimension;
         const int tid = threadIdx.x;
         const int bdim = (blockDim.x / 4);
         const int batch_idx = tid / 4;
 
-        __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3];
         __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16];
+        float *sphere_pos = sphere_pos_global +
+            static_cast<size_t>(blockIdx.x) * MAX_SPHERE_COUNT * G_BATCH_SIZE * 3;
 
         const int total_pairs = num_envs * num_edges;
         for (int pair_idx = blockIdx.x; pair_idx < total_pairs; pair_idx += gridDim.x) {
@@ -157,14 +158,15 @@ namespace batch_cc {
     template <typename Robot>
     __global__ void
     batch_cc_filter_kernel(ppln::collision::Environment<float>* envs, float* edges, int num_envs, int num_edges,
-                           int *collision_flags)
+                           int *collision_flags, float *sphere_pos_global)
     {
         constexpr auto dim = Robot::dimension;
         const int tid = threadIdx.x;
         const int batch_idx = tid / 4;
 
-        __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3];
         __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16];
+        float *sphere_pos = sphere_pos_global +
+            static_cast<size_t>(blockIdx.x) * MAX_SPHERE_COUNT * G_BATCH_SIZE * 3;
 
         const int64_t total_pairs = static_cast<int64_t>(num_envs) * num_edges;
         const int64_t total_configs = total_pairs * 3;
@@ -238,15 +240,17 @@ namespace batch_cc {
     template <typename Robot>
     __global__ void
     batch_cc_kernel_full_only_filtered(ppln::collision::Environment<float>* envs, float* edges, int num_envs,
-                                       const int *pair_indices, int num_pairs, uint8_t *cc_result, int resolution)
+                                       const int *pair_indices, int num_pairs, uint8_t *cc_result, int resolution,
+                                       float *sphere_pos_global)
     {
         constexpr auto dim = Robot::dimension;
         const int tid = threadIdx.x;
         const int bdim = (blockDim.x / 4);
         const int batch_idx = tid / 4;
 
-        __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3];
         __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16];
+        float *sphere_pos = sphere_pos_global +
+            static_cast<size_t>(blockIdx.x) * MAX_SPHERE_COUNT * G_BATCH_SIZE * 3;
 
         for (int list_idx = blockIdx.x; list_idx < num_pairs; list_idx += gridDim.x) {
             const int pair_idx = pair_indices[list_idx];
@@ -307,7 +311,8 @@ namespace batch_cc {
 
     template <typename Robot>
     __global__ void
-    batch_cc_kernel(ppln::collision::Environment<float>* envs, float* edges, int num_envs, int num_edges, uint8_t *cc_result, int resolution)
+    batch_cc_kernel(ppln::collision::Environment<float>* envs, float* edges, int num_envs, int num_edges,
+                    uint8_t *cc_result, int resolution, float *sphere_pos_global)
     {
        
         constexpr auto dim = Robot::dimension;
@@ -316,10 +321,11 @@ namespace batch_cc {
         const int batch_idx = tid / 4;
         const int col_idx = tid % 4;
 
-        __align__(16) __shared__ float sphere_pos[MAX_SPHERE_COUNT * G_BATCH_SIZE * 3]; // max spheres per robot, each has x y z coordinates
         // __align__(16) __shared__ volatile float sphere_pos_approx[10 * G_BATCH_SIZE * 3]; // ~assuming 10 spheres with granularity 32, each has x y z coordinates
         __align__(16) __shared__ int link_CC[G_BATCH_SIZE * 20]; // per-batch link flags
         __align__(16) __shared__ float T[G_BATCH_SIZE * 1 * 16]; // G_BATCH_SIZE robots x 1x4x4 transform matrix
+        float *sphere_pos = sphere_pos_global +
+            static_cast<size_t>(blockIdx.x) * MAX_SPHERE_COUNT * G_BATCH_SIZE * 3;
 
         const int total_pairs = num_envs * num_edges;
         for (int pair_idx = blockIdx.x; pair_idx < total_pairs; pair_idx += gridDim.x) {
@@ -481,6 +487,26 @@ namespace batch_cc {
         if (num_blocks <= 0 && total_pairs > 0) {
             num_blocks = 1;
         }
+        if (num_blocks > 0) {
+            size_t free_bytes = 0;
+            size_t total_bytes = 0;
+            cudaMemGetInfo(&free_bytes, &total_bytes);
+            size_t sphere_stride = static_cast<size_t>(MAX_SPHERE_COUNT) * G_BATCH_SIZE * 3;
+            size_t per_block_bytes = sphere_stride * sizeof(float);
+            size_t usable_bytes = free_bytes / 2;
+            size_t max_sphere_blocks = per_block_bytes > 0 ? (usable_bytes / per_block_bytes) : 0;
+            if (max_sphere_blocks == 0) {
+                throw std::runtime_error("Insufficient device memory for global sphere buffer.");
+            }
+            if (static_cast<size_t>(num_blocks) > max_sphere_blocks) {
+                num_blocks = static_cast<int>(max_sphere_blocks);
+                max_blocks = num_blocks;
+                if (num_blocks <= 0 && total_pairs > 0) {
+                    num_blocks = 1;
+                    max_blocks = 1;
+                }
+            }
+        }
         int num_threads = G_BATCH_SIZE * 4;
         auto env_setup_ns = get_elapsed_nanoseconds(setup_start_time);
         std::cout << "Environments Setup time: " << env_setup_ns / 1'000'000'000.0 << " s" << std::endl;
@@ -491,6 +517,12 @@ namespace batch_cc {
         size_t edges_size = edges.size() * Robot::dimension * 2 * sizeof(float);
         cudaMalloc(&d_edges, edges_size);
         cudaMemcpy(d_edges, edges.data(), edges_size, cudaMemcpyHostToDevice);
+        float *d_sphere_pos = nullptr;
+        if (total_pairs_int > 0) {
+            size_t sphere_stride = static_cast<size_t>(MAX_SPHERE_COUNT) * G_BATCH_SIZE * 3;
+            size_t sphere_bytes = static_cast<size_t>(num_blocks) * sphere_stride * sizeof(float);
+            cudaMalloc(&d_sphere_pos, sphere_bytes);
+        }
 
         auto setup_ns = get_elapsed_nanoseconds(setup_start_time);
         std::cout << "Setup time: " << setup_ns / 1'000'000'000.0 << " s" << std::endl;
@@ -511,7 +543,7 @@ namespace batch_cc {
                 cudaMemset(d_collision_flags, 0, sizeof(int) * static_cast<size_t>(total_pairs));
                 cudaMemset(d_cc_result, 0, sizeof(uint8_t) * static_cast<size_t>(total_pairs));
                 batch_cc_filter_kernel<Robot><<<num_blocks, num_threads>>>(
-                    d_envs, d_edges, num_envs, num_edges, d_collision_flags);
+                    d_envs, d_edges, num_envs, num_edges, d_collision_flags, d_sphere_pos);
 
                 int threads = 256;
                 int blocks = (total_pairs_int + threads - 1) / threads;
@@ -549,7 +581,8 @@ namespace batch_cc {
                     }
                     auto full_start_time = std::chrono::steady_clock::now();
                     batch_cc_kernel_full_only_filtered<Robot><<<filtered_blocks, num_threads>>>(
-                        d_envs, d_edges, num_envs, d_survivors, total_survivors, d_cc_result, resolution);
+                        d_envs, d_edges, num_envs, d_survivors, total_survivors, d_cc_result, resolution,
+                        d_sphere_pos);
                     cudaDeviceSynchronize();
                     auto full_ns = get_elapsed_nanoseconds(full_start_time);
                     std::cout << "Full kernel time: " << full_ns << " ns" << std::endl;
@@ -560,7 +593,8 @@ namespace batch_cc {
                 cudaFree(d_scan);
                 cudaFree(d_survivors);
             } else {
-                batch_cc_kernel_full_only<Robot><<<num_blocks, num_threads>>>(d_envs, d_edges, num_envs, num_edges, d_cc_result, resolution);
+                batch_cc_kernel_full_only<Robot><<<num_blocks, num_threads>>>(
+                    d_envs, d_edges, num_envs, num_edges, d_cc_result, resolution, d_sphere_pos);
             }
         }
         cudaDeviceSynchronize();
@@ -579,6 +613,9 @@ namespace batch_cc {
         cudaCheckError(cudaGetLastError());
         cudaFree(d_cc_result);
         cudaFree(d_edges);
+        if (d_sphere_pos) {
+            cudaFree(d_sphere_pos);
+        }
         cudaFree(d_envs);
         cudaFree(d_blob);
         auto cleanup_ns = get_elapsed_nanoseconds(cleanup_start_time);
