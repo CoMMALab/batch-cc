@@ -917,39 +917,30 @@ namespace ppln::collision {
     
     }
 
+    // note: this only works when a warp owns an edge (when BATCH_SIZE=8) since it uses warp level syncs.
     template <>
     __device__ bool env_collision_check_full<ppln::robots::Xarm7>(float* sphere_pos, ppln::collision::Environment<float> *env, const int tid){
-        const int thread_ind = tid % 4;
-        const int batch_ind = tid / 4;
-        bool has_collision=false;
-    
-        for (int i = thread_ind; i < XARM7_SPHERE_COUNT-XARM7_SPHERE_COUNT%4; i += 4){
-            // sphere i, robot batch_ind (16 robots)
-            if (i > 0 &&
+        const int thread_ind = tid;
+        bool has_collision = false;
+        const int total_spheres = XARM7_SPHERE_COUNT * BATCH_SIZE;
+
+        for (int idx = thread_ind; idx < total_spheres; idx += blockDim.x) {
+            int sphere_idx = idx / BATCH_SIZE;
+            if (sphere_idx > 0 &&
                 sphere_environment_in_collision(
                     env,
-                    sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 0],
-                    sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 1],
-                    sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 2],
-                    xarm7_spheres_array[i].w
+                    sphere_pos[idx * 3 + 0],
+                    sphere_pos[idx * 3 + 1],
+                    sphere_pos[idx * 3 + 2],
+                    xarm7_spheres_array[sphere_idx].w
                 )
             ) {
-                has_collision=true;
-            } 
-            if (warp_any_full_mask(has_collision)) return false;
+                has_collision = true;
+            }
+            if (warp_any_active_mask(has_collision)) {
+                return false;
+            }
         }
-        int i=XARM7_SPHERE_COUNT-1-thread_ind;
-        if (i > 0 &&
-            sphere_environment_in_collision(
-                env,
-                sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 0],
-                sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 1],
-                sphere_pos[i * BATCH_SIZE * 3 + batch_ind * 3 + 2],
-                xarm7_spheres_array[i].w
-            )
-        ) {
-            return false;
-        } 
         return true;
     }
 
