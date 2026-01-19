@@ -9,6 +9,8 @@ Multi environment batch collision checker.
 #include <sstream>
 #include <iostream>
 #include <cassert>
+#include <cstdlib>
+#include <cstring>
 #include <algorithm>
 #include <numeric>
 #include <type_traits>
@@ -43,8 +45,12 @@ Multi environment batch collision checker.
 namespace batch_cc {
 
     static int g_max_blocks = 0;
+    static bool g_enable_filter = true;
     void set_max_blocks(int max_blocks) {
         g_max_blocks = max_blocks;
+    }
+    void set_filter_enabled(bool enabled) {
+        g_enable_filter = enabled;
     }
 
     using EnvF = ppln::collision::Environment<float>;
@@ -253,7 +259,7 @@ namespace batch_cc {
             static_cast<size_t>(blockIdx.x) * MAX_SPHERE_COUNT * G_BATCH_SIZE * 3;
 
         for (int list_idx = blockIdx.x; list_idx < num_pairs; list_idx += gridDim.x) {
-            const int pair_idx = pair_indices[list_idx];
+            const int pair_idx = pair_indices ? pair_indices[list_idx] : list_idx;
             const int env_idx = pair_idx % num_envs;
             const int edge_idx = pair_idx / num_envs;
 
@@ -529,69 +535,85 @@ namespace batch_cc {
         cudaCheckError(cudaGetLastError());
         auto kernel_start_time = std::chrono::steady_clock::now();
         if (total_pairs_int > 0) {
+            bool use_filter = g_enable_filter;
+            const char* disable_filter = std::getenv("BATCHCC_DISABLE_FILTER");
+            if (disable_filter != nullptr &&
+                (std::strcmp(disable_filter, "1") == 0 || std::strcmp(disable_filter, "true") == 0)) {
+                use_filter = false;
+            }
             if constexpr (std::is_same<Robot, ppln::robots::Xarm7>::value) {
-                auto filter_start_time = std::chrono::steady_clock::now();
-                int *d_flags = nullptr;
-                int *d_scan = nullptr;
-                int *d_survivors = nullptr;
-                int *d_collision_flags = nullptr;
-                cudaMalloc(&d_collision_flags, sizeof(int) * static_cast<size_t>(total_pairs));
-                cudaMalloc(&d_flags, sizeof(int) * static_cast<size_t>(total_pairs));
-                cudaMalloc(&d_scan, sizeof(int) * static_cast<size_t>(total_pairs));
-                cudaMalloc(&d_survivors, sizeof(int) * static_cast<size_t>(total_pairs));
-
-                cudaMemset(d_collision_flags, 0, sizeof(int) * static_cast<size_t>(total_pairs));
-                cudaMemset(d_cc_result, 0, sizeof(uint8_t) * static_cast<size_t>(total_pairs));
-                batch_cc_filter_kernel<Robot><<<num_blocks, num_threads>>>(
-                    d_envs, d_edges, num_envs, num_edges, d_collision_flags, d_sphere_pos);
-
-                int threads = 256;
-                int blocks = (total_pairs_int + threads - 1) / threads;
-                cudaDeviceSynchronize();
-                auto filter_ns = get_elapsed_nanoseconds(filter_start_time);
-                std::cout << "Filter kernel time: " << filter_ns << " ns" << std::endl;
-
-                auto finalize_start_time = std::chrono::steady_clock::now();
-                finalize_filter_flags<<<blocks, threads>>>(d_collision_flags, d_flags, d_cc_result, total_pairs_int);
-                cudaDeviceSynchronize();
-                auto finalize_ns = get_elapsed_nanoseconds(finalize_start_time);
-                std::cout << "Finalize kernel time: " << finalize_ns << " ns" << std::endl;
-
-                auto scan_start_time = std::chrono::steady_clock::now();
-                auto flags_ptr = thrust::device_pointer_cast(d_flags);
-                auto scan_ptr = thrust::device_pointer_cast(d_scan);
-                int total_survivors = thrust::reduce(thrust::device, flags_ptr, flags_ptr + total_pairs_int, 0, thrust::plus<int>());
-                thrust::exclusive_scan(thrust::device, flags_ptr, flags_ptr + total_pairs_int, scan_ptr);
-                cudaDeviceSynchronize();
-                auto scan_ns = get_elapsed_nanoseconds(scan_start_time);
-                std::cout << "Scan time: " << scan_ns << " ns" << std::endl;
-                std::cout << "Filter survivors: " << total_survivors << " / " << total_pairs
-                          << " (" << (total_pairs > 0 ? (100.0 * total_survivors / total_pairs) : 0.0) << "%)"
-                          << std::endl;
-
-                if (total_survivors > 0) {
-                    auto build_start_time = std::chrono::steady_clock::now();
-                    build_survivor_indices<<<blocks, threads>>>(d_flags, d_scan, d_survivors, total_pairs_int);
-                    cudaDeviceSynchronize();
-                    auto build_ns = get_elapsed_nanoseconds(build_start_time);
-                    std::cout << "Build survivors time: " << build_ns << " ns" << std::endl;
-                    int filtered_blocks = std::min(total_survivors, max_blocks);
-                    if (filtered_blocks <= 0) {
-                        filtered_blocks = 1;
-                    }
+                if (!use_filter) {
                     auto full_start_time = std::chrono::steady_clock::now();
-                    batch_cc_kernel_full_only_filtered<Robot><<<filtered_blocks, num_threads>>>(
-                        d_envs, d_edges, num_envs, d_survivors, total_survivors, d_cc_result, resolution,
+                    batch_cc_kernel_full_only_filtered<Robot><<<num_blocks, num_threads>>>(
+                        d_envs, d_edges, num_envs, nullptr, total_pairs_int, d_cc_result, resolution,
                         d_sphere_pos);
                     cudaDeviceSynchronize();
                     auto full_ns = get_elapsed_nanoseconds(full_start_time);
                     std::cout << "Full kernel time: " << full_ns << " ns" << std::endl;
-                }
+                } else {
+                    auto filter_start_time = std::chrono::steady_clock::now();
+                    int *d_flags = nullptr;
+                    int *d_scan = nullptr;
+                    int *d_survivors = nullptr;
+                    int *d_collision_flags = nullptr;
+                    cudaMalloc(&d_collision_flags, sizeof(int) * static_cast<size_t>(total_pairs));
+                    cudaMalloc(&d_flags, sizeof(int) * static_cast<size_t>(total_pairs));
+                    cudaMalloc(&d_scan, sizeof(int) * static_cast<size_t>(total_pairs));
+                    cudaMalloc(&d_survivors, sizeof(int) * static_cast<size_t>(total_pairs));
 
-                cudaFree(d_collision_flags);
-                cudaFree(d_flags);
-                cudaFree(d_scan);
-                cudaFree(d_survivors);
+                    cudaMemset(d_collision_flags, 0, sizeof(int) * static_cast<size_t>(total_pairs));
+                    cudaMemset(d_cc_result, 0, sizeof(uint8_t) * static_cast<size_t>(total_pairs));
+                    batch_cc_filter_kernel<Robot><<<num_blocks, num_threads>>>(
+                        d_envs, d_edges, num_envs, num_edges, d_collision_flags, d_sphere_pos);
+
+                    int threads = 256;
+                    int blocks = (total_pairs_int + threads - 1) / threads;
+                    cudaDeviceSynchronize();
+                    auto filter_ns = get_elapsed_nanoseconds(filter_start_time);
+                    std::cout << "Filter kernel time: " << filter_ns << " ns" << std::endl;
+
+                    auto finalize_start_time = std::chrono::steady_clock::now();
+                    finalize_filter_flags<<<blocks, threads>>>(d_collision_flags, d_flags, d_cc_result, total_pairs_int);
+                    cudaDeviceSynchronize();
+                    auto finalize_ns = get_elapsed_nanoseconds(finalize_start_time);
+                    std::cout << "Finalize kernel time: " << finalize_ns << " ns" << std::endl;
+
+                    auto scan_start_time = std::chrono::steady_clock::now();
+                    auto flags_ptr = thrust::device_pointer_cast(d_flags);
+                    auto scan_ptr = thrust::device_pointer_cast(d_scan);
+                    int total_survivors = thrust::reduce(thrust::device, flags_ptr, flags_ptr + total_pairs_int, 0, thrust::plus<int>());
+                    thrust::exclusive_scan(thrust::device, flags_ptr, flags_ptr + total_pairs_int, scan_ptr);
+                    cudaDeviceSynchronize();
+                    auto scan_ns = get_elapsed_nanoseconds(scan_start_time);
+                    std::cout << "Scan time: " << scan_ns << " ns" << std::endl;
+                    std::cout << "Filter survivors: " << total_survivors << " / " << total_pairs
+                              << " (" << (total_pairs > 0 ? (100.0 * total_survivors / total_pairs) : 0.0) << "%)"
+                              << std::endl;
+
+                    if (total_survivors > 0) {
+                        auto build_start_time = std::chrono::steady_clock::now();
+                        build_survivor_indices<<<blocks, threads>>>(d_flags, d_scan, d_survivors, total_pairs_int);
+                        cudaDeviceSynchronize();
+                        auto build_ns = get_elapsed_nanoseconds(build_start_time);
+                        std::cout << "Build survivors time: " << build_ns << " ns" << std::endl;
+                        int filtered_blocks = std::min(total_survivors, max_blocks);
+                        if (filtered_blocks <= 0) {
+                            filtered_blocks = 1;
+                        }
+                        auto full_start_time = std::chrono::steady_clock::now();
+                        batch_cc_kernel_full_only_filtered<Robot><<<filtered_blocks, num_threads>>>(
+                            d_envs, d_edges, num_envs, d_survivors, total_survivors, d_cc_result, resolution,
+                            d_sphere_pos);
+                        cudaDeviceSynchronize();
+                        auto full_ns = get_elapsed_nanoseconds(full_start_time);
+                        std::cout << "Full kernel time: " << full_ns << " ns" << std::endl;
+                    }
+
+                    cudaFree(d_collision_flags);
+                    cudaFree(d_flags);
+                    cudaFree(d_scan);
+                    cudaFree(d_survivors);
+                }
             } else {
                 batch_cc_kernel_full_only<Robot><<<num_blocks, num_threads>>>(
                     d_envs, d_edges, num_envs, num_edges, d_cc_result, resolution, d_sphere_pos);
